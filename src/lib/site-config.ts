@@ -126,7 +126,7 @@ export const mainNav: NavItem[] = [
       { label: "Boletín Informativo", href: "/noticias/categoria/boletin-informativo" },
     ],
   },
-  { key: "noticias", label: "Noticias", href: "/noticias" },
+  { key: "noticias", label: "Prensa", href: "/noticias/categoria/prensa" },
 ];
 
 /** Inyecta las visiones (dinámicas) dentro del submenú "Visión País". */
