@@ -77,17 +77,33 @@ function DrawerNavItem({
 
   return (
     <div>
-      <Link
-        href={item.href}
-        onClick={onNavigate}
-        className={cn(
-          "flex items-center gap-2 py-3 text-sm font-medium transition hover:text-primary-700",
-          depth === 0 ? "text-ink" : "text-muted",
-        )}
-      >
-        {item.icon && <NavIcon name={item.icon} />}
-        {item.label}
-      </Link>
+      {item.href.startsWith("http") ? (
+        <a
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onNavigate}
+          className={cn(
+            "flex items-center gap-2 py-3 text-sm font-medium transition hover:text-primary-700",
+            depth === 0 ? "text-ink" : "text-muted",
+          )}
+        >
+          {item.icon && <NavIcon name={item.icon} />}
+          {item.label}
+        </a>
+      ) : (
+        <Link
+          href={item.href}
+          onClick={onNavigate}
+          className={cn(
+            "flex items-center gap-2 py-3 text-sm font-medium transition hover:text-primary-700",
+            depth === 0 ? "text-ink" : "text-muted",
+          )}
+        >
+          {item.icon && <NavIcon name={item.icon} />}
+          {item.label}
+        </Link>
+      )}
     </div>
   );
 }

@@ -120,6 +120,14 @@ export interface PostImage {
   sort_order: number;
 }
 
+export interface PostFile {
+  id: string;
+  post_id: string;
+  file_name: string;
+  file_url: string;
+  sort_order: number;
+}
+
 export interface Associate {
   id: string;
   name: string;

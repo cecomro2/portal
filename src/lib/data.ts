@@ -14,6 +14,7 @@ import type {
   Person,
   Post,
   PostCategory,
+  PostFile,
   PostImage,
   Posting,
   PostingFile,
@@ -381,6 +382,22 @@ export async function getPostImages(postId: string): Promise<PostImage[]> {
       .order("sort_order", { ascending: true });
     if (error) return [];
     return (data ?? []) as PostImage[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getPostFiles(postId: string): Promise<PostFile[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("post_files")
+      .select("*")
+      .eq("post_id", postId)
+      .order("sort_order", { ascending: true });
+    if (error) return [];
+    return (data ?? []) as PostFile[];
   } catch {
     return [];
   }

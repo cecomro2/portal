@@ -85,7 +85,15 @@ export const mainNav: NavItem[] = [
       },
       { label: "Educación", href: "/nuestro-trabajo/educacion" },
       { label: "Agro", href: "/nuestro-trabajo/agro" },
-      { label: "Turismo", href: "/nuestro-trabajo/turismo" },
+      {
+        label: "Turismo",
+        href: "/nuestro-trabajo/turismo",
+        children: [
+          { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
+          { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
+          { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
+        ],
+      },
       { label: "Gestión Territorial", href: "/nuestro-trabajo/gestion-territorial" },
       {
         label: "Gobernabilidad",
@@ -106,14 +114,17 @@ export const mainNav: NavItem[] = [
     label: "Red de Centros Regionales",
     href: "/red-de-centros",
     children: [
-      { label: "CECOMCE", href: "/red-de-centros/cecomce" },
-      { label: "CECOMCRO", href: "/red-de-centros/cecomcro" },
+      { label: "CECOMCE", href: "https://www.cecomce.com/" },
+      { label: "CECOMCRO", href: "https://www.instagram.com/fcecomcro/?hl=en" },
     ],
   },
   {
     key: "recursos",
     label: "Recursos de Información",
     href: "/recursos-de-informacion",
+    children: [
+      { label: "Boletín Informativo", href: "/noticias/categoria/boletin-informativo" },
+    ],
   },
   { key: "noticias", label: "Noticias", href: "/noticias" },
 ];

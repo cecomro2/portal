@@ -15,6 +15,7 @@ export interface PostInput {
   is_published: boolean;
   author: string;
   images: { image_url: string }[];
+  files: { file_name: string; file_url: string }[];
 }
 
 export async function savePost(
@@ -66,6 +67,19 @@ export async function savePost(
         input.images.map((img, i) => ({
           post_id: id,
           image_url: img.image_url,
+          sort_order: i,
+        })),
+      );
+    }
+
+    // Reemplazar documentos PDF
+    await supabase.from("post_files").delete().eq("post_id", id);
+    if (input.files.length) {
+      await supabase.from("post_files").insert(
+        input.files.map((f, i) => ({
+          post_id: id,
+          file_name: f.file_name,
+          file_url: f.file_url,
           sort_order: i,
         })),
       );

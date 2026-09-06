@@ -206,6 +206,17 @@ alter table public.post_images enable row level security;
 drop policy if exists "post_images_select" on public.post_images;
 create policy "post_images_select" on public.post_images for select using (true);
 
+create table if not exists public.post_files (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid not null references public.posts(id) on delete cascade,
+  file_name text not null,
+  file_url text not null,
+  sort_order int not null default 0
+);
+alter table public.post_files enable row level security;
+drop policy if exists "post_files_select" on public.post_files;
+create policy "post_files_select" on public.post_files for select using (true);
+
 -- ------------------------------------------------------------
 -- Asociados y Aliados
 -- ------------------------------------------------------------

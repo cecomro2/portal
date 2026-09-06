@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays } from "lucide-react";
-import { getCategories, getPostBySlug, getPostImages } from "@/lib/data";
+import { getCategories, getPostBySlug, getPostFiles, getPostImages } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
+import { DocumentList } from "@/components/site/document-list";
 
 export async function generateMetadata({
   params,
@@ -24,9 +25,10 @@ export default async function NoticiaPage({
   const post = await getPostBySlug(slug);
   if (!post || !post.is_published) notFound();
 
-  const [categories, images] = await Promise.all([
+  const [categories, images, files] = await Promise.all([
     getCategories(),
     getPostImages(post.id),
+    getPostFiles(post.id),
   ]);
   const category = categories.find((c) => c.id === post.category_id);
 
@@ -92,6 +94,21 @@ export default async function NoticiaPage({
                 />
               ))}
             </div>
+          </div>
+        )}
+
+        {files.length > 0 && (
+          <div className="mt-10">
+            <h2 className="mb-4 text-lg font-semibold text-primary-800">
+              Documentos
+            </h2>
+            <DocumentList
+              documents={files.map((f) => ({
+                id: f.id,
+                label: f.file_name,
+                file_url: f.file_url,
+              }))}
+            />
           </div>
         )}
 

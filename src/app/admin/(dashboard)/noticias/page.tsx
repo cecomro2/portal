@@ -18,6 +18,7 @@ import {
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
+import { FileUpload, type UploadedFile } from "@/components/admin/file-upload";
 
 const empty = {
   title: "",
@@ -29,6 +30,7 @@ const empty = {
   is_published: true,
   author: "",
   images: [] as string[],
+  files: [] as UploadedFile[],
 };
 
 export default function NoticiasAdminPage() {
@@ -91,11 +93,18 @@ export default function NoticiasAdminPage() {
 
   async function openEdit(p: Post) {
     const supabase = createBrowserSupabase();
-    const { data: imgs } = await supabase
-      .from("post_images")
-      .select("image_url")
-      .eq("post_id", p.id)
-      .order("sort_order");
+    const [{ data: imgs }, { data: files }] = await Promise.all([
+      supabase
+        .from("post_images")
+        .select("image_url")
+        .eq("post_id", p.id)
+        .order("sort_order"),
+      supabase
+        .from("post_files")
+        .select("*")
+        .eq("post_id", p.id)
+        .order("sort_order"),
+    ]);
     setEditing(p);
     setForm({
       title: p.title,
@@ -107,6 +116,11 @@ export default function NoticiasAdminPage() {
       is_published: p.is_published,
       author: p.author ?? "",
       images: (imgs ?? []).map((i) => i.image_url),
+      files: (files ?? []).map((f) => ({
+        file_name: f.file_name,
+        file_url: f.file_url,
+        mime_type: f.mime_type,
+      })),
     });
     setError("");
     setOpen(true);
@@ -129,6 +143,7 @@ export default function NoticiasAdminPage() {
       is_published: form.is_published,
       author: form.author,
       images: form.images.map((url) => ({ image_url: url })),
+      files: form.files,
     });
     setSaving(false);
     if (!res.ok) {
@@ -247,6 +262,13 @@ export default function NoticiasAdminPage() {
               <GalleryUpload
                 value={form.images}
                 onChange={(urls) => set("images", urls)}
+              />
+            </Field>
+
+            <Field label="Documentos (PDF)">
+              <FileUpload
+                value={form.files}
+                onChange={(files) => set("files", files)}
               />
             </Field>
 

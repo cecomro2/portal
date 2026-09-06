@@ -12,6 +12,34 @@ function NavIcon({ name, size = 15 }: { name: string; size?: number }) {
   return Icon ? <Icon size={size} className="text-muted" /> : null;
 }
 
+function NavLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (href.startsWith("http")) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(href + "/");
@@ -73,7 +101,7 @@ function DropdownChild({ child }: { child: NavItem }) {
 
   return (
     <div className="group/sub relative">
-      <Link
+      <NavLink
         href={child.href}
         className={cn(
           "flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition",
@@ -89,13 +117,13 @@ function DropdownChild({ child }: { child: NavItem }) {
         {hasGrandchildren && (
           <ChevronRight size={14} className="text-muted" />
         )}
-      </Link>
+      </NavLink>
 
       {hasGrandchildren && (
         <div className="invisible absolute left-full top-0 z-50 ml-0 min-w-[220px] -translate-x-1 pl-1 opacity-0 transition-all duration-150 group-hover/sub:visible group-hover/sub:translate-x-0 group-hover/sub:opacity-100">
           <div className="rounded-xl border-l-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
             {child.children!.map((gc) => (
-              <Link
+              <NavLink
                 key={gc.href}
                 href={gc.href}
                 className={cn(
@@ -107,7 +135,7 @@ function DropdownChild({ child }: { child: NavItem }) {
               >
                 {gc.icon && <NavIcon name={gc.icon} />}
                 {gc.label}
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
