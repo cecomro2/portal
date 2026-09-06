@@ -10,6 +10,7 @@ import type {
   Consultant,
   HomeStat,
   MediaItem,
+  MenuItem,
   Person,
   Post,
   PostCategory,
@@ -596,4 +597,51 @@ export async function getVisionDocuments(
   } catch {
     return fallbackVisionDocs(visionId);
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Menú (bottom header) y ajustes del header                          */
+/* ------------------------------------------------------------------ */
+
+export const FALLBACK_MENU: MenuItem[] = [
+  { key: "inicio", label: "Inicio", href: "/", sort_order: 1 },
+  { key: "nosotros", label: "Nosotros", href: "/nosotros/quienes-somos", sort_order: 2 },
+  { key: "trabajo", label: "Nuestro Trabajo", href: "/nuestro-trabajo", sort_order: 3 },
+  { key: "red", label: "Red de Centros Regionales", href: "/red-de-centros", sort_order: 4 },
+  { key: "recursos", label: "Recursos de Información", href: "/recursos-de-informacion", sort_order: 5 },
+  { key: "noticias", label: "Noticias", href: "/noticias", sort_order: 6 },
+];
+
+export async function getMenuItems(): Promise<MenuItem[]> {
+  if (!isSupabaseConfigured) return FALLBACK_MENU;
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error || !data?.length) return FALLBACK_MENU;
+    return data as MenuItem[];
+  } catch {
+    return FALLBACK_MENU;
+  }
+}
+
+export interface HeaderSettings {
+  logo: string;
+  itseUrl: string;
+  circuitoUrl: string;
+}
+
+export async function getHeaderSettings(): Promise<HeaderSettings> {
+  const [logo, itseUrl, circuitoUrl] = await Promise.all([
+    getSiteSetting("header_logo"),
+    getSiteSetting("itse_url"),
+    getSiteSetting("circuito_url"),
+  ]);
+  return {
+    logo: logo || "/logo-cecomro.png",
+    itseUrl: itseUrl || "https://www.itse.ac.pa",
+    circuitoUrl: circuitoUrl || "https://circuitodelcafe.com/",
+  };
 }

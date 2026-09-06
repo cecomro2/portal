@@ -25,6 +25,7 @@ export interface NavChild {
 }
 
 export interface NavItem {
+  key?: string;
   label: string;
   href: string;
   icon?: string;
@@ -40,8 +41,9 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
 
 /** Menú principal (bottom menu). */
 export const mainNav: NavItem[] = [
-  { label: "Inicio", href: "/" },
+  { key: "inicio", label: "Inicio", href: "/" },
   {
+    key: "nosotros",
     label: "Nosotros",
     href: "/nosotros/quienes-somos",
     children: [
@@ -56,6 +58,7 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
+    key: "trabajo",
     label: "Nuestro Trabajo",
     href: "/nuestro-trabajo",
     children: [
@@ -99,6 +102,7 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
+    key: "red",
     label: "Red de Centros Regionales",
     href: "/red-de-centros",
     children: [
@@ -107,15 +111,17 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
+    key: "recursos",
     label: "Recursos de Información",
     href: "/recursos-de-informacion",
   },
-  { label: "Noticias", href: "/noticias" },
+  { key: "noticias", label: "Noticias", href: "/noticias" },
 ];
 
 /** Inyecta las visiones (dinámicas) dentro del submenú "Visión País". */
 export function withVisions(
   visions: { title: string; slug: string }[],
+  base: NavItem[] = mainNav,
 ): NavItem[] {
   const visionChildren = visions.map((v) => ({
     label: v.title,
@@ -133,7 +139,22 @@ export function withVisions(
     return item;
   };
 
-  return mainNav.map(mapItem);
+  return base.map(mapItem);
+}
+
+/** Sobrescribe los items de primer nivel del menú (bottom header) editables. */
+export function withMenu(
+  menuItems: { key: string; label: string; href: string }[],
+  base: NavItem[] = mainNav,
+): NavItem[] {
+  const map = new Map(menuItems.map((m) => [m.key, m]));
+  return base.map((item) => {
+    if (item.key && map.has(item.key)) {
+      const m = map.get(item.key)!;
+      return { ...item, label: m.label, href: m.href };
+    }
+    return item;
+  });
 }
 
 export interface SocialLink {

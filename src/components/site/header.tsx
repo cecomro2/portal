@@ -96,10 +96,16 @@ export function Header({
   links,
   socials,
   nav = mainNav,
+  logoUrl = "/logo-cecomro.png",
+  itseUrl = "https://www.itse.ac.pa",
+  circuitoUrl = "https://circuitodelcafe.com/",
 }: {
   links: TopbarLink[];
   socials: SocialLink[];
   nav?: NavItem[];
+  logoUrl?: string;
+  itseUrl?: string;
+  circuitoUrl?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
@@ -112,13 +118,13 @@ export function Header({
   return (
     <header className="relative z-50 border-b border-line bg-white py-3.5 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Logo />
+        <Logo src={logoUrl} />
 
         <div className="flex items-center gap-3">
           {/* Logos aliados (desktop) */}
           <div className="hidden items-center gap-3 lg:flex">
             <a
-              href="https://www.itse.ac.pa"
+              href={itseUrl}
               target="_blank"
               rel="noopener noreferrer"
               title="Instituto Técnico Superior Especializado"
@@ -138,7 +144,7 @@ export function Header({
             </a>
 
             <a
-              href="https://circuitodelcafe.com/"
+              href={circuitoUrl}
               target="_blank"
               rel="noopener noreferrer"
               title="Circuito del Café de Chiriquí"
@@ -237,7 +243,7 @@ export function Header({
                 </Link>
               ))}
               <a
-                href="https://www.itse.ac.pa"
+                href={itseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={close}
@@ -247,7 +253,7 @@ export function Header({
                 ITSE Panamá
               </a>
               <a
-                href="https://circuitodelcafe.com/"
+                href={circuitoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={close}

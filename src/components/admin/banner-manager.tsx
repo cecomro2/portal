@@ -27,7 +27,7 @@ const empty = {
   is_active: true,
 };
 
-export default function BannerManager() {
+export function BannerManager() {
   const router = useRouter();
   const { items, loading, load } = useAdminList<Banner>(async () => {
     const supabase = createBrowserSupabase();

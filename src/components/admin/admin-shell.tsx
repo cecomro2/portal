@@ -19,7 +19,6 @@ import {
   Newspaper,
   Settings,
   ShoppingCart,
-  TrendingUp,
   Users,
   X,
 } from "lucide-react";
@@ -29,6 +28,7 @@ import { LogoMark } from "@/components/site/logo";
 
 interface NavGroup {
   label: string;
+  subheader?: string;
   items: { href: string; label: string; icon: typeof LayoutDashboard }[];
 }
 
@@ -40,8 +40,7 @@ const groups: NavGroup[] = [
   {
     label: "Contenido",
     items: [
-      { href: "/admin/banner", label: "Banner de inicio", icon: ImageIcon },
-      { href: "/admin/cifras", label: "Cifras del Home", icon: TrendingUp },
+      { href: "/admin/inicio", label: "Edición Inicio", icon: LayoutDashboard },
       { href: "/admin/vision-pais", label: "Visión País", icon: Compass },
       { href: "/admin/noticias", label: "Noticias", icon: Newspaper },
       { href: "/admin/categorias", label: "Categorías", icon: FolderOpen },
@@ -68,7 +67,12 @@ const groups: NavGroup[] = [
   },
   {
     label: "Configuración",
-    items: [{ href: "/admin/topbar", label: "Top Header", icon: Settings }],
+    subheader: "Header",
+    items: [
+      { href: "/admin/topbar", label: "Top Header", icon: Settings },
+      { href: "/admin/header", label: "Header", icon: Settings },
+      { href: "/admin/menu", label: "Bottom Header", icon: Settings },
+    ],
   },
 ];
 
@@ -105,7 +109,12 @@ export function AdminShell({
             <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-300/70">
               {group.label}
             </p>
-            <ul className="space-y-0.5">
+            {group.subheader && (
+              <p className="px-4 pb-1 pt-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-300/55">
+                {group.subheader}
+              </p>
+            )}
+            <ul className={cn("space-y-0.5", group.subheader && "pl-2")}>
               {group.items.map((item) => {
                 const active =
                   item.href === "/admin"

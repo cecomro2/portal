@@ -405,3 +405,25 @@ select v.id,
   d.n
 from public.visions v
 cross join (values (1), (2), (3)) as d(n);
+
+-- ------------------------------------------------------------
+-- ÍTEMS DEL MENÚ (bottom header) editables
+-- ------------------------------------------------------------
+create table if not exists public.menu_items (
+  key text primary key,
+  label text not null,
+  href text not null,
+  sort_order int not null default 0
+);
+alter table public.menu_items enable row level security;
+drop policy if exists "menu_items_select" on public.menu_items;
+create policy "menu_items_select" on public.menu_items for select using (true);
+
+delete from public.menu_items;
+insert into public.menu_items (key, label, href, sort_order) values
+  ('inicio', 'Inicio', '/', 1),
+  ('nosotros', 'Nosotros', '/nosotros/quienes-somos', 2),
+  ('trabajo', 'Nuestro Trabajo', '/nuestro-trabajo', 3),
+  ('red', 'Red de Centros Regionales', '/red-de-centros', 4),
+  ('recursos', 'Recursos de Información', '/recursos-de-informacion', 5),
+  ('noticias', 'Noticias', '/noticias', 6);

@@ -38,9 +38,11 @@ export function LogoMark({ className }: { className?: string }) {
 export function Logo({
   className,
   compact = false,
+  src = "/logo-cecomro.png",
 }: {
   className?: string;
   compact?: boolean;
+  src?: string;
 }) {
   const [error, setError] = useState(false);
 
@@ -68,7 +70,7 @@ export function Logo({
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src="/logo-cecomro.png"
+          src={src}
           alt="CECOM-RO"
           onError={() => setError(true)}
           className="h-11 w-auto object-contain lg:h-12"

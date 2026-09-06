@@ -294,6 +294,18 @@ create table if not exists public.vision_documents (
 alter table public.vision_documents enable row level security;
 create policy "vision_documents_select" on public.vision_documents for select using (true);
 
+-- ------------------------------------------------------------
+-- Ítems del menú (bottom header) editables
+-- ------------------------------------------------------------
+create table if not exists public.menu_items (
+  key text primary key,
+  label text not null,
+  href text not null,
+  sort_order int not null default 0
+);
+alter table public.menu_items enable row level security;
+create policy "menu_items_select" on public.menu_items for select using (true);
+
 -- ============================================================
 -- NOTA: Para otorgar acceso de administrador al primer usuario,
 -- ejecutar después de registrarse:

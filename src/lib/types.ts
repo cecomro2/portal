@@ -172,6 +172,14 @@ export interface VisionDocument {
   sort_order: number;
 }
 
+/** Ítem del menú (bottom header) editable. */
+export interface MenuItem {
+  key: string;
+  label: string;
+  href: string;
+  sort_order: number;
+}
+
 /** Perfil de administrador. */
 export interface Profile {
   id: string;

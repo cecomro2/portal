@@ -19,7 +19,7 @@ import { ImageUpload } from "@/components/admin/image-upload";
 
 const empty = { value: "", label: "", sort_order: 0 };
 
-export default function CifrasAdminPage() {
+export function CifrasManager() {
   const router = useRouter();
   const { items, loading, load } = useAdminList<HomeStat>(async () => {
     const supabase = createBrowserSupabase();
