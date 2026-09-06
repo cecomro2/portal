@@ -200,7 +200,7 @@ export default async function HomePage() {
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=80"
+                    src="/sobre-home.jpg"
                     alt="Sobre CECOM-RO"
                     className="h-full w-full object-cover"
                   />
