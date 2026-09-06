@@ -31,7 +31,13 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
         nav={nav}
         logoUrl={header.logo}
         itseUrl={header.itseUrl}
+        itseTitle={header.itseTitle}
+        itseSubtitle={header.itseSubtitle}
+        itseIcon={header.itseIcon}
         circuitoUrl={header.circuitoUrl}
+        circuitoTitle={header.circuitoTitle}
+        circuitoSubtitle={header.circuitoSubtitle}
+        circuitoIcon={header.circuitoIcon}
       />
       <SiteNav nav={nav} />
       <main className="flex-1">{children}</main>

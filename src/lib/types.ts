@@ -77,6 +77,15 @@ export interface Commission {
   sort_order: number;
 }
 
+/** Persona miembro de una comisión de trabajo. */
+export interface CommissionMember {
+  id: string;
+  commission_id: string;
+  name: string;
+  photo_url: string | null;
+  sort_order: number;
+}
+
 export type MediaKind = "image" | "document" | "video";
 
 export interface MediaItem {

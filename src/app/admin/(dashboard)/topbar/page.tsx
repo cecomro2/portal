@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deleteTopbarLink, saveTopbarLink } from "@/lib/actions/topbar";
-import { TOPBAR_ICON_OPTIONS } from "@/lib/site-config";
+import { IconPicker } from "@/components/admin/icon-picker";
 import type { TopbarLink } from "@/lib/types";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
@@ -198,17 +198,10 @@ export default function TopbarAdminPage() {
                 </Field>
               ) : (
                 <Field label="Icono">
-                  <select
+                  <IconPicker
                     value={form.icon}
-                    onChange={(e) => set("icon", e.target.value)}
-                    className={inputClass}
-                  >
-                    {TOPBAR_ICON_OPTIONS.map((s) => (
-                      <option key={s.value} value={s.value}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(v) => set("icon", v)}
+                  />
                 </Field>
               )}
               <Field label="Orden">

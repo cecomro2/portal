@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { SocialIcon } from "@/components/icons";
-import { mainNav, NAV_ICONS, type NavItem, type SocialLink } from "@/lib/site-config";
+import { mainNav, NAV_ICONS, TOPBAR_ICONS, type NavItem, type SocialLink } from "@/lib/site-config";
 import type { TopbarLink } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -114,17 +114,32 @@ export function Header({
   nav = mainNav,
   logoUrl = "/logo-cecomro.png",
   itseUrl = "https://www.itse.ac.pa",
+  itseTitle = "ITSE Panamá",
+  itseSubtitle = "Educación Superior",
+  itseIcon = "graduation-cap",
   circuitoUrl = "https://circuitodelcafe.com/",
+  circuitoTitle = "Circuito del Café",
+  circuitoSubtitle = "Tierras Altas • Boquete",
+  circuitoIcon = "coffee",
 }: {
   links: TopbarLink[];
   socials: SocialLink[];
   nav?: NavItem[];
   logoUrl?: string;
   itseUrl?: string;
+  itseTitle?: string;
+  itseSubtitle?: string;
+  itseIcon?: string;
   circuitoUrl?: string;
+  circuitoTitle?: string;
+  circuitoSubtitle?: string;
+  circuitoIcon?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
+
+  const ItseIcon = TOPBAR_ICONS[itseIcon] ?? GraduationCap;
+  const CircuitoIcon = TOPBAR_ICONS[circuitoIcon] ?? Coffee;
 
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
@@ -143,18 +158,18 @@ export function Header({
               href={itseUrl}
               target="_blank"
               rel="noopener noreferrer"
-              title="Instituto Técnico Superior Especializado"
+              title={itseTitle}
               className="group flex items-center gap-2 rounded-lg border border-line bg-surface/80 px-3 py-1.5 transition hover:border-primary-300"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-[10px] font-black tracking-tighter text-white">
-                ITSE
+              <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
+                <ItseIcon size={14} />
               </span>
               <span className="flex flex-col text-left">
                 <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-primary-700 transition group-hover:text-accent-500">
-                  ITSE Panamá
+                  {itseTitle}
                 </span>
                 <span className="text-[9px] font-medium text-muted">
-                  Educación Superior
+                  {itseSubtitle}
                 </span>
               </span>
             </a>
@@ -163,18 +178,18 @@ export function Header({
               href={circuitoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              title="Circuito del Café de Chiriquí"
+              title={circuitoTitle}
               className="group flex items-center gap-2.5 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-1.5 transition hover:border-amber-400"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-amber-700 to-amber-500 text-white shadow-sm">
-                <Coffee size={14} />
+                <CircuitoIcon size={14} />
               </span>
               <span className="flex flex-col text-left">
                 <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-amber-900 transition group-hover:text-accent-500">
-                  Circuito del Café
+                  {circuitoTitle}
                 </span>
                 <span className="text-[9px] font-medium text-amber-700">
-                  Tierras Altas • Boquete
+                  {circuitoSubtitle}
                 </span>
               </span>
             </a>
@@ -265,8 +280,8 @@ export function Header({
                 onClick={close}
                 className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
               >
-                <GraduationCap size={16} className="text-muted" />
-                ITSE Panamá
+                <ItseIcon size={16} className="text-muted" />
+                {itseTitle}
               </a>
               <a
                 href={circuitoUrl}
@@ -275,8 +290,8 @@ export function Header({
                 onClick={close}
                 className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
               >
-                <Coffee size={16} className="text-muted" />
-                Circuito del Café
+                <CircuitoIcon size={16} className="text-muted" />
+                {circuitoTitle}
               </a>
             </nav>
 

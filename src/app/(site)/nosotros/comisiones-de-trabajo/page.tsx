@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/site/page-header";
 import { OrgChart } from "@/components/site/org-chart";
 import { Reveal } from "@/components/site/reveal";
-import { getCommissions } from "@/lib/data";
+import { getCommissions, getCommissionMembers } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Comisiones de Trabajo" };
 
 export default async function ComisionesPage() {
-  const commissions = await getCommissions();
+  const [commissions, members] = await Promise.all([
+    getCommissions(),
+    getCommissionMembers(),
+  ]);
 
   return (
     <>
@@ -22,7 +25,7 @@ export default async function ComisionesPage() {
           {commissions.length ? (
             <Reveal>
               <div className="rounded-2xl border border-line bg-surface p-6 sm:p-10">
-                <OrgChart commissions={commissions} />
+                <OrgChart commissions={commissions} members={members} />
               </div>
             </Reveal>
           ) : (

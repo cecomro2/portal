@@ -7,6 +7,7 @@ import type {
   Associate,
   Banner,
   Commission,
+  CommissionMember,
   Consultant,
   HomeStat,
   MediaItem,
@@ -255,6 +256,21 @@ export async function getCommissions(): Promise<Commission[]> {
       .order("sort_order", { ascending: true });
     if (error) return [];
     return (data ?? []) as Commission[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getCommissionMembers(): Promise<CommissionMember[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("commission_members")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) return [];
+    return (data ?? []) as CommissionMember[];
   } catch {
     return [];
   }
@@ -648,18 +664,46 @@ export async function getMenuItems(): Promise<MenuItem[]> {
 export interface HeaderSettings {
   logo: string;
   itseUrl: string;
+  itseTitle: string;
+  itseSubtitle: string;
+  itseIcon: string;
   circuitoUrl: string;
+  circuitoTitle: string;
+  circuitoSubtitle: string;
+  circuitoIcon: string;
 }
 
 export async function getHeaderSettings(): Promise<HeaderSettings> {
-  const [logo, itseUrl, circuitoUrl] = await Promise.all([
+  const [
+    logo,
+    itseUrl,
+    itseTitle,
+    itseSubtitle,
+    itseIcon,
+    circuitoUrl,
+    circuitoTitle,
+    circuitoSubtitle,
+    circuitoIcon,
+  ] = await Promise.all([
     getSiteSetting("header_logo"),
     getSiteSetting("itse_url"),
+    getSiteSetting("itse_title"),
+    getSiteSetting("itse_subtitle"),
+    getSiteSetting("itse_icon"),
     getSiteSetting("circuito_url"),
+    getSiteSetting("circuito_title"),
+    getSiteSetting("circuito_subtitle"),
+    getSiteSetting("circuito_icon"),
   ]);
   return {
     logo: logo || "/logo-cecomro.png",
     itseUrl: itseUrl || "https://www.itse.ac.pa",
+    itseTitle: itseTitle || "ITSE Panamá",
+    itseSubtitle: itseSubtitle || "Educación Superior",
+    itseIcon: itseIcon || "graduation-cap",
     circuitoUrl: circuitoUrl || "https://circuitodelcafe.com/",
+    circuitoTitle: circuitoTitle || "Circuito del Café",
+    circuitoSubtitle: circuitoSubtitle || "Tierras Altas • Boquete",
+    circuitoIcon: circuitoIcon || "coffee",
   };
 }

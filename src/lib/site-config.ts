@@ -1,6 +1,7 @@
 import {
   Briefcase,
   Building2,
+  Coffee,
   Compass,
   ExternalLink,
   FileText,
@@ -58,6 +59,7 @@ export const TOPBAR_ICONS: Record<string, LucideIcon> = {
   globe: Globe,
   compass: Compass,
   "graduation-cap": GraduationCap,
+  coffee: Coffee,
   briefcase: Briefcase,
   "file-text": FileText,
   building: Building2,
@@ -77,6 +79,7 @@ export const TOPBAR_ICON_OPTIONS: { value: string; label: string }[] = [
   { value: "globe", label: "Sitio web" },
   { value: "compass", label: "Brújula" },
   { value: "graduation-cap", label: "Educación" },
+  { value: "coffee", label: "Café" },
   { value: "briefcase", label: "Trabajo" },
   { value: "file-text", label: "Documento" },
   { value: "building", label: "Institución" },
