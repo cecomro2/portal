@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { mainNav, NAV_ICONS, type NavItem } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
+import { SearchModal } from "@/components/site/search-modal";
 
 function NavIcon({ name, size = 15 }: { name: string; size?: number }) {
   const Icon = NAV_ICONS[name];
@@ -127,13 +128,9 @@ export function SiteNav({ nav = mainNav }: { nav?: NavItem[] }) {
             <DesktopItem key={item.href} item={item} />
           ))}
         </ul>
-        <Link
-          href="/contacto"
-          className="ml-3 inline-flex shrink-0 items-center gap-1.5 rounded bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow transition hover:bg-accent-600"
-        >
-          Involúcrate
-          <ArrowRight size={14} />
-        </Link>
+        <SearchModal
+          className="ml-3 inline-flex shrink-0 items-center gap-1.5 rounded bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/20"
+        />
       </nav>
     </div>
   );

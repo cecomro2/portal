@@ -13,7 +13,13 @@ const quickLinks = [
   { label: "Visión 2050", href: "/nuestro-trabajo/vision-2050" },
 ];
 
-export function SearchModal() {
+export function SearchModal({
+  className,
+  label = "Buscar",
+}: {
+  className?: string;
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const router = useRouter();
@@ -31,10 +37,13 @@ export function SearchModal() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 font-semibold text-slate-700 transition hover:text-accent-500"
+        className={
+          className ??
+          "flex items-center gap-1.5 font-semibold text-slate-700 transition hover:text-accent-500"
+        }
       >
-        <Search size={13} className="text-primary-600" />
-        <span>Buscar</span>
+        <Search size={13} className="shrink-0" />
+        <span>{label}</span>
       </button>
 
       {open && (

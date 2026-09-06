@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Clock, MapPin, Phone } from "lucide-react";
 import { SocialIcon } from "@/components/icons";
-import { CONTACT, MISSION } from "@/lib/site-config";
+import { CONTACT } from "@/lib/site-config";
 import type { SocialLink } from "@/lib/site-config";
 
 export function Footer({ socials }: { socials: SocialLink[] }) {
@@ -91,16 +91,6 @@ export function Footer({ socials }: { socials: SocialLink[] }) {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Misión */}
-        <div className="border-t border-slate-800 pt-6">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-accent-400">
-            Misión
-          </h3>
-          <p className="mt-2 max-w-4xl text-xs leading-relaxed text-slate-400">
-            {MISSION}
-          </p>
         </div>
 
         <div className="mt-6 flex flex-col items-center justify-between gap-2 border-t border-slate-800 pt-6 text-center text-xs text-slate-400 sm:flex-row sm:text-left">

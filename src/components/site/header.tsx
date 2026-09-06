@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  ArrowRight,
   ChevronDown,
   Coffee,
   GraduationCap,
@@ -23,19 +22,19 @@ function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
 
 function DrawerNavItem({
   item,
-  openKey,
+  openKeys,
   onToggle,
   depth = 0,
   onNavigate,
 }: {
   item: NavItem;
-  openKey: string | null;
+  openKeys: Set<string>;
   onToggle: (key: string) => void;
   depth?: number;
   onNavigate: () => void;
 }) {
   const hasChildren = Boolean(item.children?.length);
-  const isOpen = openKey === item.href;
+  const isOpen = openKeys.has(item.href);
 
   if (hasChildren) {
     return (
@@ -64,7 +63,7 @@ function DrawerNavItem({
               <DrawerNavItem
                 key={child.href}
                 item={child}
-                openKey={openKey}
+                openKeys={openKeys}
                 onToggle={onToggle}
                 depth={depth + 1}
                 onNavigate={onNavigate}
@@ -103,7 +102,7 @@ export function Header({
   nav?: NavItem[];
 }) {
   const [open, setOpen] = useState(false);
-  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
 
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
@@ -209,9 +208,14 @@ export function Header({
               <DrawerNavItem
                 key={item.href}
                 item={item}
-                openKey={openKey}
+                openKeys={openKeys}
                 onToggle={(key) =>
-                  setOpenKey((prev) => (prev === key ? null : key))
+                  setOpenKeys((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(key)) next.delete(key);
+                    else next.add(key);
+                    return next;
+                  })
                 }
                 onNavigate={close}
               />
@@ -253,15 +257,6 @@ export function Header({
                 Circuito del Café
               </a>
             </nav>
-
-            <Link
-              href="/contacto"
-              onClick={close}
-              className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-accent-500 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-accent-600"
-            >
-              Involúcrate
-              <ArrowRight size={14} />
-            </Link>
 
             <div className="mt-4 flex items-center gap-2 border-t border-line pt-4">
               {socials.map((s) => (
