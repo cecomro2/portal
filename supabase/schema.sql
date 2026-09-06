@@ -43,6 +43,7 @@ create trigger on_auth_user_created
 create table if not exists public.topbar_links (
   id uuid primary key default gen_random_uuid(),
   label text not null,
+  title text,
   href text not null,
   kind text not null default 'link' check (kind in ('link', 'search', 'social')),
   icon text,

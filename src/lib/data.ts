@@ -78,9 +78,10 @@ export const FALLBACK_TOP_LINKS: TopbarLink[] = defaultTopbarLinks.map(
   (l, i) => ({
     id: `top-${i}`,
     label: l.label,
+    title: (l as { title?: string }).title ?? null,
     href: l.href,
     kind: "link",
-    icon: null,
+    icon: (l as { icon?: string }).icon ?? null,
     sort_order: i,
     is_active: true,
     is_external: l.is_external,

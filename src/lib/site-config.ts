@@ -1,7 +1,19 @@
 import {
   Briefcase,
+  Building2,
+  Compass,
+  ExternalLink,
   FileText,
+  Globe,
+  GraduationCap,
+  Info,
+  Link2,
+  Mail,
+  MapPin,
+  Newspaper,
+  Phone,
   ShoppingCart,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import type { SocialPlatform } from "@/lib/types";
@@ -38,6 +50,43 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
   "shopping-cart": ShoppingCart,
   "file-text": FileText,
 };
+
+/** Iconos disponibles para los enlaces del top header (clave → componente). */
+export const TOPBAR_ICONS: Record<string, LucideIcon> = {
+  mail: Mail,
+  phone: Phone,
+  globe: Globe,
+  compass: Compass,
+  "graduation-cap": GraduationCap,
+  briefcase: Briefcase,
+  "file-text": FileText,
+  building: Building2,
+  users: Users,
+  newspaper: Newspaper,
+  "map-pin": MapPin,
+  info: Info,
+  "external-link": ExternalLink,
+  link: Link2,
+};
+
+/** Lista de iconos para el selector del admin (sin exponer componentes). */
+export const TOPBAR_ICON_OPTIONS: { value: string; label: string }[] = [
+  { value: "", label: "Sin icono" },
+  { value: "mail", label: "Correo" },
+  { value: "phone", label: "Teléfono" },
+  { value: "globe", label: "Sitio web" },
+  { value: "compass", label: "Brújula" },
+  { value: "graduation-cap", label: "Educación" },
+  { value: "briefcase", label: "Trabajo" },
+  { value: "file-text", label: "Documento" },
+  { value: "building", label: "Institución" },
+  { value: "users", label: "Personas" },
+  { value: "newspaper", label: "Noticias / Prensa" },
+  { value: "map-pin", label: "Ubicación" },
+  { value: "info", label: "Información" },
+  { value: "external-link", label: "Enlace externo" },
+  { value: "link", label: "Enlace" },
+];
 
 /** Menú principal (bottom menu). */
 export const mainNav: NavItem[] = [
@@ -183,9 +232,9 @@ export const defaultSocials: SocialLink[] = [
 
 /** Enlaces por defecto del top header (editables en admin). */
 export const defaultTopbarLinks = [
-  { label: "Contacto", href: "/contacto", kind: "link", icon: null, is_external: false },
-  { label: "ITSE Panamá", href: "https://itse.ac.pa", kind: "link", icon: null, is_external: true },
-  { label: "Visiones Regionales 2050", href: "/nuestro-trabajo/vision-2050", kind: "link", icon: null, is_external: false },
+  { label: "Contacto", href: "/contacto", kind: "link", icon: "mail", title: "Contacto", is_external: false },
+  { label: "ITSE Panamá", href: "https://itse.ac.pa", kind: "link", icon: "graduation-cap", title: "ITSE Panamá", is_external: true },
+  { label: "Visiones Regionales 2050", href: "/nuestro-trabajo/vision-2050", kind: "link", icon: "compass", title: "Visiones Regionales 2050", is_external: false },
 ];
 
 export const CONTACT = {

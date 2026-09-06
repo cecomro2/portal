@@ -32,22 +32,26 @@ export async function POST(req: NextRequest) {
       file.type || "application/octet-stream",
     );
 
-    // Registrar las imágenes en la galería de medios automáticamente
-    if ((file.type || "").startsWith("image/")) {
-      try {
-        const supabase = createServiceSupabase();
-        await supabase.from("media_items").insert({
-          title: file.name,
-          kind: "image",
-          file_url: stored.url,
-          file_name: file.name,
-          mime_type: file.type || null,
-          size_bytes: file.size,
-          published_at: new Date().toISOString(),
-        });
-      } catch {
-        // No bloquear la subida si falla el registro en la galería
-      }
+    // Registrar el archivo en la galería de medios automáticamente
+    // (imágenes, documentos PDF y videos).
+    try {
+      const supabase = createServiceSupabase();
+      const kind = (file.type || "").startsWith("image/")
+        ? "image"
+        : (file.type || "").startsWith("video/")
+          ? "video"
+          : "document";
+      await supabase.from("media_items").insert({
+        title: file.name,
+        kind,
+        file_url: stored.url,
+        file_name: file.name,
+        mime_type: file.type || null,
+        size_bytes: file.size,
+        published_at: new Date().toISOString(),
+      });
+    } catch {
+      // No bloquear la subida si falla el registro en la galería
     }
 
     return Response.json({

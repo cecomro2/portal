@@ -9,6 +9,7 @@ export type SocialPlatform =
 export interface TopbarLink {
   id: string;
   label: string;
+  title: string | null;
   href: string;
   kind: "link" | "search" | "social";
   icon: string | null;

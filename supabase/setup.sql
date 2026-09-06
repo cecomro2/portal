@@ -43,6 +43,7 @@ create trigger on_auth_user_created
 create table if not exists public.topbar_links (
   id uuid primary key default gen_random_uuid(),
   label text not null,
+  title text,
   href text not null,
   kind text not null default 'link' check (kind in ('link', 'search', 'social')),
   icon text,
@@ -53,6 +54,7 @@ create table if not exists public.topbar_links (
 alter table public.topbar_links enable row level security;
 drop policy if exists "topbar_select" on public.topbar_links;
 create policy "topbar_select" on public.topbar_links for select using (true);
+alter table public.topbar_links add column if not exists title text;
 
 -- ------------------------------------------------------------
 -- Banners (slides del hero)

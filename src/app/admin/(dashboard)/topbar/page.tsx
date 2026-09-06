@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deleteTopbarLink, saveTopbarLink } from "@/lib/actions/topbar";
+import { TOPBAR_ICON_OPTIONS } from "@/lib/site-config";
 import type { TopbarLink } from "@/lib/types";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
@@ -17,6 +18,7 @@ import {
 
 const empty = {
   label: "",
+  title: "",
   href: "",
   kind: "link" as "link" | "social",
   icon: "",
@@ -65,6 +67,7 @@ export default function TopbarAdminPage() {
     setEditing(l);
     setForm({
       label: l.label,
+      title: l.title ?? "",
       href: l.href,
       kind: l.kind === "social" ? "social" : "link",
       icon: l.icon ?? "",
@@ -83,9 +86,10 @@ export default function TopbarAdminPage() {
     const res = await saveTopbarLink({
       id: editing?.id,
       label: form.label,
+      title: form.title || null,
       href: form.href,
       kind: form.kind,
-      icon: form.kind === "social" ? form.icon : null,
+      icon: form.icon || null,
       sort_order: form.sort_order,
       is_active: form.is_active,
       is_external: form.is_external,
@@ -140,7 +144,7 @@ export default function TopbarAdminPage() {
 
           <form onSubmit={onSubmit} className="grid gap-4">
             <div className="grid gap-4 lg:grid-cols-2">
-              <Field label="Etiqueta *">
+              <Field label="Texto *" hint="Texto visible del enlace.">
                 <input
                   required
                   value={form.label}
@@ -148,11 +152,21 @@ export default function TopbarAdminPage() {
                   className={inputClass}
                 />
               </Field>
-              <Field label="URL *">
+              <Field label="Enlace *">
                 <input
                   required
                   value={form.href}
                   onChange={(e) => set("href", e.target.value)}
+                  className={inputClass}
+                />
+              </Field>
+              <Field
+                label="Título (tooltip)"
+                hint="Texto opcional que aparece al pasar el cursor."
+              >
+                <input
+                  value={form.title}
+                  onChange={(e) => set("title", e.target.value)}
                   className={inputClass}
                 />
               </Field>
@@ -183,15 +197,28 @@ export default function TopbarAdminPage() {
                   </select>
                 </Field>
               ) : (
-                <Field label="Orden">
-                  <input
-                    type="number"
-                    value={form.sort_order}
-                    onChange={(e) => set("sort_order", Number(e.target.value))}
+                <Field label="Icono">
+                  <select
+                    value={form.icon}
+                    onChange={(e) => set("icon", e.target.value)}
                     className={inputClass}
-                  />
+                  >
+                    {TOPBAR_ICON_OPTIONS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
                 </Field>
               )}
+              <Field label="Orden">
+                <input
+                  type="number"
+                  value={form.sort_order}
+                  onChange={(e) => set("sort_order", Number(e.target.value))}
+                  className={inputClass}
+                />
+              </Field>
             </div>
 
             <div className="flex flex-wrap gap-5">

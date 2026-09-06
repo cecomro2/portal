@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { mainNav, NAV_ICONS, type NavItem } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-import { SearchModal } from "@/components/site/search-modal";
 
 function NavIcon({ name, size = 15 }: { name: string; size?: number }) {
   const Icon = NAV_ICONS[name];
@@ -149,16 +148,13 @@ export function SiteNav({ nav = mainNav }: { nav?: NavItem[] }) {
     <div className="sticky top-0 z-40 hidden bg-primary-600 shadow-md lg:block">
       <nav
         aria-label="Navegación principal"
-        className="mx-auto flex h-12 max-w-7xl items-center justify-between px-2 xl:px-4"
+        className="mx-auto flex h-12 max-w-7xl items-center justify-center px-2 xl:px-4"
       >
         <ul className="flex h-full items-stretch">
           {nav.map((item) => (
             <DesktopItem key={item.href} item={item} />
           ))}
         </ul>
-        <SearchModal
-          className="ml-3 inline-flex shrink-0 items-center gap-1.5 rounded bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/20"
-        />
       </nav>
     </div>
   );

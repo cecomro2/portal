@@ -6,6 +6,7 @@ import { createServiceSupabase } from "@/lib/supabase/server";
 export interface TopbarInput {
   id?: string;
   label: string;
+  title: string | null;
   href: string;
   kind: "link" | "social";
   icon: string | null;
@@ -21,6 +22,7 @@ export async function saveTopbarLink(
     const supabase = createServiceSupabase();
     const payload = {
       label: input.label,
+      title: input.title || null,
       href: input.href,
       kind: input.kind,
       icon: input.icon || null,
