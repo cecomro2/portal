@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Marca Cecomro */
+  --color-primary: #2f358a;
+  --color-primary-50: #eef0fb;
+  --color-primary-100: #dce0f6;
+  --color-primary-200: #b9bfec;
+  --color-primary-300: #8e97de;
+  --color-primary-400: #5f6acb;
+  --color-primary-500: #4149ad;
+  --color-primary-600: #2f358a;
+  --color-primary-700: #272c74;
+  --color-primary-800: #20245d;
+  --color-primary-900: #191d49;
+  --color-primary-950: #10122e;
+
+  --color-accent: #c63e43;
+  --color-accent-50: #fdecec;
+  --color-accent-100: #fbd6d7;
+  --color-accent-200: #f6abad;
+  --color-accent-300: #ee7679;
+  --color-accent-400: #e35054;
+  --color-accent-500: #c63e43;
+  --color-accent-600: #a83237;
+  --color-accent-700: #88292d;
+  --color-accent-800: #6a2226;
+  --color-accent-900: #4d1b1e;
+
+  --color-ink: #1f2430;
+  --color-muted: #5b6270;
+  --color-line: #e7e9f0;
+  --color-surface: #f6f7fb;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #1f2430;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #1f2430;
+  font-family: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(47, 53, 138, 0.16);
+  color: #191d49;
+}
+
+/* Scrollbar sutil */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c4c7d8 transparent;
+}
+
+/* Texto enriquecido (descripciones de vacantes/compras, noticias, páginas) */
+.rich-text,
+.rich-text * {
+  font-family: var(--font-poppins), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif !important;
+}
+.rich-text {
+  color: #3a4151;
+  line-height: 1.75;
+  font-size: 0.975rem;
+}
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4 {
+  color: #191d49;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.25em 0 0.5em;
+}
+.rich-text h2 {
+  font-size: 1.25rem;
+}
+.rich-text h3 {
+  font-size: 1.125rem;
+}
+.rich-text p {
+  margin: 0.6em 0;
+}
+.rich-text ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin: 0.6em 0;
+}
+.rich-text ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+  margin: 0.6em 0;
+}
+.rich-text li {
+  margin: 0.25em 0;
+}
+.rich-text a {
+  color: #2f358a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rich-text a:hover {
+  color: #c63e43;
+}
+.rich-text blockquote {
+  border-left: 3px solid #c63e43;
+  padding-left: 1rem;
+  color: #5b6270;
+  margin: 1em 0;
+  font-style: italic;
+}
+.rich-text img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  height: auto;
 }
