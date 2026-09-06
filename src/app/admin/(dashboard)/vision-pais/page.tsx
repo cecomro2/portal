@@ -143,14 +143,24 @@ export default function VisionPaisAdminPage() {
     if (!file) return;
     setUploading(true);
     setError("");
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const json = await res.json();
-    setUploading(false);
-    if (!res.ok) setError(json.error ?? "Error al subir");
-    else setDUrl(json.url);
-    if (fileRef.current) fileRef.current.value = "";
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error ?? "Error al subir");
+        return;
+      }
+      setDUrl(json.url);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error al subir el archivo",
+      );
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
   }
 
   async function onSubmitDoc(e: React.FormEvent) {
@@ -253,6 +263,93 @@ export default function VisionPaisAdminPage() {
         <p className="mb-4 rounded-lg border border-accent-200 bg-accent-50 px-4 py-2.5 text-sm text-accent-700">
           {error}
         </p>
+      )}
+
+      {/* Formulario de documento */}
+      {dFormOpen && selected && (
+        <Card className="mb-6 border-accent-200">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-primary-800">
+              {editingDoc ? "Editar documento" : "Nuevo documento"}
+            </h2>
+            <button
+              onClick={() => setDFormOpen(false)}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-surface"
+              aria-label="Cerrar"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <form onSubmit={onSubmitDoc} className="grid gap-4">
+            <Field label="Etiqueta *">
+              <input
+                required
+                value={dLabel}
+                onChange={(e) => setDLabel(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="PDF *">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600"
+                  >
+                    {uploading ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <Upload size={16} />
+                    )}
+                    {dUrl ? "Cambiar PDF" : "Subir PDF"}
+                  </button>
+                  {dUrl && (
+                    <span className="truncate text-xs text-muted">
+                      PDF cargado
+                    </span>
+                  )}
+                </div>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="hidden"
+                  onChange={handleFile}
+                />
+              </Field>
+              <Field label="Orden">
+                <input
+                  type="number"
+                  value={dOrder}
+                  onChange={(e) => setDOrder(Number(e.target.value))}
+                  className={inputClass}
+                />
+              </Field>
+            </div>
+            {error && (
+              <p className="rounded-lg border border-accent-200 bg-accent-50 px-4 py-2.5 text-sm text-accent-700">
+                {error}
+              </p>
+            )}
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={saving || !dUrl}
+                className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-60"
+              >
+                {saving ? "Guardando…" : "Guardar"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDFormOpen(false)}
+                className="rounded-lg border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:bg-surface"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </Card>
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -364,88 +461,6 @@ export default function VisionPaisAdminPage() {
           )}
         </Card>
       </div>
-
-      {/* Formulario de documento */}
-      {dFormOpen && selected && (
-        <Card className="mt-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-primary-800">
-              {editingDoc ? "Editar documento" : "Nuevo documento"}
-            </h2>
-            <button
-              onClick={() => setDFormOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-surface"
-              aria-label="Cerrar"
-            >
-              <X size={18} />
-            </button>
-          </div>
-          <form onSubmit={onSubmitDoc} className="grid gap-4">
-            <Field label="Etiqueta *">
-              <input
-                required
-                value={dLabel}
-                onChange={(e) => setDLabel(e.target.value)}
-                className={inputClass}
-              />
-            </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="PDF *">
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600"
-                  >
-                    {uploading ? (
-                      <Loader2 size={16} className="animate-spin" />
-                    ) : (
-                      <Upload size={16} />
-                    )}
-                    {dUrl ? "Cambiar PDF" : "Subir PDF"}
-                  </button>
-                  {dUrl && (
-                    <span className="truncate text-xs text-muted">
-                      PDF cargado
-                    </span>
-                  )}
-                </div>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  className="hidden"
-                  onChange={handleFile}
-                />
-              </Field>
-              <Field label="Orden">
-                <input
-                  type="number"
-                  value={dOrder}
-                  onChange={(e) => setDOrder(Number(e.target.value))}
-                  className={inputClass}
-                />
-              </Field>
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={saving || !dUrl}
-                className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-60"
-              >
-                {saving ? "Guardando…" : "Guardar"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setDFormOpen(false)}
-                className="rounded-lg border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:bg-surface"
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </Card>
-      )}
     </div>
   );
 }

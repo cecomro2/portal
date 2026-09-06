@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { BannerManager } from "@/components/admin/banner-manager";
 import { CifrasManager } from "@/components/admin/cifras-manager";
+import { ActualidadManager } from "@/components/admin/actualidad-manager";
 import { cn } from "@/lib/utils";
 
 export default function EdicionInicioPage() {
-  const [tab, setTab] = useState<"banner" | "cifras">("banner");
+  const [tab, setTab] = useState<"banner" | "cifras" | "actualidad">("banner");
 
   return (
     <div>
@@ -15,6 +16,7 @@ export default function EdicionInicioPage() {
           [
             { key: "banner", label: "Banner (Slides)" },
             { key: "cifras", label: "Cifras" },
+            { key: "actualidad", label: "Actualidad" },
           ] as const
         ).map((t) => (
           <button
@@ -33,7 +35,13 @@ export default function EdicionInicioPage() {
         ))}
       </div>
 
-      {tab === "banner" ? <BannerManager /> : <CifrasManager />}
+      {tab === "banner" ? (
+        <BannerManager />
+      ) : tab === "cifras" ? (
+        <CifrasManager />
+      ) : (
+        <ActualidadManager />
+      )}
     </div>
   );
 }

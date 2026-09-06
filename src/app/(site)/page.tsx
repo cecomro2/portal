@@ -98,12 +98,25 @@ const centers = [
 ];
 
 export default async function HomePage() {
-  const [banners, posts, stats, sobreImage] = await Promise.all([
+  const [banners, posts, stats, sobreImage, newsCatsRaw] = await Promise.all([
     getBanners(),
     getPosts(),
     getHomeStats(),
     getSiteSetting("sobre_home_image"),
+    getSiteSetting("home_news_categories"),
   ]);
+
+  let selectedCats: string[] = [];
+  try {
+    selectedCats = newsCatsRaw ? (JSON.parse(newsCatsRaw) as string[]) : [];
+  } catch {
+    selectedCats = [];
+  }
+  const homePosts = selectedCats.length
+    ? posts.filter(
+        (p) => p.category_id && selectedCats.includes(p.category_id),
+      )
+    : posts;
 
   return (
     <>
@@ -318,7 +331,7 @@ export default async function HomePage() {
       </section>
 
       {/* Noticias recientes */}
-      {posts.length > 0 && (
+      {homePosts.length > 0 && (
         <section className="border-t border-line bg-white py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
@@ -342,7 +355,7 @@ export default async function HomePage() {
             </Reveal>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.slice(0, 3).map((post, i) => (
+              {homePosts.slice(0, 3).map((post, i) => (
                 <Reveal key={post.id} delay={i * 0.08}>
                   <Link
                     href={`/noticias/${post.slug}`}

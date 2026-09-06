@@ -47,6 +47,7 @@ export default function NoticiasAdminPage() {
   const [categories, setCategories] = useState<PostCategory[]>([]);
   const [query, setQuery] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Post | null>(null);
   const [form, setForm] = useState(empty);
@@ -69,6 +70,9 @@ export default function NoticiasAdminPage() {
         const hay = `${p.title} ${p.excerpt ?? ""}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
+      if (categoryFilter !== "all" && p.category_id !== categoryFilter) {
+        return false;
+      }
       if (dateFilter !== "all") {
         const d = new Date(p.published_at).getTime();
         const day = 86_400_000;
@@ -78,7 +82,7 @@ export default function NoticiasAdminPage() {
       }
       return true;
     });
-  }, [items, query, dateFilter]);
+  }, [items, query, dateFilter, categoryFilter]);
 
   function set<K extends keyof typeof empty>(key: K, value: (typeof empty)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -309,8 +313,8 @@ export default function NoticiasAdminPage() {
       )}
 
       {/* Filtros */}
-      <div className="mb-4 grid gap-3 sm:grid-cols-3">
-        <div className="relative sm:col-span-2">
+      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative lg:col-span-2">
           <Search
             size={16}
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
@@ -323,6 +327,18 @@ export default function NoticiasAdminPage() {
             className="w-full rounded-lg border border-line bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition focus:border-primary-400"
           />
         </div>
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-primary-400"
+        >
+          <option value="all">Categoría: Todas</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
         <select
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}

@@ -103,7 +103,6 @@ export const mainNav: NavItem[] = [
       { label: "Comisiones de Trabajo", href: "/nosotros/comisiones-de-trabajo" },
       { label: "Plan Estratégico", href: "/nosotros/plan-estrategico" },
       { label: "Asociados y Aliados", href: "/nosotros/asociados-y-aliados" },
-      { label: "Red de Consultores", href: "/nosotros/red-de-consultores" },
     ],
   },
   {

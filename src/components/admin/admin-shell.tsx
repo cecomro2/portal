@@ -10,7 +10,6 @@ import {
   FileText,
   FolderOpen,
   GitBranch,
-  GraduationCap,
   Handshake,
   Image as ImageIcon,
   LayoutDashboard,
@@ -55,7 +54,6 @@ const groups: NavGroup[] = [
       { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
       { href: "/admin/comisiones", label: "Comisiones", icon: GitBranch },
       { href: "/admin/asociados", label: "Asociados y Aliados", icon: Building2 },
-      { href: "/admin/consultores", label: "Red de Consultores", icon: GraduationCap },
     ],
   },
   {
