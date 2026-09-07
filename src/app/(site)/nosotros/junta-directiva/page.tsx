@@ -20,7 +20,7 @@ export default async function JuntaDirectivaPage() {
       <section className="bg-white py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {members.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
               {members.map((m, i) => (
                 <Reveal key={m.id} delay={(i % 4) * 0.06}>
                   <PersonCard person={m} />

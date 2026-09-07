@@ -58,6 +58,21 @@ export function stripHtml(html: string | null | undefined): string {
     .trim();
 }
 
+/** Normaliza texto para búsquedas: minúsculas y sin acentos. */
+export function normalize(input: string | null | undefined): string {
+  return (input ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+/** Divide una consulta en términos normalizados (ignora signos de puntuación). */
+export function searchTerms(query: string): string[] {
+  return normalize(query)
+    .split(/[^a-z0-9ñ]+/i)
+    .filter(Boolean);
+}
+
 /** Devuelve una fecha relativa en español ("hace 4 horas"). */
 export function timeAgo(iso: string | null | undefined): string {
   if (!iso) return "";

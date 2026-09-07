@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/site/page-header";
-import { PostingRow } from "@/components/site/posting-row";
-import { Reveal } from "@/components/site/reveal";
+import { VacancyList } from "@/components/site/vacancy-list";
 import { getPostings } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Vacantes AECID" };
@@ -21,19 +20,7 @@ export default async function VacantesPage() {
 
       <section className="bg-white py-12 lg:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          {postings.length ? (
-            <div className="space-y-4">
-              {postings.map((p, i) => (
-                <Reveal key={p.id} delay={i * 0.05}>
-                  <PostingRow posting={p} basePath={BASE} />
-                </Reveal>
-              ))}
-            </div>
-          ) : (
-            <p className="rounded-xl border border-dashed border-line bg-surface p-10 text-center text-muted">
-              No hay vacantes publicadas en este momento.
-            </p>
-          )}
+          <VacancyList postings={postings} basePath={BASE} />
         </div>
       </section>
     </>

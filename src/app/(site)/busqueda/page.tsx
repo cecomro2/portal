@@ -4,9 +4,16 @@ import { Search } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { PostCard } from "@/components/site/post-card";
 import { getMediaItems, getPosts } from "@/lib/data";
-import { stripHtml } from "@/lib/utils";
+import { flattenNav } from "@/lib/site-config";
+import { normalize, searchTerms, stripHtml } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Buscar" };
+
+const staticPages = [
+  ...flattenNav(),
+  { label: "Contacto", href: "/contacto" },
+  { label: "Prensa", href: "/noticias/categoria/prensa" },
+];
 
 export default async function BusquedaPage({
   searchParams,
@@ -14,38 +21,42 @@ export default async function BusquedaPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { q = "" } = await searchParams;
-  const query = q.trim().toLowerCase();
+  const terms = searchTerms(q);
 
   const [posts, media] = await Promise.all([getPosts(), getMediaItems()]);
 
-  const matchedPosts = query
+  const matches = (hay: string) =>
+    terms.length === 0 || terms.every((t) => hay.includes(t));
+
+  const matchedPosts = terms.length
     ? posts.filter((p) =>
-        [p.title, p.excerpt, stripHtml(p.content)]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(query),
+        matches(
+          normalize(`${p.title} ${p.excerpt ?? ""} ${stripHtml(p.content)}`),
+        ),
       )
     : [];
 
-  const matchedMedia = query
+  const matchedMedia = terms.length
     ? media.filter((m) =>
-        [m.title, m.description, m.file_name]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(query),
+        matches(normalize(`${m.title} ${m.description ?? ""} ${m.file_name}`)),
       )
     : [];
 
-  const total = matchedPosts.length + matchedMedia.length;
+  const matchedPages = terms.length
+    ? staticPages.filter((pg) =>
+        matches(normalize(`${pg.label} ${pg.description ?? ""}`)),
+      )
+    : [];
+
+  const total =
+    matchedPosts.length + matchedMedia.length + matchedPages.length;
 
   return (
     <>
       <PageHeader
         kicker="Cecomro"
         title="Buscar"
-        subtitle="Encuentra noticias, documentos y recursos de información."
+        subtitle="Encuentra noticias, documentos, páginas y recursos de información."
       />
 
       <section className="bg-white py-16 lg:py-20">
@@ -56,6 +67,7 @@ export default async function BusquedaPage({
               className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
             />
             <input
+              key={q}
               type="search"
               name="q"
               defaultValue={q}
@@ -64,13 +76,43 @@ export default async function BusquedaPage({
             />
           </form>
 
-          {query && (
+          {terms.length > 0 && (
             <p className="mt-6 text-sm text-muted">
               {total} resultado{total !== 1 && "s"} para «{q}»
             </p>
           )}
 
-          {query && matchedPosts.length > 0 && (
+          {matchedPages.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-lg font-bold text-primary-800">Páginas</h2>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {matchedPages.map((pg) => (
+                  <li key={pg.href}>
+                    <Link
+                      href={pg.href}
+                      className="flex items-center justify-between gap-4 rounded-xl border border-line bg-white p-4 transition hover:border-primary-200"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold text-primary-800">
+                          {pg.label}
+                        </p>
+                        {pg.description && (
+                          <p className="truncate text-sm text-muted">
+                            {pg.description}
+                          </p>
+                        )}
+                      </div>
+                      <span className="shrink-0 text-xs uppercase text-muted">
+                        Página
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {matchedPosts.length > 0 && (
             <div className="mt-8">
               <h2 className="text-lg font-bold text-primary-800">Noticias</h2>
               <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -81,7 +123,7 @@ export default async function BusquedaPage({
             </div>
           )}
 
-          {query && matchedMedia.length > 0 && (
+          {matchedMedia.length > 0 && (
             <div className="mt-10">
               <h2 className="text-lg font-bold text-primary-800">
                 Recursos de información
@@ -117,7 +159,7 @@ export default async function BusquedaPage({
             </div>
           )}
 
-          {query && total === 0 && (
+          {terms.length > 0 && total === 0 && (
             <p className="mt-12 rounded-xl border border-dashed border-line bg-surface p-10 text-center text-muted">
               No se encontraron resultados para tu búsqueda.
             </p>

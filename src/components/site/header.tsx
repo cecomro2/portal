@@ -144,7 +144,10 @@ export function Header({
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
   );
-  const close = () => setOpen(false);
+  const close = () => {
+    setOpen(false);
+    setOpenKeys(new Set());
+  };
 
   return (
     <header className="relative z-50 border-b border-line bg-white py-3.5 shadow-sm">

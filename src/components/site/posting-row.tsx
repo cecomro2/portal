@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ChevronRight, MapPin } from "lucide-react";
-import { postingStatus, stripHtml, timeAgo } from "@/lib/utils";
+import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
+import { postingStatus, stripHtml, timeAgo, formatDate } from "@/lib/utils";
 import type { Posting } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +34,20 @@ export function PostingRow({
             {open ? "Convocatoria abierta" : "Cerrada"}
           </span>
         </div>
+
+        {posting.closing_date && (
+          <p
+            className={cn(
+              "mt-2 inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold",
+              open
+                ? "bg-accent-500/10 text-accent-600"
+                : "bg-gray-100 text-gray-500",
+            )}
+          >
+            <CalendarDays size={13} className="shrink-0" />
+            Fecha de cierre: {formatDate(posting.closing_date)}
+          </p>
+        )}
 
         {posting.location && (
           <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">

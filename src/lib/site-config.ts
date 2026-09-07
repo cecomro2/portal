@@ -219,6 +219,27 @@ export function withMenu(
   });
 }
 
+export interface SearchablePage {
+  label: string;
+  href: string;
+  description?: string;
+}
+
+/** Aplana el menú en una lista de páginas buscables (solo enlaces internos). */
+export function flattenNav(nav: NavItem[] = mainNav): SearchablePage[] {
+  const out: SearchablePage[] = [];
+  const walk = (items: NavItem[]) => {
+    for (const item of items) {
+      if (item.href.startsWith("/")) {
+        out.push({ label: item.label, href: item.href });
+      }
+      if (item.children) walk(item.children);
+    }
+  };
+  walk(nav);
+  return out;
+}
+
 export interface SocialLink {
   platform: SocialPlatform;
   label: string;
