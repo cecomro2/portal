@@ -65,12 +65,14 @@ create table if not exists public.header_items (
   subtitle text,
   href text not null,
   icon text,
+  image_url text,
   sort_order int not null default 0,
   is_active boolean not null default true
 );
 alter table public.header_items enable row level security;
 drop policy if exists "header_items_select" on public.header_items;
 create policy "header_items_select" on public.header_items for select using (true);
+alter table public.header_items add column if not exists image_url text;
 
 -- Semilla: los dos elementos actuales (solo si la tabla está vacía)
 insert into public.header_items (title, subtitle, href, icon, sort_order, is_active)

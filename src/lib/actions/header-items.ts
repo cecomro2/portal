@@ -9,6 +9,7 @@ export interface HeaderItemInput {
   subtitle: string | null;
   href: string;
   icon: string | null;
+  image_url: string | null;
   sort_order: number;
   is_active: boolean;
 }
@@ -23,6 +24,7 @@ export async function saveHeaderItem(
       subtitle: input.subtitle || null,
       href: input.href,
       icon: input.icon || null,
+      image_url: input.image_url || null,
       sort_order: input.sort_order,
       is_active: input.is_active,
     };

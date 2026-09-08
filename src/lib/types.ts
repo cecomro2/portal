@@ -25,6 +25,7 @@ export interface HeaderItem {
   subtitle: string | null;
   href: string;
   icon: string | null;
+  image_url: string | null;
   sort_order: number;
   is_active: boolean;
 }

@@ -23,6 +23,7 @@ const empty = {
   subtitle: "",
   href: "",
   icon: "",
+  image_url: "",
   sort_order: 0,
   is_active: true,
 };
@@ -45,6 +46,7 @@ export default function HeaderAdminPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<HeaderItem | null>(null);
   const [form, setForm] = useState(empty);
+  const [mediaMode, setMediaMode] = useState<"icon" | "image">("icon");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -65,6 +67,7 @@ export default function HeaderAdminPage() {
   function openNew() {
     setEditing(null);
     setForm({ ...empty, sort_order: items.length + 1 });
+    setMediaMode("icon");
     setError("");
     setOpen(true);
   }
@@ -76,9 +79,11 @@ export default function HeaderAdminPage() {
       subtitle: h.subtitle ?? "",
       href: h.href,
       icon: h.icon ?? "",
+      image_url: h.image_url ?? "",
       sort_order: h.sort_order,
       is_active: h.is_active,
     });
+    setMediaMode(h.image_url ? "image" : "icon");
     setError("");
     setOpen(true);
   }
@@ -92,7 +97,8 @@ export default function HeaderAdminPage() {
       title: form.title,
       subtitle: form.subtitle || null,
       href: form.href,
-      icon: form.icon || null,
+      icon: mediaMode === "icon" ? form.icon || null : null,
+      image_url: mediaMode === "image" ? form.image_url || null : null,
       sort_order: form.sort_order,
       is_active: form.is_active,
     });
@@ -193,8 +199,31 @@ export default function HeaderAdminPage() {
                   className={inputClass}
                 />
               </Field>
-              <Field label="Icono">
-                <IconPicker value={form.icon} onChange={(v) => set("icon", v)} />
+              <Field label="Gráfico">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMediaMode("icon")}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                      mediaMode === "icon"
+                        ? "bg-primary-600 text-white"
+                        : "border border-line bg-white text-muted hover:text-primary-700"
+                    }`}
+                  >
+                    Icono
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMediaMode("image")}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                      mediaMode === "image"
+                        ? "bg-primary-600 text-white"
+                        : "border border-line bg-white text-muted hover:text-primary-700"
+                    }`}
+                  >
+                    Imagen
+                  </button>
+                </div>
               </Field>
               <Field label="Orden">
                 <input
@@ -205,6 +234,19 @@ export default function HeaderAdminPage() {
                 />
               </Field>
             </div>
+
+            {mediaMode === "icon" ? (
+              <Field label="Icono">
+                <IconPicker value={form.icon} onChange={(v) => set("icon", v)} />
+              </Field>
+            ) : (
+              <Field label="Imagen">
+                <ImageUpload
+                  value={form.image_url}
+                  onChange={(v) => set("image_url", v)}
+                />
+              </Field>
+            )}
 
             <label className="flex items-center gap-2 text-sm font-medium text-ink">
               <input

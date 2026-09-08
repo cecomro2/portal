@@ -64,6 +64,7 @@ create table if not exists public.header_items (
   subtitle text,
   href text not null,
   icon text,
+  image_url text,
   sort_order int not null default 0,
   is_active boolean not null default true
 );

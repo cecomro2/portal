@@ -145,9 +145,18 @@ export function Header({
                   title={item.title}
                   className="group flex items-center gap-2.5 rounded-lg border border-line bg-surface/80 px-3 py-1.5 transition hover:border-primary-300"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
-                    {Icon && <Icon size={14} />}
-                  </span>
+                  {item.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      className="h-7 w-7 shrink-0 rounded object-contain"
+                    />
+                  ) : (
+                    <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
+                      {Icon && <Icon size={14} />}
+                    </span>
+                  )}
                   <span className="flex flex-col text-left">
                     <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-primary-700 transition group-hover:text-accent-500">
                       {item.title}
@@ -252,7 +261,16 @@ export function Header({
                     onClick={close}
                     className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
                   >
-                    {Icon && <Icon size={16} className="text-muted" />}
+                    {item.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="h-6 w-6 shrink-0 rounded object-contain"
+                      />
+                    ) : (
+                      Icon && <Icon size={16} className="text-muted" />
+                    )}
                     {item.title}
                   </a>
                 );
