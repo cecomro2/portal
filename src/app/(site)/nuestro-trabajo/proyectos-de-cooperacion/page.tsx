@@ -4,6 +4,8 @@ import { ArrowRight, Briefcase, ShoppingCart } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
 import { ReadMorePopup } from "@/components/site/read-more-popup";
+import { PostCard } from "@/components/site/post-card";
+import { getPostsByCategory } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Proyectos de Cooperación AECID" };
 
@@ -55,7 +57,9 @@ const quickLinks = [
   },
 ];
 
-export default function ProyectosCooperacionPage() {
+export default async function ProyectosCooperacionPage() {
+  const prensa = await getPostsByCategory("prensa-aecid");
+
   return (
     <>
       <PageHeader
@@ -149,6 +153,36 @@ export default function ProyectosCooperacionPage() {
           </div>
         </div>
       </section>
+
+      {/* Prensa */}
+      {prensa.length > 0 && (
+        <section className="border-t border-line bg-white py-16 lg:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <Reveal>
+              <div className="mb-8 flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-primary-700 sm:text-3xl">
+                  Prensa
+                </h2>
+                <Link
+                  href="/noticias/categoria/prensa-aecid"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 transition hover:text-accent-500"
+                >
+                  Ver todas
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            </Reveal>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {prensa.slice(0, 6).map((post, i) => (
+                <Reveal key={post.id} delay={(i % 3) * 0.07}>
+                  <PostCard post={post} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }
