@@ -114,7 +114,7 @@ export const mainNav: NavItem[] = [
     href: "/nuestro-trabajo",
     children: [
       {
-        label: "Proyectos de Cooperación",
+        label: "Proyectos de Cooperación AECID",
         href: "/nuestro-trabajo/proyectos-de-cooperacion",
         children: [
           {

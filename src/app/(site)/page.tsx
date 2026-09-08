@@ -27,7 +27,7 @@ const axes: {
   {
     icon: Briefcase,
     color: "bg-accent-50 text-accent-500",
-    title: "Proyectos de Cooperación",
+    title: "Proyectos de Cooperación AECID",
     desc: "Gestión de fondos con organismos internacionales, vacantes de empleo y licitaciones del Portal de Compras AECID.",
     href: "/nuestro-trabajo/proyectos-de-cooperacion",
     linkLabel: "Ver Proyectos",
