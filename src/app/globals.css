@@ -56,6 +56,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Restaurar cursor de puntero en botones (Tailwind v4 usa cursor: default) */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
 ::selection {
   background: rgba(47, 53, 138, 0.16);
   color: #191d49;

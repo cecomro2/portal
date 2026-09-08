@@ -77,6 +77,13 @@ export default function VisionPaisAdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
+  // Auto-seleccionar la primera visión para que los documentos sean visibles
+  useEffect(() => {
+    if (!selected && visions.length) {
+      setSelected(visions[0]);
+    }
+  }, [visions, selected]);
+
   function openNewVision() {
     setEditingVision(null);
     setVTitle("");
@@ -373,7 +380,7 @@ export default function VisionPaisAdminPage() {
                 >
                   <button
                     onClick={() => setSelected(v)}
-                    className="min-w-0 flex-1 text-left text-sm font-medium text-ink hover:text-primary-700"
+                    className="min-w-0 flex-1 cursor-pointer text-left text-sm font-medium text-ink transition hover:text-primary-700"
                   >
                     {v.title}
                   </button>
