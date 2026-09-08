@@ -3,17 +3,11 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { PostCard } from "@/components/site/post-card";
-import { getMediaItems, getPosts } from "@/lib/data";
+import { getMediaItems, getPosts, getVisions } from "@/lib/data";
 import { flattenNav } from "@/lib/site-config";
 import { normalize, searchTerms, stripHtml } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Buscar" };
-
-const staticPages = [
-  ...flattenNav(),
-  { label: "Contacto", href: "/contacto" },
-  { label: "Prensa", href: "/noticias/categoria/prensa" },
-];
 
 export default async function BusquedaPage({
   searchParams,
@@ -23,7 +17,23 @@ export default async function BusquedaPage({
   const { q = "" } = await searchParams;
   const terms = searchTerms(q);
 
-  const [posts, media] = await Promise.all([getPosts(), getMediaItems()]);
+  const [posts, media, visions] = await Promise.all([
+    getPosts(),
+    getMediaItems(),
+    getVisions(),
+  ]);
+
+  const staticPages = [
+    ...flattenNav(),
+    ...visions.map((v) => ({
+      label: v.title,
+      href: `/vision-pais/${v.slug}`,
+      description: "Visión País 2050",
+    })),
+    { label: "Visión 2050", href: "/nuestro-trabajo/vision-2050", description: "Visiones Regionales 2050" },
+    { label: "Contacto", href: "/contacto", description: "Información de contacto" },
+    { label: "Prensa", href: "/noticias/categoria/prensa", description: "Noticias de prensa" },
+  ];
 
   const matches = (hay: string) =>
     terms.length === 0 || terms.every((t) => hay.includes(t));
