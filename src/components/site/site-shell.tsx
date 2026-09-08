@@ -1,4 +1,5 @@
 import {
+  getHeaderItems,
   getHeaderSettings,
   getMenuItems,
   getSocials,
@@ -13,13 +14,15 @@ import { Footer } from "@/components/site/footer";
 import { QuickHelp } from "@/components/site/quick-help";
 
 export async function SiteShell({ children }: { children: React.ReactNode }) {
-  const [links, socials, visions, header, menuItems] = await Promise.all([
-    getTopbarLinks(),
-    getSocials(),
-    getVisions(),
-    getHeaderSettings(),
-    getMenuItems(),
-  ]);
+  const [links, socials, visions, header, headerItems, menuItems] =
+    await Promise.all([
+      getTopbarLinks(),
+      getSocials(),
+      getVisions(),
+      getHeaderSettings(),
+      getHeaderItems(),
+      getMenuItems(),
+    ]);
 
   const nav = withVisions(visions, withMenu(menuItems));
 
@@ -31,14 +34,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
         socials={socials}
         nav={nav}
         logoUrl={header.logo}
-        itseUrl={header.itseUrl}
-        itseTitle={header.itseTitle}
-        itseSubtitle={header.itseSubtitle}
-        itseIcon={header.itseIcon}
-        circuitoUrl={header.circuitoUrl}
-        circuitoTitle={header.circuitoTitle}
-        circuitoSubtitle={header.circuitoSubtitle}
-        circuitoIcon={header.circuitoIcon}
+        items={headerItems}
       />
       <SiteNav nav={nav} />
       <main className="flex-1">{children}</main>

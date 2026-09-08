@@ -18,6 +18,17 @@ export interface TopbarLink {
   is_external: boolean;
 }
 
+/** Elemento del header principal (junto al logo). */
+export interface HeaderItem {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  href: string;
+  icon: string | null;
+  sort_order: number;
+  is_active: boolean;
+}
+
 /** Slide del hero/banner de inicio. */
 export interface Banner {
   id: string;

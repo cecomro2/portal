@@ -57,6 +57,30 @@ create policy "topbar_select" on public.topbar_links for select using (true);
 alter table public.topbar_links add column if not exists title text;
 
 -- ------------------------------------------------------------
+-- Elementos del header principal (junto al logo)
+-- ------------------------------------------------------------
+create table if not exists public.header_items (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  subtitle text,
+  href text not null,
+  icon text,
+  sort_order int not null default 0,
+  is_active boolean not null default true
+);
+alter table public.header_items enable row level security;
+drop policy if exists "header_items_select" on public.header_items;
+create policy "header_items_select" on public.header_items for select using (true);
+
+-- Semilla: los dos elementos actuales (solo si la tabla está vacía)
+insert into public.header_items (title, subtitle, href, icon, sort_order, is_active)
+select * from (values
+  ('ITSE Panamá', 'Educación Superior', 'https://www.itse.ac.pa', 'graduation-cap', 1, true),
+  ('Circuito del Café', 'Tierras Altas • Boquete', 'https://circuitodelcafe.com/', 'coffee', 2, true)
+) as seed(title, subtitle, href, icon, sort_order, is_active)
+where not exists (select 1 from public.header_items);
+
+-- ------------------------------------------------------------
 -- Banners (slides del hero)
 -- ------------------------------------------------------------
 create table if not exists public.banners (

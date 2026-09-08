@@ -2,17 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  ChevronDown,
-  Coffee,
-  GraduationCap,
-  Menu,
-  X,
-} from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { SocialIcon } from "@/components/icons";
 import { mainNav, NAV_ICONS, TOPBAR_ICONS, type NavItem, type SocialLink } from "@/lib/site-config";
-import type { TopbarLink } from "@/lib/types";
+import type { HeaderItem, TopbarLink } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
@@ -113,33 +107,16 @@ export function Header({
   socials,
   nav = mainNav,
   logoUrl = "/logo-cecomro.png",
-  itseUrl = "https://www.itse.ac.pa",
-  itseTitle = "ITSE Panamá",
-  itseSubtitle = "Educación Superior",
-  itseIcon = "graduation-cap",
-  circuitoUrl = "https://circuitodelcafe.com/",
-  circuitoTitle = "Circuito del Café",
-  circuitoSubtitle = "Tierras Altas • Boquete",
-  circuitoIcon = "coffee",
+  items = [],
 }: {
   links: TopbarLink[];
   socials: SocialLink[];
   nav?: NavItem[];
   logoUrl?: string;
-  itseUrl?: string;
-  itseTitle?: string;
-  itseSubtitle?: string;
-  itseIcon?: string;
-  circuitoUrl?: string;
-  circuitoTitle?: string;
-  circuitoSubtitle?: string;
-  circuitoIcon?: string;
+  items?: HeaderItem[];
 }) {
   const [open, setOpen] = useState(false);
   const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
-
-  const ItseIcon = TOPBAR_ICONS[itseIcon] ?? GraduationCap;
-  const CircuitoIcon = TOPBAR_ICONS[circuitoIcon] ?? Coffee;
 
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
@@ -155,47 +132,35 @@ export function Header({
         <Logo src={logoUrl} />
 
         <div className="flex items-center gap-3">
-          {/* Logos aliados (desktop) */}
+          {/* Elementos del header (desktop) */}
           <div className="hidden items-center gap-3 lg:flex">
-            <a
-              href={itseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={itseTitle}
-              className="group flex items-center gap-2 rounded-lg border border-line bg-surface/80 px-3 py-1.5 transition hover:border-primary-300"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
-                <ItseIcon size={14} />
-              </span>
-              <span className="flex flex-col text-left">
-                <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-primary-700 transition group-hover:text-accent-500">
-                  {itseTitle}
-                </span>
-                <span className="text-[9px] font-medium text-muted">
-                  {itseSubtitle}
-                </span>
-              </span>
-            </a>
-
-            <a
-              href={circuitoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={circuitoTitle}
-              className="group flex items-center gap-2.5 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-1.5 transition hover:border-amber-400"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-amber-700 to-amber-500 text-white shadow-sm">
-                <CircuitoIcon size={14} />
-              </span>
-              <span className="flex flex-col text-left">
-                <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-amber-900 transition group-hover:text-accent-500">
-                  {circuitoTitle}
-                </span>
-                <span className="text-[9px] font-medium text-amber-700">
-                  {circuitoSubtitle}
-                </span>
-              </span>
-            </a>
+            {items.map((item) => {
+              const Icon = item.icon ? TOPBAR_ICONS[item.icon] : null;
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={item.title}
+                  className="group flex items-center gap-2.5 rounded-lg border border-line bg-surface/80 px-3 py-1.5 transition hover:border-primary-300"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
+                    {Icon && <Icon size={14} />}
+                  </span>
+                  <span className="flex flex-col text-left">
+                    <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-primary-700 transition group-hover:text-accent-500">
+                      {item.title}
+                    </span>
+                    {item.subtitle && (
+                      <span className="text-[9px] font-medium text-muted">
+                        {item.subtitle}
+                      </span>
+                    )}
+                  </span>
+                </a>
+              );
+            })}
           </div>
 
           {/* Hamburguesa (móvil) */}
@@ -276,26 +241,22 @@ export function Header({
                   {l.label}
                 </Link>
               ))}
-              <a
-                href={itseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={close}
-                className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
-              >
-                <ItseIcon size={16} className="text-muted" />
-                {itseTitle}
-              </a>
-              <a
-                href={circuitoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={close}
-                className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
-              >
-                <CircuitoIcon size={16} className="text-muted" />
-                {circuitoTitle}
-              </a>
+              {items.map((item) => {
+                const Icon = item.icon ? TOPBAR_ICONS[item.icon] : null;
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={close}
+                    className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ink transition hover:bg-surface"
+                  >
+                    {Icon && <Icon size={16} className="text-muted" />}
+                    {item.title}
+                  </a>
+                );
+              })}
             </nav>
 
             <div className="mt-4 flex items-center gap-2 border-t border-line pt-4">
