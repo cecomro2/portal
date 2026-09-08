@@ -31,25 +31,42 @@ function DrawerNavItem({
   const isOpen = openKeys.has(item.href);
 
   if (hasChildren) {
+    const labelClasses = cn(
+      "flex flex-1 items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
+      depth === 0 ? "text-ink" : "text-muted",
+    );
     return (
       <div>
-        <button
-          type="button"
-          onClick={() => onToggle(item.href)}
-          className={cn(
-            "flex w-full items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
-            depth === 0 ? "text-ink" : "text-muted",
+        <div className="flex items-center">
+          {item.href.startsWith("http") ? (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onNavigate}
+              className={labelClasses}
+            >
+              {item.icon && <NavIcon name={item.icon} />}
+              {item.label}
+            </a>
+          ) : (
+            <Link href={item.href} onClick={onNavigate} className={labelClasses}>
+              {item.icon && <NavIcon name={item.icon} />}
+              {item.label}
+            </Link>
           )}
-        >
-          <span className="flex flex-1 items-center gap-2">
-            {item.icon && <NavIcon name={item.icon} />}
-            {item.label}
-          </span>
-          <ChevronDown
-            size={16}
-            className={cn("shrink-0 text-muted transition", isOpen && "rotate-180")}
-          />
-        </button>
+          <button
+            type="button"
+            onClick={() => onToggle(item.href)}
+            aria-label={isOpen ? "Contraer submenú" : "Expandir submenú"}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
+          >
+            <ChevronDown
+              size={16}
+              className={cn("transition", isOpen && "rotate-180")}
+            />
+          </button>
+        </div>
 
         {isOpen && (
           <div className="mb-2 ml-3 border-l border-line pl-3">
