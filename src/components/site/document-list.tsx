@@ -33,19 +33,10 @@ export function DocumentList({ documents }: { documents: DocItem[] }) {
                 </span>
               </span>
               <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
-                <a
-                  href={doc.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-primary-700 md:hidden"
-                >
-                  <Eye size={15} />
-                  Ver Documento (PDF)
-                </a>
                 <button
                   type="button"
                   onClick={() => setOpenId(open ? null : doc.id)}
-                  className="hidden items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-primary-700 md:inline-flex"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-primary-700"
                 >
                   <Eye size={15} />
                   {open ? "Ocultar" : "Ver Documento (PDF)"}
@@ -60,7 +51,7 @@ export function DocumentList({ documents }: { documents: DocItem[] }) {
             </div>
 
             {open && (
-              <div className="hidden border-t border-line bg-white md:block">
+              <div className="border-t border-line bg-white">
                 <iframe
                   src={doc.file_url}
                   title={doc.label}
