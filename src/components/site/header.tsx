@@ -16,19 +16,21 @@ function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
 
 function DrawerNavItem({
   item,
+  pathKey,
   openKey,
   onToggle,
   depth = 0,
   onNavigate,
 }: {
   item: NavItem;
+  pathKey: string;
   openKey: string | null;
   onToggle: (key: string) => void;
   depth?: number;
   onNavigate: () => void;
 }) {
   const hasChildren = Boolean(item.children?.length);
-  const isOpen = openKey === item.href;
+  const isOpen = openKey === pathKey;
 
   if (hasChildren) {
     const labelClasses = cn(
@@ -57,7 +59,7 @@ function DrawerNavItem({
           )}
           <button
             type="button"
-            onClick={() => onToggle(item.href)}
+            onClick={() => onToggle(pathKey)}
             aria-label={isOpen ? "Contraer submenú" : "Expandir submenú"}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
           >
@@ -72,8 +74,9 @@ function DrawerNavItem({
           <div className="mb-2 ml-3 border-l border-line pl-3">
             {item.children!.map((child) => (
               <DrawerNavItem
-                key={child.href}
+                key={`${pathKey}/${child.href}`}
                 item={child}
+                pathKey={`${pathKey}/${child.href}`}
                 openKey={openKey}
                 onToggle={onToggle}
                 depth={depth + 1}
@@ -239,6 +242,7 @@ export function Header({
               <DrawerNavItem
                 key={item.href}
                 item={item}
+                pathKey={item.href}
                 openKey={openKey}
                 onToggle={(key) =>
                   setOpenKey((prev) => (prev === key ? null : key))
