@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -44,8 +45,50 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
+function DropdownChild({ child }: { child: NavItem }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const active = isActive(pathname, child.href);
+  const hasChildren = Boolean(child.children?.length);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <NavLink
+        href={child.href}
+        className={cn(
+          "flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition",
+          active
+            ? "bg-primary-50 font-semibold text-primary-700"
+            : "text-ink hover:bg-surface hover:text-primary-700",
+        )}
+      >
+        <span className="flex items-center gap-2">
+          {child.icon && <NavIcon name={child.icon} />}
+          {child.label}
+        </span>
+        {hasChildren && <ChevronRight size={14} className="text-muted" />}
+      </NavLink>
+
+      {open && hasChildren && (
+        <div className="absolute left-full top-0 z-50 pl-1">
+          <div className="min-w-[220px] rounded-xl border-l-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
+            {child.children!.map((gc) => (
+              <DropdownChild key={gc.href} child={gc} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DesktopItem({ item }: { item: NavItem }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   const active = isActive(pathname, item.href);
 
   if (!item.children?.length) {
@@ -68,7 +111,11 @@ function DesktopItem({ item }: { item: NavItem }) {
   }
 
   return (
-    <div className="group relative flex h-full items-center">
+    <div
+      className="relative flex h-full items-center"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         type="button"
         className={cn(
@@ -79,48 +126,14 @@ function DesktopItem({ item }: { item: NavItem }) {
         )}
       >
         {item.label}
-        <ChevronDown size={14} className="transition group-hover:rotate-180" />
+        <ChevronDown size={14} className={cn("transition", open && "rotate-180")} />
       </button>
 
-      <div className="invisible absolute left-0 top-full z-50 min-w-[240px] translate-y-2 pt-1 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-        <div className="rounded-b-xl border-t-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
-          {item.children.map((child) => (
-            <DropdownChild key={child.href} child={child} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DropdownChild({ child }: { child: NavItem }) {
-  const pathname = usePathname();
-  const active = isActive(pathname, child.href);
-  const hasChildren = Boolean(child.children?.length);
-
-  return (
-    <div className="group/sub relative">
-      <NavLink
-        href={child.href}
-        className={cn(
-          "flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition",
-          active
-            ? "bg-primary-50 font-semibold text-primary-700"
-            : "text-ink hover:bg-surface hover:text-primary-700",
-        )}
-      >
-        <span className="flex items-center gap-2">
-          {child.icon && <NavIcon name={child.icon} />}
-          {child.label}
-        </span>
-        {hasChildren && <ChevronRight size={14} className="text-muted" />}
-      </NavLink>
-
-      {hasChildren && (
-        <div className="invisible absolute left-full top-0 z-50 ml-0 min-w-[220px] -translate-x-1 pl-1 opacity-0 transition-all duration-150 group-hover/sub:visible group-hover/sub:translate-x-0 group-hover/sub:opacity-100">
-          <div className="rounded-xl border-l-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
-            {child.children!.map((gc) => (
-              <DropdownChild key={gc.href} child={gc} />
+      {open && (
+        <div className="absolute left-0 top-full z-50 pt-1">
+          <div className="min-w-[240px] rounded-b-xl border-t-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
+            {item.children.map((child) => (
+              <DropdownChild key={child.href} child={child} />
             ))}
           </div>
         </div>
