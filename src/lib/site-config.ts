@@ -142,12 +142,15 @@ const ejecutadosAreas: NavItem[] = [
     { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
   ]),
   areaItem("ejecutados", "gobernabilidad"),
+  areaItem("ejecutados", "logistica", [
+    { label: "Cadenas de Valor Panamá-Costa Rica", href: "/nuestro-trabajo/ejecutados/logistica/cadenas-de-valor" },
+  ]),
 ];
 
 const impulsamosAreas: NavItem[] = [
   areaItem("impulsamos", "agro", [
     { label: "Política Agroalimentaria de Estado", href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf" },
-    { label: "CBI", href: "/noticias/categoria/agro" },
+    { label: "CBI", href: "/nuestro-trabajo/impulsamos/agro/cbi" },
   ]),
   areaItem("impulsamos", "educacion"),
   areaItem("impulsamos", "turismo"),

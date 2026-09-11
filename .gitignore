@@ -46,6 +46,8 @@ next-env.d.ts
 /imgs varias/
 /PDFs/
 /pila pagina/
+/cadenas de valor/
+/agro/
 
 # datos intermedios de scraping
 scripts/boletines.json
