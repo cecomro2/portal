@@ -98,6 +98,7 @@ export const AREA_TITLES: Record<string, string> = {
   turismo: "Turismo",
   "gestion-territorial": "Gestión Territorial",
   gobernabilidad: "Gobernabilidad",
+  logistica: "Logística",
 };
 
 /** Etiquetas de los grupos de proyectos. */
@@ -152,6 +153,9 @@ const impulsamosAreas: NavItem[] = [
   areaItem("impulsamos", "turismo"),
   areaItem("impulsamos", "gestion-territorial"),
   areaItem("impulsamos", "gobernabilidad"),
+  areaItem("impulsamos", "logistica", [
+    { label: "PILA", href: "/nuestro-trabajo/impulsamos/logistica/pila" },
+  ]),
 ];
 
 /** Bloque AECID (va aparte dentro de "Proyectos en Ejecución"). */
