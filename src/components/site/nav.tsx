@@ -54,9 +54,7 @@ function itemIsActive(item: NavItem, pathname: string): boolean {
 }
 
 function DropdownChild({ child }: { child: NavItem }) {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const active = itemIsActive(child, pathname);
   const hasChildren = Boolean(child.children?.length);
 
   return (
@@ -67,12 +65,7 @@ function DropdownChild({ child }: { child: NavItem }) {
     >
       <NavLink
         href={child.href}
-        className={cn(
-          "flex items-center justify-between gap-3 px-4 py-2.5 text-sm transition",
-          active
-            ? "bg-primary-50 font-semibold text-primary-700"
-            : "text-ink hover:bg-surface hover:text-primary-700",
-        )}
+        className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink transition hover:bg-surface hover:text-primary-700"
       >
         <span className="flex items-center gap-2">
           {child.icon && <NavIcon name={child.icon} />}
