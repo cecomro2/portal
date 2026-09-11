@@ -157,6 +157,11 @@ export const mainNav: NavItem[] = [
           { label: "CBI", href: "/noticias/categoria/agro", badge: "Agro" },
         ],
       },
+      {
+        label: "Visión País",
+        href: "/vision-pais",
+        children: [],
+      },
     ],
   },
   {
