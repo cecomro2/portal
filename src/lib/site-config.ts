@@ -42,7 +42,6 @@ export interface NavItem {
   label: string;
   href: string;
   icon?: string;
-  badge?: string;
   children?: NavItem[];
 }
 
@@ -92,6 +91,33 @@ export const TOPBAR_ICON_OPTIONS: { value: string; label: string }[] = [
   { value: "link", label: "Enlace" },
 ];
 
+/** Submenú común de áreas para los tres grupos de proyectos. */
+const areasSubmenu: NavItem[] = [
+  { label: "Agro", href: "/nuestro-trabajo/agro" },
+  { label: "Educación", href: "/nuestro-trabajo/educacion" },
+  { label: "Turismo", href: "/nuestro-trabajo/turismo" },
+  { label: "Gestión Territorial", href: "/nuestro-trabajo/gestion-territorial" },
+  { label: "Gobernabilidad", href: "/nuestro-trabajo/gobernabilidad" },
+];
+
+/** Bloque AECID (va aparte dentro de "Proyectos en Ejecución"). */
+const aecidSubmenu: NavItem = {
+  label: "Proyectos de Cooperación AECID",
+  href: "/nuestro-trabajo/proyectos-de-cooperacion",
+  children: [
+    {
+      label: "Vacantes AECID",
+      href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
+      icon: "briefcase",
+    },
+    {
+      label: "Portal de Compras AECID",
+      href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid",
+      icon: "shopping-cart",
+    },
+  ],
+};
+
 /** Menú principal (bottom menu). */
 export const mainNav: NavItem[] = [
   { key: "inicio", label: "Inicio", href: "/" },
@@ -116,46 +142,17 @@ export const mainNav: NavItem[] = [
       {
         label: "Proyectos en Ejecución",
         href: "/nuestro-trabajo/proyectos-de-cooperacion",
-        children: [
-          {
-            label: "Proyectos de Cooperación AECID",
-            href: "/nuestro-trabajo/proyectos-de-cooperacion",
-          },
-          {
-            label: "Vacantes AECID",
-            href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
-            icon: "briefcase",
-          },
-          {
-            label: "Portal de Compras AECID",
-            href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid",
-            icon: "shopping-cart",
-          },
-        ],
+        children: [...areasSubmenu, aecidSubmenu],
       },
       {
         label: "Proyectos Ejecutados",
         href: "/nuestro-trabajo",
-        children: [
-          { label: "PIASI", href: "/nuestro-trabajo/piasi", badge: "Agro" },
-          { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe", badge: "Turismo" },
-          { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com", badge: "Turismo" },
-          { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica", badge: "Turismo" },
-          { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid", badge: "AECID" },
-        ],
+        children: [...areasSubmenu],
       },
       {
         label: "Proyectos que Impulsamos",
         href: "/nuestro-trabajo",
-        children: [
-          { label: "PIASI", href: "/nuestro-trabajo/piasi", badge: "Agro" },
-          {
-            label: "Política Agroalimentaria de Estado",
-            href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf",
-            badge: "Enlace",
-          },
-          { label: "CBI", href: "/noticias/categoria/agro", badge: "Agro" },
-        ],
+        children: [...areasSubmenu],
       },
       {
         label: "Visión País",

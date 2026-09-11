@@ -11,26 +11,6 @@ function NavIcon({ name, size = 15 }: { name: string; size?: number }) {
   return Icon ? <Icon size={size} className="text-muted" /> : null;
 }
 
-const BADGE_COLORS: Record<string, string> = {
-  Agro: "bg-emerald-100 text-emerald-700",
-  Turismo: "bg-amber-100 text-amber-700",
-  AECID: "bg-primary-100 text-primary-700",
-  Enlace: "bg-gray-100 text-gray-600",
-};
-
-function Badge({ text }: { text?: string }) {
-  if (!text) return null;
-  return (
-    <span
-      className={`ml-1.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
-        BADGE_COLORS[text] ?? "bg-gray-100 text-gray-600"
-      }`}
-    >
-      {text}
-    </span>
-  );
-}
-
 function NavLink({
   href,
   className,
@@ -132,7 +112,6 @@ function DropdownChild({ child }: { child: NavItem }) {
         <span className="flex items-center gap-2">
           {child.icon && <NavIcon name={child.icon} />}
           {child.label}
-          <Badge text={child.badge} />
         </span>
         {hasGrandchildren && (
           <ChevronRight size={14} className="text-muted" />
@@ -155,7 +134,6 @@ function DropdownChild({ child }: { child: NavItem }) {
               >
                 {gc.icon && <NavIcon name={gc.icon} />}
                 {gc.label}
-                <Badge text={gc.badge} />
               </NavLink>
             ))}
           </div>
