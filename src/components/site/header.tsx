@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { SocialIcon } from "@/components/icons";
 import { mainNav, NAV_ICONS, TOPBAR_ICONS, type NavItem, type SocialLink } from "@/lib/site-config";
@@ -17,20 +17,20 @@ function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
 function DrawerNavItem({
   item,
   pathKey,
-  openKey,
+  openPaths,
   onToggle,
   depth = 0,
   onNavigate,
 }: {
   item: NavItem;
   pathKey: string;
-  openKey: string | null;
-  onToggle: (key: string) => void;
+  openPaths: string[];
+  onToggle: (key: string, depth: number) => void;
   depth?: number;
   onNavigate: () => void;
 }) {
   const hasChildren = Boolean(item.children?.length);
-  const isOpen = openKey === pathKey;
+  const isOpen = openPaths[depth] === pathKey;
 
   if (hasChildren) {
     return (
@@ -38,7 +38,7 @@ function DrawerNavItem({
         <div className="flex items-center">
           <button
             type="button"
-            onClick={() => onToggle(pathKey)}
+            onClick={() => onToggle(pathKey, depth)}
             className={cn(
               "flex flex-1 items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
               depth === 0 ? "text-ink" : "text-muted",
@@ -51,28 +51,6 @@ function DrawerNavItem({
               className={cn("ml-auto text-muted transition", isOpen && "rotate-180")}
             />
           </button>
-
-          {item.href.startsWith("http") ? (
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onNavigate}
-              aria-label={`Ir a ${item.label}`}
-              className="flex h-10 w-9 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
-            >
-              <ArrowUpRight size={15} />
-            </a>
-          ) : (
-            <Link
-              href={item.href}
-              onClick={onNavigate}
-              aria-label={`Ir a ${item.label}`}
-              className="flex h-10 w-9 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
-            >
-              <ArrowUpRight size={15} />
-            </Link>
-          )}
         </div>
 
         {isOpen && (
@@ -82,7 +60,7 @@ function DrawerNavItem({
                 key={`${pathKey}/${child.href}`}
                 item={child}
                 pathKey={`${pathKey}/${child.href}`}
-                openKey={openKey}
+                openPaths={openPaths}
                 onToggle={onToggle}
                 depth={depth + 1}
                 onNavigate={onNavigate}
@@ -141,14 +119,14 @@ export function Header({
   items?: HeaderItem[];
 }) {
   const [open, setOpen] = useState(false);
-  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [openPaths, setOpenPaths] = useState<string[]>([]);
 
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
   );
   const close = () => {
     setOpen(false);
-    setOpenKey(null);
+    setOpenPaths([]);
   };
 
   return (
@@ -248,9 +226,16 @@ export function Header({
                 key={item.href}
                 item={item}
                 pathKey={item.href}
-                openKey={openKey}
-                onToggle={(key) =>
-                  setOpenKey((prev) => (prev === key ? null : key))
+                openPaths={openPaths}
+                onToggle={(key, depth) =>
+                  setOpenPaths((prev) => {
+                    if (prev[depth] === key) {
+                      return prev.slice(0, depth);
+                    }
+                    const next = prev.slice(0, depth + 1);
+                    next[depth] = key;
+                    return next;
+                  })
                 }
                 onNavigate={close}
               />
