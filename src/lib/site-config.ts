@@ -127,7 +127,6 @@ const impulsamosAreas: NavItem[] = [
   {
     ...area.agro,
     children: [
-      { label: "PIASI", href: "/nuestro-trabajo/piasi" },
       { label: "Política Agroalimentaria de Estado", href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf" },
       { label: "CBI", href: "/noticias/categoria/agro" },
     ],

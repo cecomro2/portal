@@ -45,10 +45,18 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
+/** Un ítem es activo si una de sus hojas coincide con la ruta actual. */
+function itemIsActive(item: NavItem, pathname: string): boolean {
+  if (item.children?.length) {
+    return item.children.some((c) => itemIsActive(c, pathname));
+  }
+  return isActive(pathname, item.href);
+}
+
 function DropdownChild({ child }: { child: NavItem }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const active = isActive(pathname, child.href);
+  const active = itemIsActive(child, pathname);
   const hasChildren = Boolean(child.children?.length);
 
   return (
@@ -89,7 +97,7 @@ function DropdownChild({ child }: { child: NavItem }) {
 function DesktopItem({ item }: { item: NavItem }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const active = isActive(pathname, item.href);
+  const active = itemIsActive(item, pathname);
 
   if (!item.children?.length) {
     return (
