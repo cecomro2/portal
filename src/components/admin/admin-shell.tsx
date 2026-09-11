@@ -9,8 +9,6 @@ import {
   Compass,
   FileText,
   FolderOpen,
-  GitBranch,
-  Handshake,
   Image as ImageIcon,
   LayoutDashboard,
   LogOut,
@@ -52,7 +50,6 @@ const groups: NavGroup[] = [
     items: [
       { href: "/admin/junta", label: "Junta Directiva", icon: Users },
       { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
-      { href: "/admin/comisiones", label: "Comisiones", icon: GitBranch },
       { href: "/admin/asociados", label: "Asociados y Aliados", icon: Building2 },
     ],
   },

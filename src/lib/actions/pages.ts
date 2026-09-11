@@ -12,8 +12,6 @@ const pagePaths: Record<string, string> = {
   "gestion-territorial": "/nuestro-trabajo/gestion-territorial",
   gobernabilidad: "/nuestro-trabajo/gobernabilidad",
   estudios: "/nuestro-trabajo/estudios",
-  cecomce: "/red-de-centros/cecomce",
-  cecomcro: "/red-de-centros/cecomcro",
 };
 
 export async function savePage(

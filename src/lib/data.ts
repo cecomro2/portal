@@ -6,8 +6,6 @@ import {
 import type {
   Associate,
   Banner,
-  Commission,
-  CommissionMember,
   Consultant,
   HeaderItem,
   HomeStat,
@@ -242,36 +240,6 @@ async function listPersons(table: "board_members" | "executive_team") {
       .order("sort_order", { ascending: true });
     if (error) return [];
     return (data ?? []) as Person[];
-  } catch {
-    return [];
-  }
-}
-
-export async function getCommissions(): Promise<Commission[]> {
-  if (!isSupabaseConfigured) return [];
-  try {
-    const supabase = createPublicSupabase();
-    const { data, error } = await supabase
-      .from("commissions")
-      .select("*")
-      .order("sort_order", { ascending: true });
-    if (error) return [];
-    return (data ?? []) as Commission[];
-  } catch {
-    return [];
-  }
-}
-
-export async function getCommissionMembers(): Promise<CommissionMember[]> {
-  if (!isSupabaseConfigured) return [];
-  try {
-    const supabase = createPublicSupabase();
-    const { data, error } = await supabase
-      .from("commission_members")
-      .select("*")
-      .order("sort_order", { ascending: true });
-    if (error) return [];
-    return (data ?? []) as CommissionMember[];
   } catch {
     return [];
   }
@@ -642,9 +610,8 @@ export const FALLBACK_MENU: MenuItem[] = [
   { key: "inicio", label: "Inicio", href: "/", sort_order: 1 },
   { key: "nosotros", label: "Nosotros", href: "/nosotros/quienes-somos", sort_order: 2 },
   { key: "trabajo", label: "Nuestro Trabajo", href: "/nuestro-trabajo", sort_order: 3 },
-  { key: "red", label: "Red de Centros Regionales", href: "/red-de-centros", sort_order: 4 },
-  { key: "recursos", label: "Recursos de Información", href: "/recursos-de-informacion", sort_order: 5 },
-  { key: "noticias", label: "Noticias", href: "/noticias", sort_order: 6 },
+  { key: "recursos", label: "Recursos de Información", href: "/recursos-de-informacion", sort_order: 4 },
+  { key: "noticias", label: "Noticias", href: "/noticias", sort_order: 5 },
 ];
 
 export async function getMenuItems(): Promise<MenuItem[]> {

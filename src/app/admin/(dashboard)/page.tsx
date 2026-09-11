@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   Briefcase,
-  GitBranch,
   Image as ImageIcon,
   Newspaper,
   ShoppingCart,
@@ -17,7 +16,6 @@ const quickLinks = [
   { href: "/admin/compras", label: "Portal de Compras", icon: ShoppingCart },
   { href: "/admin/junta", label: "Junta Directiva", icon: Users },
   { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
-  { href: "/admin/comisiones", label: "Comisiones", icon: GitBranch },
   { href: "/admin/galeria", label: "Galería de medios", icon: ImageIcon },
   { href: "/admin/noticias", label: "Noticias", icon: Newspaper },
 ];

@@ -27,11 +27,18 @@ export default function ContactoPage() {
                   </span>
                   <div>
                     <h3 className="font-semibold text-primary-800">Ubicación</h3>
-                    {CONTACT.location.map((l) => (
-                      <p key={l} className="text-sm text-muted">
-                        {l}
-                      </p>
-                    ))}
+                    <a
+                      href={CONTACT.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 block transition hover:text-accent-500"
+                    >
+                      {CONTACT.location.map((l) => (
+                        <p key={l} className="text-sm text-muted">
+                          {l}
+                        </p>
+                      ))}
+                    </a>
                   </div>
                 </div>
 

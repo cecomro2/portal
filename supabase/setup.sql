@@ -161,31 +161,6 @@ drop policy if exists "team_select" on public.executive_team;
 create policy "team_select" on public.executive_team for select using (true);
 
 -- ------------------------------------------------------------
--- Comisiones de trabajo (organigrama)
--- ------------------------------------------------------------
-create table if not exists public.commissions (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  description text,
-  parent_id uuid references public.commissions(id) on delete cascade,
-  sort_order int not null default 0
-);
-alter table public.commissions enable row level security;
-drop policy if exists "commissions_select" on public.commissions;
-create policy "commissions_select" on public.commissions for select using (true);
-
-create table if not exists public.commission_members (
-  id uuid primary key default gen_random_uuid(),
-  commission_id uuid not null references public.commissions(id) on delete cascade,
-  name text not null,
-  photo_url text,
-  sort_order int not null default 0
-);
-alter table public.commission_members enable row level security;
-drop policy if exists "commission_members_select" on public.commission_members;
-create policy "commission_members_select" on public.commission_members for select using (true);
-
--- ------------------------------------------------------------
 -- Galería de medios
 -- ------------------------------------------------------------
 create table if not exists public.media_items (

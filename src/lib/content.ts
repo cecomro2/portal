@@ -74,8 +74,6 @@ export const EDITABLE_PAGES: { slug: string; title: string; path: string }[] = [
   { slug: "gestion-territorial", title: "Gestión Territorial", path: "/nuestro-trabajo/gestion-territorial" },
   { slug: "gobernabilidad", title: "Gobernabilidad", path: "/nuestro-trabajo/gobernabilidad" },
   { slug: "estudios", title: "Estudios", path: "/nuestro-trabajo/estudios" },
-  { slug: "cecomce", title: "CECOMCE", path: "/red-de-centros/cecomce" },
-  { slug: "cecomcro", title: "CECOMCRO", path: "/red-de-centros/cecomcro" },
 ];
 
 export const PLACEHOLDER_PAGE = {

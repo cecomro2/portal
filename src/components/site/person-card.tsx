@@ -12,7 +12,7 @@ function initials(name: string) {
 export function PersonCard({ person }: { person: Person }) {
   return (
     <div className="group overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative aspect-[4/4] overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200">
+      <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200">
         {person.photo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

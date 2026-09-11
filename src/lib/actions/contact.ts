@@ -1,6 +1,6 @@
 "use server";
 
-import { sendEmail } from "@/lib/resend";
+import { sendEmail } from "@/lib/mailer";
 
 export interface ContactResult {
   ok: boolean;
@@ -32,7 +32,13 @@ export async function submitContact(formData: FormData): Promise<ContactResult> 
   `;
 
   const result = await sendEmail({
-    to: process.env.CONTACT_EMAIL ?? "info@cecomro.com",
+    to: "direccionejecutiva@cecomro.page",
+    cc: [
+      "cecomro@gmail.com",
+      "mgsr.sandoya@gmail.com",
+      "info@cecomro.com",
+      "cecomro2@gmail.com",
+    ],
     subject: `[Contacto] ${subject || "Nuevo mensaje"}`,
     html,
     replyTo: email,

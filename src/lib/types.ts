@@ -80,24 +80,6 @@ export interface Person {
   is_active: boolean;
 }
 
-/** Nodo del organigrama de Comisiones de Trabajo. */
-export interface Commission {
-  id: string;
-  name: string;
-  description: string | null;
-  parent_id: string | null;
-  sort_order: number;
-}
-
-/** Persona miembro de una comisión de trabajo. */
-export interface CommissionMember {
-  id: string;
-  commission_id: string;
-  name: string;
-  photo_url: string | null;
-  sort_order: number;
-}
-
 export type MediaKind = "image" | "document" | "video";
 
 export interface MediaItem {

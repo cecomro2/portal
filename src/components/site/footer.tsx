@@ -32,13 +32,18 @@ export function Footer({ socials }: { socials: SocialLink[] }) {
               <MapPin size={14} className="text-accent-400" />
               Ubicación
             </h3>
-            <p className="mt-3 space-y-0.5 text-xs leading-relaxed text-slate-300">
+            <a
+              href={CONTACT.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 block space-y-0.5 text-xs leading-relaxed text-slate-300 transition hover:text-accent-400"
+            >
               {CONTACT.location.map((l) => (
                 <span key={l} className="block">
                   {l}
                 </span>
               ))}
-            </p>
+            </a>
           </div>
 
           {/* Horario */}

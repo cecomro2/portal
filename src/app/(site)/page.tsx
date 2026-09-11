@@ -78,25 +78,6 @@ const axes: {
   },
 ];
 
-const centers = [
-  {
-    code: "CCE",
-    name: "CECOMCE",
-    region: "Colón y Región Oriental",
-    desc: "Impulso a la logística portuaria, zona franca y desarrollo productivo caribeño.",
-    href: "/red-de-centros/cecomce",
-    color: "bg-primary-600",
-  },
-  {
-    code: "CCR",
-    name: "CECOMCRO",
-    region: "Región Central",
-    desc: "Fomento agroindustrial y comercial para Coclé, Herrera, Los Santos y Veraguas.",
-    href: "/red-de-centros/cecomcro",
-    color: "bg-accent-500",
-  },
-];
-
 export default async function HomePage() {
   const [banners, posts, stats, sobreImage, newsCatsRaw] = await Promise.all([
     getBanners(),
@@ -282,48 +263,6 @@ export default async function HomePage() {
                     )}
                   </div>
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Red de Centros Regionales */}
-      <section className="bg-white py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="mx-auto mb-8 max-w-xl text-center">
-              <p className="text-xs font-bold uppercase tracking-widest text-accent-500">
-                Articulación Nacional
-              </p>
-              <h2 className="mt-1 text-xl font-bold text-primary-700 sm:text-2xl">
-                Red de Centros Regionales
-              </h2>
-            </div>
-          </Reveal>
-
-          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-            {centers.map((c, i) => (
-              <Reveal key={c.name} delay={i * 0.08}>
-                <Link
-                  href={c.href}
-                  className="block rounded-2xl border border-line bg-surface p-6 transition hover:border-primary-300 hover:bg-white hover:shadow-sm"
-                >
-                  <div className="mb-2 flex items-center gap-3">
-                    <span
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold text-white ${c.color}`}
-                    >
-                      {c.code}
-                    </span>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900">
-                        {c.name}
-                      </h3>
-                      <p className="text-[11px] text-muted">{c.region}</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-600">{c.desc}</p>
-                </Link>
               </Reveal>
             ))}
           </div>

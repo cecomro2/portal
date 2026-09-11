@@ -36,11 +36,11 @@ export default async function NoticiaPage({
     <article className="bg-white">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <Link
-          href="/noticias"
+          href={category ? `/noticias/categoria/${category.slug}` : "/noticias"}
           className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 transition hover:text-accent-500"
         >
           <ArrowLeft size={16} />
-          Volver a Noticias
+          Volver a {category?.name ?? "Noticias"}
         </Link>
 
         <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted">

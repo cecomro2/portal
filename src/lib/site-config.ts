@@ -103,7 +103,6 @@ export const mainNav: NavItem[] = [
       { label: "Misión", href: "/nosotros/mision" },
       { label: "Junta Directiva", href: "/nosotros/junta-directiva" },
       { label: "Equipo Ejecutivo", href: "/nosotros/equipo-ejecutivo" },
-      { label: "Comisiones de Trabajo", href: "/nosotros/comisiones-de-trabajo" },
       { label: "Plan Estratégico", href: "/nosotros/plan-estrategico" },
       { label: "Asociados y Aliados", href: "/nosotros/asociados-y-aliados" },
     ],
@@ -158,15 +157,6 @@ export const mainNav: NavItem[] = [
         ],
       },
       { label: "Estudios", href: "/nuestro-trabajo/estudios" },
-    ],
-  },
-  {
-    key: "red",
-    label: "Red de Centros Regionales",
-    href: "/red-de-centros",
-    children: [
-      { label: "CECOMCE", href: "https://www.cecomce.com/" },
-      { label: "CECOMCRO", href: "https://www.instagram.com/fcecomcro/?hl=en" },
     ],
   },
   {
@@ -261,9 +251,16 @@ export const defaultTopbarLinks = [
 ];
 
 export const CONTACT = {
-  location: ["Edificio Brencan", "Calle B Norte", "David, Chiriquí"],
+  location: [
+    "Plaza Felipe Rodríguez",
+    "Calle Felipe Rodríguez",
+    "Piso #2",
+    "David, Chiriquí",
+  ],
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Plaza%20Felipe%20Rodr%C3%ADguez%20David%20Chiriqu%C3%AD%20Panam%C3%A1",
   hours: ["Lunes a Viernes: 8:00 am a 5:00 pm", "Sábado: 9:00 am a 12:00 md"],
-  phones: ["+507 6079-1889"],
+  phones: ["+507 6728-9192"],
 } as const;
 
 export const MISSION =
