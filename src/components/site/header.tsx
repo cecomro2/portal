@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { SocialIcon } from "@/components/icons";
 import { mainNav, NAV_ICONS, TOPBAR_ICONS, type NavItem, type SocialLink } from "@/lib/site-config";
@@ -33,41 +33,46 @@ function DrawerNavItem({
   const isOpen = openKey === pathKey;
 
   if (hasChildren) {
-    const labelClasses = cn(
-      "flex flex-1 items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
-      depth === 0 ? "text-ink" : "text-muted",
-    );
     return (
       <div>
         <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => onToggle(pathKey)}
+            className={cn(
+              "flex flex-1 items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
+              depth === 0 ? "text-ink" : "text-muted",
+            )}
+          >
+            {item.icon && <NavIcon name={item.icon} />}
+            {item.label}
+            <ChevronDown
+              size={16}
+              className={cn("ml-auto text-muted transition", isOpen && "rotate-180")}
+            />
+          </button>
+
           {item.href.startsWith("http") ? (
             <a
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
               onClick={onNavigate}
-              className={labelClasses}
+              aria-label={`Ir a ${item.label}`}
+              className="flex h-10 w-9 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
             >
-              {item.icon && <NavIcon name={item.icon} />}
-              {item.label}
+              <ArrowUpRight size={15} />
             </a>
           ) : (
-            <Link href={item.href} onClick={onNavigate} className={labelClasses}>
-              {item.icon && <NavIcon name={item.icon} />}
-              {item.label}
+            <Link
+              href={item.href}
+              onClick={onNavigate}
+              aria-label={`Ir a ${item.label}`}
+              className="flex h-10 w-9 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
+            >
+              <ArrowUpRight size={15} />
             </Link>
           )}
-          <button
-            type="button"
-            onClick={() => onToggle(pathKey)}
-            aria-label={isOpen ? "Contraer submenú" : "Expandir submenú"}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-surface hover:text-primary-700"
-          >
-            <ChevronDown
-              size={16}
-              className={cn("transition", isOpen && "rotate-180")}
-            />
-          </button>
         </div>
 
         {isOpen && (
