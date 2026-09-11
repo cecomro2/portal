@@ -45,6 +45,7 @@ next-env.d.ts
 # staging areas for files to be moved into public/
 /imgs varias/
 /PDFs/
+/pila pagina/
 
 # datos intermedios de scraping
 scripts/boletines.json
