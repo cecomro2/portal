@@ -42,6 +42,7 @@ export interface NavItem {
   label: string;
   href: string;
   icon?: string;
+  badge?: string;
   children?: NavItem[];
 }
 
@@ -113,9 +114,13 @@ export const mainNav: NavItem[] = [
     href: "/nuestro-trabajo",
     children: [
       {
-        label: "Proyectos de Cooperación AECID",
+        label: "Proyectos en Ejecución",
         href: "/nuestro-trabajo/proyectos-de-cooperacion",
         children: [
+          {
+            label: "Proyectos de Cooperación AECID",
+            href: "/nuestro-trabajo/proyectos-de-cooperacion",
+          },
           {
             label: "Vacantes AECID",
             href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
@@ -129,34 +134,29 @@ export const mainNav: NavItem[] = [
         ],
       },
       {
-        label: "Visión País",
-        href: "/vision-pais",
-        children: [],
-      },
-      { label: "Educación", href: "/nuestro-trabajo/educacion" },
-      { label: "Agro", href: "/nuestro-trabajo/agro" },
-      {
-        label: "Turismo",
-        href: "/nuestro-trabajo/turismo",
+        label: "Proyectos Ejecutados",
+        href: "/nuestro-trabajo",
         children: [
-          { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
-          { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
-          { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
+          { label: "PIASI", href: "/nuestro-trabajo/piasi", badge: "Agro" },
+          { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe", badge: "Turismo" },
+          { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com", badge: "Turismo" },
+          { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica", badge: "Turismo" },
+          { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid", badge: "AECID" },
         ],
       },
-      { label: "Gestión Territorial", href: "/nuestro-trabajo/gestion-territorial" },
       {
-        label: "Gobernabilidad",
-        href: "/nuestro-trabajo/gobernabilidad",
+        label: "Proyectos que Impulsamos",
+        href: "/nuestro-trabajo",
         children: [
+          { label: "PIASI", href: "/nuestro-trabajo/piasi", badge: "Agro" },
           {
-            label: "Síntesis Diagnósticos Provinciales",
-            href: "/nuestro-trabajo/gobernabilidad/sintesis-diagnosticos-provinciales",
-            icon: "file-text",
+            label: "Política Agroalimentaria de Estado",
+            href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf",
+            badge: "Enlace",
           },
+          { label: "CBI", href: "/noticias/categoria/agro", badge: "Agro" },
         ],
       },
-      { label: "Estudios", href: "/nuestro-trabajo/estudios" },
     ],
   },
   {

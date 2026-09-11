@@ -14,6 +14,26 @@ function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
   return Icon ? <Icon size={size} className="text-muted" /> : null;
 }
 
+const BADGE_COLORS: Record<string, string> = {
+  Agro: "bg-emerald-100 text-emerald-700",
+  Turismo: "bg-amber-100 text-amber-700",
+  AECID: "bg-primary-100 text-primary-700",
+  Enlace: "bg-gray-100 text-gray-600",
+};
+
+function Badge({ text }: { text?: string }) {
+  if (!text) return null;
+  return (
+    <span
+      className={`ml-1.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
+        BADGE_COLORS[text] ?? "bg-gray-100 text-gray-600"
+      }`}
+    >
+      {text}
+    </span>
+  );
+}
+
 function DrawerNavItem({
   item,
   openKeys,
@@ -48,11 +68,13 @@ function DrawerNavItem({
             >
               {item.icon && <NavIcon name={item.icon} />}
               {item.label}
+              <Badge text={item.badge} />
             </a>
           ) : (
             <Link href={item.href} onClick={onNavigate} className={labelClasses}>
               {item.icon && <NavIcon name={item.icon} />}
               {item.label}
+              <Badge text={item.badge} />
             </Link>
           )}
           <button
@@ -101,6 +123,7 @@ function DrawerNavItem({
         >
           {item.icon && <NavIcon name={item.icon} />}
           {item.label}
+              <Badge text={item.badge} />
         </a>
       ) : (
         <Link
@@ -113,6 +136,7 @@ function DrawerNavItem({
         >
           {item.icon && <NavIcon name={item.icon} />}
           {item.label}
+              <Badge text={item.badge} />
         </Link>
       )}
     </div>
