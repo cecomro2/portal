@@ -16,19 +16,19 @@ function NavIcon({ name, size = 16 }: { name: string; size?: number }) {
 
 function DrawerNavItem({
   item,
-  openKeys,
+  openKey,
   onToggle,
   depth = 0,
   onNavigate,
 }: {
   item: NavItem;
-  openKeys: Set<string>;
+  openKey: string | null;
   onToggle: (key: string) => void;
   depth?: number;
   onNavigate: () => void;
 }) {
   const hasChildren = Boolean(item.children?.length);
-  const isOpen = openKeys.has(item.href);
+  const isOpen = openKey === item.href;
 
   if (hasChildren) {
     const labelClasses = cn(
@@ -74,7 +74,7 @@ function DrawerNavItem({
               <DrawerNavItem
                 key={child.href}
                 item={child}
-                openKeys={openKeys}
+                openKey={openKey}
                 onToggle={onToggle}
                 depth={depth + 1}
                 onNavigate={onNavigate}
@@ -133,14 +133,14 @@ export function Header({
   items?: HeaderItem[];
 }) {
   const [open, setOpen] = useState(false);
-  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   const navLinks = links.filter(
     (l) => l.kind === "link" && l.is_active && !/itse/i.test(l.label),
   );
   const close = () => {
     setOpen(false);
-    setOpenKeys(new Set());
+    setOpenKey(null);
   };
 
   return (
@@ -239,14 +239,9 @@ export function Header({
               <DrawerNavItem
                 key={item.href}
                 item={item}
-                openKeys={openKeys}
+                openKey={openKey}
                 onToggle={(key) =>
-                  setOpenKeys((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(key)) next.delete(key);
-                    else next.add(key);
-                    return next;
-                  })
+                  setOpenKey((prev) => (prev === key ? null : key))
                 }
                 onNavigate={close}
               />

@@ -91,13 +91,51 @@ export const TOPBAR_ICON_OPTIONS: { value: string; label: string }[] = [
   { value: "link", label: "Enlace" },
 ];
 
-/** Submenú común de áreas para los tres grupos de proyectos. */
-const areasSubmenu: NavItem[] = [
-  { label: "Agro", href: "/nuestro-trabajo/agro" },
-  { label: "Educación", href: "/nuestro-trabajo/educacion" },
-  { label: "Turismo", href: "/nuestro-trabajo/turismo" },
-  { label: "Gestión Territorial", href: "/nuestro-trabajo/gestion-territorial" },
-  { label: "Gobernabilidad", href: "/nuestro-trabajo/gobernabilidad" },
+/** Áreas base (enlaces directos). */
+const area = {
+  agro: { label: "Agro", href: "/nuestro-trabajo/agro" },
+  educacion: { label: "Educación", href: "/nuestro-trabajo/educacion" },
+  turismo: { label: "Turismo", href: "/nuestro-trabajo/turismo" },
+  gestion: { label: "Gestión Territorial", href: "/nuestro-trabajo/gestion-territorial" },
+  gobernabilidad: { label: "Gobernabilidad", href: "/nuestro-trabajo/gobernabilidad" },
+};
+
+const enEjecucionAreas: NavItem[] = [
+  area.agro,
+  area.educacion,
+  area.turismo,
+  area.gestion,
+  area.gobernabilidad,
+];
+
+const ejecutadosAreas: NavItem[] = [
+  { ...area.agro, children: [{ label: "PIASI", href: "/nuestro-trabajo/piasi" }] },
+  area.educacion,
+  {
+    ...area.turismo,
+    children: [
+      { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
+      { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
+      { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
+    ],
+  },
+  { ...area.gestion, children: [{ label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" }] },
+  area.gobernabilidad,
+];
+
+const impulsamosAreas: NavItem[] = [
+  {
+    ...area.agro,
+    children: [
+      { label: "PIASI", href: "/nuestro-trabajo/piasi" },
+      { label: "Política Agroalimentaria de Estado", href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf" },
+      { label: "CBI", href: "/noticias/categoria/agro" },
+    ],
+  },
+  area.educacion,
+  area.turismo,
+  area.gestion,
+  area.gobernabilidad,
 ];
 
 /** Bloque AECID (va aparte dentro de "Proyectos en Ejecución"). */
@@ -142,17 +180,17 @@ export const mainNav: NavItem[] = [
       {
         label: "Proyectos en Ejecución",
         href: "/nuestro-trabajo/proyectos-de-cooperacion",
-        children: [...areasSubmenu, aecidSubmenu],
+        children: [...enEjecucionAreas, aecidSubmenu],
       },
       {
         label: "Proyectos Ejecutados",
         href: "/nuestro-trabajo",
-        children: [...areasSubmenu],
+        children: ejecutadosAreas,
       },
       {
         label: "Proyectos que Impulsamos",
         href: "/nuestro-trabajo",
-        children: [...areasSubmenu],
+        children: impulsamosAreas,
       },
       {
         label: "Visión País",

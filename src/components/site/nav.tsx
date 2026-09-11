@@ -96,7 +96,7 @@ function DesktopItem({ item }: { item: NavItem }) {
 function DropdownChild({ child }: { child: NavItem }) {
   const pathname = usePathname();
   const active = isActive(pathname, child.href);
-  const hasGrandchildren = Boolean(child.children?.length);
+  const hasChildren = Boolean(child.children?.length);
 
   return (
     <div className="group/sub relative">
@@ -113,28 +113,14 @@ function DropdownChild({ child }: { child: NavItem }) {
           {child.icon && <NavIcon name={child.icon} />}
           {child.label}
         </span>
-        {hasGrandchildren && (
-          <ChevronRight size={14} className="text-muted" />
-        )}
+        {hasChildren && <ChevronRight size={14} className="text-muted" />}
       </NavLink>
 
-      {hasGrandchildren && (
+      {hasChildren && (
         <div className="invisible absolute left-full top-0 z-50 ml-0 min-w-[220px] -translate-x-1 pl-1 opacity-0 transition-all duration-150 group-hover/sub:visible group-hover/sub:translate-x-0 group-hover/sub:opacity-100">
           <div className="rounded-xl border-l-2 border-accent-500 bg-white py-2 shadow-xl ring-1 ring-black/5">
             {child.children!.map((gc) => (
-              <NavLink
-                key={gc.href}
-                href={gc.href}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2.5 text-sm transition",
-                  isActive(pathname, gc.href)
-                    ? "bg-primary-50 font-semibold text-primary-700"
-                    : "text-ink hover:bg-surface hover:text-primary-700",
-                )}
-              >
-                {gc.icon && <NavIcon name={gc.icon} />}
-                {gc.label}
-              </NavLink>
+              <DropdownChild key={gc.href} child={gc} />
             ))}
           </div>
         </div>

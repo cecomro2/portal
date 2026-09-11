@@ -51,6 +51,7 @@ const axes: {
     desc: "Modernización del agro con IICA, tecnificación de cadenas de frío, innovación agrotech y apertura de mercados.",
     href: "/nuestro-trabajo/agro",
     linkLabel: "Iniciativas Agrícolas",
+    subs: [{ label: "PIASI", href: "/nuestro-trabajo/piasi" }],
   },
   {
     icon: Coffee,
@@ -59,6 +60,11 @@ const axes: {
     desc: "Desarrollo y consolidación del Circuito del Café, agroturismo, senderismo en Tierras Altas y turismo cultural.",
     href: "/nuestro-trabajo/turismo",
     linkLabel: "Circuito del Café",
+    subs: [
+      { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
+      { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
+      { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
+    ],
   },
   {
     icon: GraduationCap,
@@ -75,6 +81,9 @@ const axes: {
     desc: "Infraestructura logística, proyectos de puertos multimodales, monitoreo urbano y publicaciones estadísticas.",
     href: "/nuestro-trabajo/gestion-territorial",
     linkLabel: "Territorio e Infraestructura",
+    subs: [
+      { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
+    ],
   },
 ];
 
