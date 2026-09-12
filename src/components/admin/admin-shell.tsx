@@ -10,6 +10,7 @@ import {
   FileText,
   FolderOpen,
   Image as ImageIcon,
+  Key,
   LayoutDashboard,
   Layers,
   LogOut,
@@ -33,7 +34,10 @@ interface NavGroup {
 const groups: NavGroup[] = [
   {
     label: "General",
-    items: [{ href: "/admin", label: "Panel", icon: LayoutDashboard }],
+    items: [
+      { href: "/admin", label: "Panel", icon: LayoutDashboard },
+      { href: "/admin/contrasena", label: "Cambiar contraseña", icon: Key },
+    ],
   },
   {
     label: "Contenido",
