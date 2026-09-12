@@ -91,72 +91,20 @@ export const TOPBAR_ICON_OPTIONS: { value: string; label: string }[] = [
   { value: "link", label: "Enlace" },
 ];
 
-/** Títulos de las áreas (usados en el menú y en las páginas de grupo). */
-export const AREA_TITLES: Record<string, string> = {
-  agro: "Agro",
-  educacion: "Educación",
-  turismo: "Turismo",
-  "gestion-territorial": "Gestión Territorial",
-  gobernabilidad: "Gobernabilidad",
-  logistica: "Logística",
-};
-
-/** Etiquetas de los grupos de proyectos. */
-export const GRUPO_LABELS: Record<string, string> = {
-  "en-ejecucion": "Proyectos en Ejecución",
-  ejecutados: "Proyectos Ejecutados",
-  impulsamos: "Proyectos que Impulsamos",
-};
-
-function areaItem(
-  grupo: string,
-  areaSlug: string,
-  children?: NavItem[],
-): NavItem {
-  return {
-    label: AREA_TITLES[areaSlug] ?? areaSlug,
-    href: `/nuestro-trabajo/${grupo}/${areaSlug}`,
-    children,
-  };
-}
-
-const enEjecucionAreas: NavItem[] = [
-  areaItem("en-ejecucion", "agro"),
-  areaItem("en-ejecucion", "educacion"),
-  areaItem("en-ejecucion", "turismo"),
-  areaItem("en-ejecucion", "gestion-territorial"),
-  areaItem("en-ejecucion", "gobernabilidad"),
+/** Ítems directos de "Proyectos Ejecutados". */
+const ejecutadosItems: NavItem[] = [
+  { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
+  { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
+  { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
+  { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
+  { label: "Cadenas de Valor Panamá-Costa Rica", href: "/nuestro-trabajo/ejecutados/logistica/cadenas-de-valor" },
 ];
 
-const ejecutadosAreas: NavItem[] = [
-  areaItem("ejecutados", "agro"),
-  areaItem("ejecutados", "educacion"),
-  areaItem("ejecutados", "turismo", [
-    { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
-    { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
-    { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
-  ]),
-  areaItem("ejecutados", "gestion-territorial", [
-    { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
-  ]),
-  areaItem("ejecutados", "gobernabilidad"),
-  areaItem("ejecutados", "logistica", [
-    { label: "Cadenas de Valor Panamá-Costa Rica", href: "/nuestro-trabajo/ejecutados/logistica/cadenas-de-valor" },
-  ]),
-];
-
-const impulsamosAreas: NavItem[] = [
-  areaItem("impulsamos", "agro", [
-    { label: "Política Agroalimentaria de Estado", href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf" },
-    { label: "CBI", href: "/nuestro-trabajo/impulsamos/agro/cbi" },
-  ]),
-  areaItem("impulsamos", "educacion"),
-  areaItem("impulsamos", "turismo"),
-  areaItem("impulsamos", "gestion-territorial"),
-  areaItem("impulsamos", "gobernabilidad"),
-  areaItem("impulsamos", "logistica", [
-    { label: "PILA", href: "/nuestro-trabajo/impulsamos/logistica/pila" },
-  ]),
+/** Ítems directos de "Proyectos que Impulsamos". */
+const impulsamosItems: NavItem[] = [
+  { label: "Política Agroalimentaria de Estado", href: "https://www.caf.com/es/actualidad/noticias/panama-sanciona-ley-de-politica-agroalimentaria-de-estado-que-impulsara-su-competitividad-con-el-apoyo-de-caf" },
+  { label: "CBI", href: "/nuestro-trabajo/impulsamos/agro/cbi" },
+  { label: "PILA", href: "/nuestro-trabajo/impulsamos/logistica/pila" },
 ];
 
 /** Bloque AECID (va primero dentro de "Proyectos en Ejecución"). */
@@ -206,17 +154,17 @@ export const mainNav: NavItem[] = [
       {
         label: "Proyectos en Ejecución",
         href: "#en-ejecucion",
-        children: [aecidSubmenu, ...enEjecucionAreas],
+        children: [aecidSubmenu],
       },
       {
         label: "Proyectos Ejecutados",
         href: "#ejecutados",
-        children: ejecutadosAreas,
+        children: ejecutadosItems,
       },
       {
         label: "Proyectos que Impulsamos",
         href: "#impulsamos",
-        children: impulsamosAreas,
+        children: impulsamosItems,
       },
       {
         label: "Visión País",

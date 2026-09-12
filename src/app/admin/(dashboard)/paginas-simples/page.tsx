@@ -17,9 +17,12 @@ import {
   inputClass,
 } from "@/components/admin/ui";
 
-const parentOptions = flattenNav()
-  .filter((p) => p.href.startsWith("/"))
-  .map((p) => p.href);
+const parentOptions = [
+  "#en-ejecucion",
+  "#ejecutados",
+  "#impulsamos",
+  ...flattenNav().filter((p) => p.href.startsWith("/")).map((p) => p.href),
+];
 
 export default function SimplePagesAdminPage() {
   const router = useRouter();
@@ -67,7 +70,7 @@ export default function SimplePagesAdminPage() {
     setEditingPage(null);
     setPTitle("");
     setPPath("");
-    setPParent("/nuestro-trabajo/ejecutados/agro");
+    setPParent("#ejecutados");
     setPContent("");
     setPOrder(pages.length + 1);
     setPActive(true);
@@ -165,7 +168,7 @@ export default function SimplePagesAdminPage() {
               </Field>
               <Field
                 label="Ruta (URL) *"
-                hint="Ruta completa, ej: /nuestro-trabajo/ejecutados/agro/piasi"
+                hint="Ruta completa, ej: /nuestro-trabajo/ejecutados/piasi"
               >
                 <input
                   required
@@ -178,14 +181,14 @@ export default function SimplePagesAdminPage() {
             </div>
             <Field
               label="Ubicación en el menú (href del padre) *"
-              hint="La página se anida bajo el item del menú con este enlace."
+              hint="Grupos: #en-ejecucion, #ejecutados o #impulsamos. También un href de menú."
             >
               <input
                 required
                 list="parent-href-options"
                 value={pParent}
                 onChange={(e) => setPParent(e.target.value)}
-                placeholder="/nuestro-trabajo/ejecutados/agro"
+                placeholder="#ejecutados"
                 className={inputClass}
               />
               <datalist id="parent-href-options">

@@ -7,7 +7,7 @@
 insert into public.simple_pages (title, path, content, parent_href, sort_order, is_active) values
   ('PIASI', '/nuestro-trabajo/ejecutados/agro/piasi',
    '<div class="sp-split"><div><h3 class="sp-heading">Proyecto PIASI</h3><p class="sp-text">Agregue aquí la descripción del proyecto.</p></div><div class="sp-docs"><div class="sp-doc"><span class="sp-doc__icon">PDF</span><span class="sp-doc__label">Documento PIASI</span><a class="sp-btn sp-btn--primary" href="#" target="_blank" rel="noopener">Ver Documento (PDF)</a><a class="sp-btn sp-btn--outline" href="#" download>Descargar</a></div></div></div>',
-   '/nuestro-trabajo/ejecutados/agro', 1, true)
+   '#ejecutados', 1, true)
 on conflict (path) do nothing;
 
 -- Junta Directiva
