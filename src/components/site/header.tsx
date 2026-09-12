@@ -30,7 +30,16 @@ function DrawerNavItem({
   onNavigate: () => void;
 }) {
   const hasChildren = Boolean(item.children?.length);
+  const isHeader = !hasChildren && item.href.startsWith("#");
   const isOpen = openPaths[depth] === pathKey;
+
+  if (isHeader) {
+    return (
+      <div className="py-2 text-[11px] font-bold uppercase tracking-wider text-muted">
+        {item.label}
+      </div>
+    );
+  }
 
   if (hasChildren) {
     return (

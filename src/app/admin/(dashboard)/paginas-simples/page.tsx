@@ -21,6 +21,23 @@ const parentOptions = [
   "#en-ejecucion",
   "#ejecutados",
   "#impulsamos",
+  "#en-ejecucion-agro",
+  "#en-ejecucion-educacion",
+  "#en-ejecucion-turismo",
+  "#en-ejecucion-gestion-territorial",
+  "#en-ejecucion-gobernabilidad",
+  "#ejecutados-agro",
+  "#ejecutados-educacion",
+  "#ejecutados-turismo",
+  "#ejecutados-gestion-territorial",
+  "#ejecutados-gobernabilidad",
+  "#ejecutados-logistica",
+  "#impulsamos-agro",
+  "#impulsamos-educacion",
+  "#impulsamos-turismo",
+  "#impulsamos-gestion-territorial",
+  "#impulsamos-gobernabilidad",
+  "#impulsamos-logistica",
   ...flattenNav().filter((p) => p.href.startsWith("/")).map((p) => p.href),
 ];
 
@@ -70,7 +87,7 @@ export default function SimplePagesAdminPage() {
     setEditingPage(null);
     setPTitle("");
     setPPath("");
-    setPParent("#ejecutados");
+    setPParent("#ejecutados-agro");
     setPContent("");
     setPOrder(pages.length + 1);
     setPActive(true);

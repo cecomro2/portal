@@ -56,6 +56,7 @@ function itemIsActive(item: NavItem, pathname: string): boolean {
 function DropdownChild({ child }: { child: NavItem }) {
   const [open, setOpen] = useState(false);
   const hasChildren = Boolean(child.children?.length);
+  const isHeader = !hasChildren && child.href.startsWith("#");
 
   const content = (
     <>
@@ -66,6 +67,14 @@ function DropdownChild({ child }: { child: NavItem }) {
       {hasChildren && <ChevronRight size={14} className="text-muted" />}
     </>
   );
+
+  if (isHeader) {
+    return (
+      <div className="px-4 pb-1 pt-3 text-[11px] font-bold uppercase tracking-wider text-muted">
+        {child.label}
+      </div>
+    );
+  }
 
   return (
     <div
