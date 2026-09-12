@@ -16,6 +16,7 @@ export interface PostInput {
   author: string;
   images: { image_url: string }[];
   files: { file_name: string; file_url: string }[];
+  videos: { title: string | null; video_url: string }[];
 }
 
 export async function savePost(
@@ -80,6 +81,19 @@ export async function savePost(
           post_id: id,
           file_name: f.file_name,
           file_url: f.file_url,
+          sort_order: i,
+        })),
+      );
+    }
+
+    // Reemplazar videos
+    await supabase.from("post_videos").delete().eq("post_id", id);
+    if (input.videos.length) {
+      await supabase.from("post_videos").insert(
+        input.videos.map((v, i) => ({
+          post_id: id,
+          title: v.title || null,
+          video_url: v.video_url,
           sort_order: i,
         })),
       );

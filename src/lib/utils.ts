@@ -31,6 +31,15 @@ export function slugify(input: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** Extrae el ID de un video de YouTube desde distintos formatos de URL. */
+export function youtubeId(url: string): string | null {
+  if (!url) return null;
+  const m = url.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  return m ? m[1] : null;
+}
+
 /** Formatea un tamaño en bytes a una cadena legible. */
 export function formatBytes(bytes: number): string {
   if (!bytes || bytes <= 0) return "0 B";

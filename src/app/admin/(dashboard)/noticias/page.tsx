@@ -19,6 +19,7 @@ import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
 import { FileUpload, type UploadedFile } from "@/components/admin/file-upload";
+import { VideoList, type VideoItem } from "@/components/admin/video-list";
 
 const empty = {
   title: "",
@@ -31,6 +32,7 @@ const empty = {
   author: "",
   images: [] as string[],
   files: [] as UploadedFile[],
+  videos: [] as VideoItem[],
 };
 
 export default function NoticiasAdminPage() {
@@ -97,7 +99,7 @@ export default function NoticiasAdminPage() {
 
   async function openEdit(p: Post) {
     const supabase = createBrowserSupabase();
-    const [{ data: imgs }, { data: files }] = await Promise.all([
+    const [{ data: imgs }, { data: files }, { data: videos }] = await Promise.all([
       supabase
         .from("post_images")
         .select("image_url")
@@ -105,6 +107,11 @@ export default function NoticiasAdminPage() {
         .order("sort_order"),
       supabase
         .from("post_files")
+        .select("*")
+        .eq("post_id", p.id)
+        .order("sort_order"),
+      supabase
+        .from("post_videos")
         .select("*")
         .eq("post_id", p.id)
         .order("sort_order"),
@@ -124,6 +131,10 @@ export default function NoticiasAdminPage() {
         file_name: f.file_name,
         file_url: f.file_url,
         mime_type: f.mime_type,
+      })),
+      videos: (videos ?? []).map((v) => ({
+        title: v.title,
+        video_url: v.video_url,
       })),
     });
     setError("");
@@ -148,6 +159,7 @@ export default function NoticiasAdminPage() {
       author: form.author,
       images: form.images.map((url) => ({ image_url: url })),
       files: form.files,
+      videos: form.videos,
     });
     setSaving(false);
     if (!res.ok) {
@@ -273,6 +285,16 @@ export default function NoticiasAdminPage() {
               <FileUpload
                 value={form.files}
                 onChange={(files) => set("files", files)}
+              />
+            </Field>
+
+            <Field
+              label="Videos (YouTube)"
+              hint="Agrega uno o más videos; se insertan como reproductores embebidos."
+            >
+              <VideoList
+                value={form.videos}
+                onChange={(videos) => set("videos", videos)}
               />
             </Field>
 

@@ -132,6 +132,14 @@ export interface PostFile {
   sort_order: number;
 }
 
+export interface PostVideo {
+  id: string;
+  post_id: string;
+  title: string | null;
+  video_url: string;
+  sort_order: number;
+}
+
 export interface Associate {
   id: string;
   name: string;

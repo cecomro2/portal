@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays } from "lucide-react";
-import { getCategories, getPostBySlug, getPostFiles, getPostImages } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+import { getCategories, getPostBySlug, getPostFiles, getPostImages, getPostVideos } from "@/lib/data";
+import { formatDate, youtubeId } from "@/lib/utils";
 import { DocumentList } from "@/components/site/document-list";
 
 export async function generateMetadata({
@@ -25,10 +25,11 @@ export default async function NoticiaPage({
   const post = await getPostBySlug(slug);
   if (!post || !post.is_published) notFound();
 
-  const [categories, images, files] = await Promise.all([
+  const [categories, images, files, videos] = await Promise.all([
     getCategories(),
     getPostImages(post.id),
     getPostFiles(post.id),
+    getPostVideos(post.id),
   ]);
   const category = categories.find((c) => c.id === post.category_id);
 
@@ -101,6 +102,38 @@ export default async function NoticiaPage({
                 file_url: f.file_url,
               }))}
             />
+          </div>
+        )}
+
+        {videos.length > 0 && (
+          <div className="mt-10">
+            <h2 className="mb-4 text-lg font-semibold text-primary-800">
+              Videos
+            </h2>
+            <div className="space-y-6">
+              {videos.map((v) => {
+                const id = youtubeId(v.video_url);
+                if (!id) return null;
+                return (
+                  <div key={v.id}>
+                    {v.title && (
+                      <p className="mb-2 text-sm font-semibold text-primary-800">
+                        {v.title}
+                      </p>
+                    )}
+                    <div className="aspect-video overflow-hidden rounded-2xl border border-line bg-black">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${id}`}
+                        title={v.title ?? "Video"}
+                        className="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

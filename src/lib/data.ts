@@ -18,6 +18,7 @@ import type {
   PostImage,
   Posting,
   PostingFile,
+  PostVideo,
   SimplePage,
   SitePage,
   SocialPlatform,
@@ -385,6 +386,22 @@ export async function getPostFiles(postId: string): Promise<PostFile[]> {
       .order("sort_order", { ascending: true });
     if (error) return [];
     return (data ?? []) as PostFile[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getPostVideos(postId: string): Promise<PostVideo[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("post_videos")
+      .select("*")
+      .eq("post_id", postId)
+      .order("sort_order", { ascending: true });
+    if (error) return [];
+    return (data ?? []) as PostVideo[];
   } catch {
     return [];
   }

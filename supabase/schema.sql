@@ -218,6 +218,16 @@ create table if not exists public.post_files (
 alter table public.post_files enable row level security;
 create policy "post_files_select" on public.post_files for select using (true);
 
+create table if not exists public.post_videos (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid not null references public.posts(id) on delete cascade,
+  title text,
+  video_url text not null,
+  sort_order int not null default 0
+);
+alter table public.post_videos enable row level security;
+create policy "post_videos_select" on public.post_videos for select using (true);
+
 -- ------------------------------------------------------------
 -- Asociados y Aliados
 -- ------------------------------------------------------------
