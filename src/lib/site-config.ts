@@ -129,9 +129,7 @@ const enEjecucionAreas: NavItem[] = [
 ];
 
 const ejecutadosAreas: NavItem[] = [
-  areaItem("ejecutados", "agro", [
-    { label: "PIASI", href: "/nuestro-trabajo/piasi" },
-  ]),
+  areaItem("ejecutados", "agro"),
   areaItem("ejecutados", "educacion"),
   areaItem("ejecutados", "turismo", [
     { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe" },
@@ -252,6 +250,45 @@ export function withVisions(
       return { ...item, children: item.children.map(mapItem) };
     }
     return item;
+  };
+
+  return base.map(mapItem);
+}
+
+/** Inyecta las páginas simples dinámicas bajo su item padre (por parent_href). */
+export function withSimplePages(
+  pages: {
+    title: string;
+    path: string;
+    parent_href: string;
+    sort_order: number;
+  }[],
+  base: NavItem[] = mainNav,
+): NavItem[] {
+  const byParent = new Map<
+    string,
+    { title: string; path: string; sort_order: number }[]
+  >();
+  for (const p of pages) {
+    const list = byParent.get(p.parent_href) ?? [];
+    list.push(p);
+    byParent.set(p.parent_href, list);
+  }
+  for (const list of byParent.values()) {
+    list.sort((a, b) => a.sort_order - b.sort_order);
+  }
+
+  const mapItem = (item: NavItem): NavItem => {
+    const children = item.children ? item.children.map(mapItem) : undefined;
+    const extra = byParent.get(item.href);
+    if (extra?.length) {
+      const merged = [
+        ...(children ?? []),
+        ...extra.map((e) => ({ label: e.title, href: e.path })),
+      ];
+      return { ...item, children: merged };
+    }
+    return children ? { ...item, children } : item;
   };
 
   return base.map(mapItem);

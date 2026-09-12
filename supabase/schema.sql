@@ -308,6 +308,34 @@ alter table public.vision_documents enable row level security;
 create policy "vision_documents_select" on public.vision_documents for select using (true);
 
 -- ------------------------------------------------------------
+-- Páginas simples (texto + botones, editables y ubicables en el menú)
+-- ------------------------------------------------------------
+create table if not exists public.simple_pages (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  path text not null unique,
+  content text not null default '',
+  parent_href text not null default '',
+  sort_order int not null default 0,
+  is_active boolean not null default true
+);
+
+alter table public.simple_pages enable row level security;
+create policy "simple_pages_select" on public.simple_pages for select using (true);
+
+create table if not exists public.simple_page_buttons (
+  id uuid primary key default gen_random_uuid(),
+  page_id uuid not null references public.simple_pages(id) on delete cascade,
+  label text not null,
+  href text not null,
+  is_download boolean not null default false,
+  sort_order int not null default 0
+);
+
+alter table public.simple_page_buttons enable row level security;
+create policy "simple_page_buttons_select" on public.simple_page_buttons for select using (true);
+
+-- ------------------------------------------------------------
 -- Ítems del menú (bottom header) editables
 -- ------------------------------------------------------------
 create table if not exists public.menu_items (

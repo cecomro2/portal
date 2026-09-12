@@ -184,6 +184,27 @@ export interface VisionDocument {
   sort_order: number;
 }
 
+/** Página simple (texto a la izquierda + botones a la derecha). */
+export interface SimplePage {
+  id: string;
+  title: string;
+  path: string;
+  content: string;
+  parent_href: string;
+  sort_order: number;
+  is_active: boolean;
+}
+
+/** Botón de una página simple. */
+export interface SimplePageButton {
+  id: string;
+  page_id: string;
+  label: string;
+  href: string;
+  is_download: boolean;
+  sort_order: number;
+}
+
 /** Ítem del menú (bottom header) editable. */
 export interface MenuItem {
   key: string;

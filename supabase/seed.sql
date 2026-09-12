@@ -3,6 +3,11 @@
 -- Ejecutar después de schema.sql si se desea cargar contenido.
 -- ============================================================
 
+-- Páginas simples (texto + botones)
+insert into public.simple_pages (title, path, content, parent_href, sort_order, is_active) values
+  ('PIASI', '/nuestro-trabajo/ejecutados/agro/piasi', 'Proyecto PIASI. Agregue aquí la descripción del proyecto desde el panel de administración (Páginas Simples).', '/nuestro-trabajo/ejecutados/agro', 1, true)
+on conflict (path) do nothing;
+
 -- Junta Directiva
 insert into public.board_members (name, position, sort_order) values
   ('Felipe Rodriguez', 'Presidente', 1),

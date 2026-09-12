@@ -11,6 +11,7 @@ import {
   FolderOpen,
   Image as ImageIcon,
   LayoutDashboard,
+  Layers,
   LogOut,
   Menu,
   Newspaper,
@@ -43,6 +44,7 @@ const groups: NavGroup[] = [
       { href: "/admin/categorias", label: "Categorías", icon: FolderOpen },
       { href: "/admin/galeria", label: "Galería de medios", icon: ImageIcon },
       { href: "/admin/paginas", label: "Páginas", icon: FileText },
+      { href: "/admin/paginas-simples", label: "Páginas Simples", icon: Layers },
     ],
   },
   {

@@ -51,7 +51,7 @@ const axes: {
     desc: "Modernización del agro con IICA, tecnificación de cadenas de frío, innovación agrotech y apertura de mercados.",
     href: "/nuestro-trabajo/agro",
     linkLabel: "Iniciativas Agrícolas",
-    subs: [{ label: "PIASI", href: "/nuestro-trabajo/piasi" }],
+    subs: [{ label: "PIASI", href: "/nuestro-trabajo/ejecutados/agro/piasi" }],
   },
   {
     icon: Coffee,
