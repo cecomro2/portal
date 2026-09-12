@@ -405,7 +405,7 @@ drop policy if exists "vision_documents_select" on public.vision_documents;
 create policy "vision_documents_select" on public.vision_documents for select using (true);
 
 -- ------------------------------------------------------------
--- PÁGINAS SIMPLES (texto + botones, editables y ubicables en el menú)
+-- PÁGINAS SIMPLES (bloques de contenido editables y ubicables en el menú)
 -- ------------------------------------------------------------
 create table if not exists public.simple_pages (
   id uuid primary key default gen_random_uuid(),
@@ -420,23 +420,12 @@ alter table public.simple_pages enable row level security;
 drop policy if exists "simple_pages_select" on public.simple_pages;
 create policy "simple_pages_select" on public.simple_pages for select using (true);
 
-create table if not exists public.simple_page_buttons (
-  id uuid primary key default gen_random_uuid(),
-  page_id uuid not null references public.simple_pages(id) on delete cascade,
-  label text not null,
-  href text not null,
-  is_download boolean not null default false,
-  sort_order int not null default 0
-);
-alter table public.simple_page_buttons enable row level security;
-drop policy if exists "simple_page_buttons_select" on public.simple_page_buttons;
-create policy "simple_page_buttons_select" on public.simple_page_buttons for select using (true);
-
-delete from public.simple_page_buttons;
 delete from public.simple_pages;
 
 insert into public.simple_pages (title, path, content, parent_href, sort_order, is_active) values
-  ('PIASI', '/nuestro-trabajo/ejecutados/agro/piasi', 'Proyecto PIASI. Agregue aquí la descripción del proyecto desde el panel de administración (Páginas Simples).', '/nuestro-trabajo/ejecutados/agro', 1, true)
+  ('PIASI', '/nuestro-trabajo/ejecutados/agro/piasi',
+   '<div class="sp-split"><div><h3 class="sp-heading">Proyecto PIASI</h3><p class="sp-text">Agregue aquí la descripción del proyecto.</p></div><div class="sp-docs"><div class="sp-doc"><span class="sp-doc__icon">PDF</span><span class="sp-doc__label">Documento PIASI</span><a class="sp-btn sp-btn--primary" href="#" target="_blank" rel="noopener">Ver Documento (PDF)</a><a class="sp-btn sp-btn--outline" href="#" download>Descargar</a></div></div></div>',
+   '/nuestro-trabajo/ejecutados/agro', 1, true)
 on conflict (path) do nothing;
 
 delete from public.vision_documents;

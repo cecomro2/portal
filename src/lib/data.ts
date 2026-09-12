@@ -19,7 +19,6 @@ import type {
   Posting,
   PostingFile,
   SimplePage,
-  SimplePageButton,
   SitePage,
   SocialPlatform,
   TopbarLink,
@@ -640,24 +639,6 @@ export async function getSimplePageByPath(
     return data as SimplePage;
   } catch {
     return null;
-  }
-}
-
-export async function getSimplePageButtons(
-  pageId: string,
-): Promise<SimplePageButton[]> {
-  if (!isSupabaseConfigured) return [];
-  try {
-    const supabase = createPublicSupabase();
-    const { data, error } = await supabase
-      .from("simple_page_buttons")
-      .select("*")
-      .eq("page_id", pageId)
-      .order("sort_order", { ascending: true });
-    if (error) return [];
-    return (data ?? []) as SimplePageButton[];
-  } catch {
-    return [];
   }
 }
 
