@@ -57,22 +57,37 @@ function DropdownChild({ child }: { child: NavItem }) {
   const [open, setOpen] = useState(false);
   const hasChildren = Boolean(child.children?.length);
 
+  const content = (
+    <>
+      <span className="flex items-center gap-2">
+        {child.icon && <NavIcon name={child.icon} />}
+        {child.label}
+      </span>
+      {hasChildren && <ChevronRight size={14} className="text-muted" />}
+    </>
+  );
+
   return (
     <div
       className="relative"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <NavLink
-        href={child.href}
-        className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink transition hover:bg-surface hover:text-primary-700"
-      >
-        <span className="flex items-center gap-2">
-          {child.icon && <NavIcon name={child.icon} />}
-          {child.label}
-        </span>
-        {hasChildren && <ChevronRight size={14} className="text-muted" />}
-      </NavLink>
+      {hasChildren ? (
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-ink transition hover:bg-surface hover:text-primary-700"
+        >
+          {content}
+        </button>
+      ) : (
+        <NavLink
+          href={child.href}
+          className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink transition hover:bg-surface hover:text-primary-700"
+        >
+          {content}
+        </NavLink>
+      )}
 
       {open && hasChildren && (
         <div className="absolute left-full top-0 z-50 pl-1">

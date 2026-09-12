@@ -159,11 +159,16 @@ const impulsamosAreas: NavItem[] = [
   ]),
 ];
 
-/** Bloque AECID (va aparte dentro de "Proyectos en Ejecución"). */
+/** Bloque AECID (va primero dentro de "Proyectos en Ejecución"). */
 const aecidSubmenu: NavItem = {
-  label: "Proyectos de Cooperación AECID",
-  href: "/nuestro-trabajo/proyectos-de-cooperacion",
+  label: "AECID",
+  href: "#aecid",
   children: [
+    {
+      label: "Proyectos de Cooperación AECID",
+      href: "/nuestro-trabajo/proyectos-de-cooperacion",
+      icon: "file-text",
+    },
     {
       label: "Vacantes AECID",
       href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
@@ -200,17 +205,17 @@ export const mainNav: NavItem[] = [
     children: [
       {
         label: "Proyectos en Ejecución",
-        href: "/nuestro-trabajo/proyectos-de-cooperacion",
-        children: [...enEjecucionAreas, aecidSubmenu],
+        href: "#en-ejecucion",
+        children: [aecidSubmenu, ...enEjecucionAreas],
       },
       {
         label: "Proyectos Ejecutados",
-        href: "/nuestro-trabajo/ejecutados/agro",
+        href: "#ejecutados",
         children: ejecutadosAreas,
       },
       {
         label: "Proyectos que Impulsamos",
-        href: "/nuestro-trabajo/impulsamos/agro",
+        href: "#impulsamos",
         children: impulsamosAreas,
       },
       {
