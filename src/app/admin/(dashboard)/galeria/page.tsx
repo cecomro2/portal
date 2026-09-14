@@ -2,16 +2,28 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FileText, Loader2, Search, Trash2, Upload } from "lucide-react";
+import {
+  Check,
+  Copy,
+  ExternalLink,
+  FileText,
+  Loader2,
+  Pencil,
+  Search,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/upload-client";
-import { deleteMediaItem } from "@/lib/actions/media";
+import { deleteMediaItem, updateMediaItem } from "@/lib/actions/media";
 import type { MediaItem } from "@/lib/types";
 import { formatBytes, formatDate } from "@/lib/utils";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
   AdminPageHeader,
   EmptyState,
+  Field,
   inputClass,
 } from "@/components/admin/ui";
 
@@ -50,6 +62,10 @@ export default function GaleriaAdminPage() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [editing, setEditing] = useState<MediaItem | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -95,6 +111,44 @@ export default function GaleriaAdminPage() {
     await deleteMediaItem(id);
     await load();
     router.refresh();
+  }
+
+  function openEdit(m: MediaItem) {
+    setEditing(m);
+    setEditTitle(m.title);
+    setError("");
+  }
+
+  async function onSaveEdit() {
+    if (!editing) return;
+    setSaving(true);
+    setError("");
+    const res = await updateMediaItem(editing.id, { title: editTitle });
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error ?? "Error al guardar.");
+      return;
+    }
+    setEditing(null);
+    await load();
+    router.refresh();
+  }
+
+  async function copyUrl(url: string, id: string) {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopiedId(id);
+    window.setTimeout(() => setCopiedId(null), 1500);
   }
 
   return (
@@ -219,19 +273,108 @@ export default function GaleriaAdminPage() {
                     {formatDate(m.published_at)}
                   </p>
                 </div>
-                <button
-                  onClick={() => onDelete(m.id)}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted transition hover:bg-accent-50 hover:text-accent-600"
-                  aria-label="Eliminar"
-                >
-                  <Trash2 size={15} />
-                </button>
+                <div className="flex shrink-0 gap-1">
+                  <button
+                    onClick={() => openEdit(m)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
+                    aria-label="Editar nombre"
+                    title="Editar nombre"
+                  >
+                    <Pencil size={15} />
+                  </button>
+                  <button
+                    onClick={() => copyUrl(m.file_url, m.id)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
+                    aria-label="Copiar URL"
+                    title="Copiar URL"
+                  >
+                    {copiedId === m.id ? (
+                      <Check size={15} className="text-emerald-600" />
+                    ) : (
+                      <Copy size={15} />
+                    )}
+                  </button>
+                  <a
+                    href={m.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
+                    aria-label="Ver archivo"
+                    title="Ver archivo"
+                  >
+                    <ExternalLink size={15} />
+                  </a>
+                  <button
+                    onClick={() => onDelete(m.id)}
+                    className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-accent-50 hover:text-accent-600"
+                    aria-label="Eliminar"
+                    title="Eliminar"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       ) : (
         <EmptyState message="No hay recursos que coincidan." />
+      )}
+
+      {editing && (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-primary-950/70 p-4 backdrop-blur-sm"
+          onClick={() => setEditing(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-primary-800">
+                Editar nombre
+              </h3>
+              <button
+                onClick={() => setEditing(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-surface"
+                aria-label="Cerrar"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <Field label="Nombre">
+              <input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className={inputClass}
+                autoFocus
+              />
+            </Field>
+
+            {error && (
+              <p className="mt-3 rounded-lg border border-accent-200 bg-accent-50 px-4 py-2.5 text-sm text-accent-700">
+                {error}
+              </p>
+            )}
+
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={onSaveEdit}
+                disabled={saving}
+                className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-60"
+              >
+                {saving ? "Guardando…" : "Guardar"}
+              </button>
+              <button
+                onClick={() => setEditing(null)}
+                className="rounded-lg border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:bg-surface"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

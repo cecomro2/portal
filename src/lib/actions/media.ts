@@ -38,6 +38,24 @@ export async function createMediaItem(
   }
 }
 
+export async function updateMediaItem(
+  id: string,
+  input: { title: string },
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const supabase = createServiceSupabase();
+    const { error } = await supabase
+      .from("media_items")
+      .update({ title: input.title })
+      .eq("id", id);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath("/recursos-de-informacion");
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "Error" };
+  }
+}
+
 export async function deleteMediaItem(
   id: string,
 ): Promise<{ ok: boolean; error?: string }> {
