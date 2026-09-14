@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText, Loader2, Search, Trash2, Upload } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
+import { uploadFile } from "@/lib/upload-client";
 import { deleteMediaItem } from "@/lib/actions/media";
 import type { MediaItem } from "@/lib/types";
 import { formatBytes, formatDate } from "@/lib/utils";
@@ -78,11 +79,7 @@ export default function GaleriaAdminPage() {
     setError("");
     for (const file of files) {
       try {
-        const fd = new FormData();
-        fd.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error);
+        await uploadFile(file);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al subir archivo");
       }

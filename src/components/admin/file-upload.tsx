@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { FilePlus, FileText, Loader2, X } from "lucide-react";
+import { uploadFile } from "@/lib/upload-client";
 
 export interface UploadedFile {
   file_name: string;
@@ -28,15 +29,11 @@ export function FileUpload({
     const uploaded: UploadedFile[] = [];
     for (const file of files) {
       try {
-        const fd = new FormData();
-        fd.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error);
+        const result = await uploadFile(file);
         uploaded.push({
           file_name: file.name,
-          file_url: json.url,
-          mime_type: json.mimeType,
+          file_url: result.url,
+          mime_type: result.mimeType,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al subir archivo");

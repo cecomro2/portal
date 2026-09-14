@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Images, ImagePlus, Loader2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
+import { uploadFile } from "@/lib/upload-client";
 import type { MediaItem } from "@/lib/types";
 
 export function ImageUpload({
@@ -26,17 +27,12 @@ export function ImageUpload({
     setLoading(true);
     setError("");
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error ?? "No se pudo subir la imagen.");
-      } else {
-        onChange(json.url);
-      }
-    } catch {
-      setError("Error de red al subir la imagen.");
+      const result = await uploadFile(file);
+      onChange(result.url);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error de red al subir la imagen.",
+      );
     } finally {
       setLoading(false);
       if (inputRef.current) inputRef.current.value = "";

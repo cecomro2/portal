@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { mkdir, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
@@ -93,6 +94,36 @@ export async function storeFile(
   await mkdir(path.dirname(localPath), { recursive: true });
   await writeFile(localPath, body);
   return { url: `/${key}`, key, backend: "local" };
+}
+
+export interface PresignedUpload {
+  uploadUrl: string;
+  key: string;
+  publicUrl: string;
+}
+
+/** Genera una URL prefirmada para subir un archivo directamente a R2. */
+export async function createPresignedUpload(
+  originalName: string,
+  contentType: string,
+): Promise<PresignedUpload> {
+  if (!isR2Configured) {
+    throw new Error("R2 no está configurado para subidas directas.");
+  }
+  const key = buildKey(originalName);
+  const command = new PutObjectCommand({
+    Bucket: R2_BUCKET,
+    Key: key,
+    ContentType: contentType,
+  });
+  const uploadUrl = await getSignedUrl(getR2Client(), command, {
+    expiresIn: 600,
+  });
+  return {
+    uploadUrl,
+    key,
+    publicUrl: `${R2_PUBLIC_URL!.replace(/\/$/, "")}/${key}`,
+  };
 }
 
 export async function deleteStoredFile(

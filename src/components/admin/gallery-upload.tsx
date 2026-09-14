@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { ImagePlus, Loader2, X } from "lucide-react";
+import { uploadFile } from "@/lib/upload-client";
 
 export function GalleryUpload({
   value,
@@ -22,12 +23,8 @@ export function GalleryUpload({
     const uploaded: string[] = [];
     for (const file of files) {
       try {
-        const fd = new FormData();
-        fd.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error);
-        uploaded.push(json.url);
+        const result = await uploadFile(file);
+        uploaded.push(result.url);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al subir");
         break;

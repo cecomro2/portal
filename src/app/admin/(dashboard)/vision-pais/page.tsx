@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
+import { uploadFile } from "@/lib/upload-client";
 import {
   deleteVision,
   deleteVisionDocument,
@@ -151,15 +152,8 @@ export default function VisionPaisAdminPage() {
     setUploading(true);
     setError("");
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error ?? "Error al subir");
-        return;
-      }
-      setDUrl(json.url);
+      const result = await uploadFile(file);
+      setDUrl(result.url);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Error al subir el archivo",
