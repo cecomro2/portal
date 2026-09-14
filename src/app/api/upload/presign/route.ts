@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { fileName, contentType } = await req.json();
+    const { fileName, contentType, size } = await req.json();
     if (!fileName) {
       return Response.json({ error: "Nombre de archivo requerido" }, { status: 400 });
     }
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         file_url: publicUrl,
         file_name: fileName,
         mime_type: type,
-        size_bytes: 0,
+        size_bytes: typeof size === "number" ? size : 0,
         published_at: new Date().toISOString(),
       });
     } catch {
