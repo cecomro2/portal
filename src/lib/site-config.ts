@@ -212,7 +212,7 @@ export const mainNav: NavItem[] = [
         children: impulsamosAreas,
       },
       {
-        label: "Visión País",
+        label: "Visiones 2050",
         href: "/vision-pais",
         children: [],
       },
