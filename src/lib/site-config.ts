@@ -1,3 +1,4 @@
+// Configuración del sitio y navegación principal.
 import {
   Briefcase,
   Building2,
