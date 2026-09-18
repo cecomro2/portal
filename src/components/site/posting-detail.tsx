@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Info, MapPin } from "lucide-react";
 import { formatDate, postingStatus } from "@/lib/utils";
-import type { Posting, PostingFile } from "@/lib/types";
+import type { Posting, PostingFile, PostingImage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { DocumentList } from "@/components/site/document-list";
 
 export function PostingDetail({
   posting,
   files,
+  images,
   backHref,
   backLabel,
 }: {
   posting: Posting;
   files: PostingFile[];
+  images?: PostingImage[];
   backHref: string;
   backLabel: string;
 }) {
@@ -63,6 +65,23 @@ export function PostingDetail({
           className="rich-text mt-8"
           dangerouslySetInnerHTML={{ __html: posting.description }}
         />
+
+        {/* Imágenes */}
+        {images && images.length > 0 && (
+          <div className="mt-8">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {images.map((img) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={img.id}
+                  src={img.image_url}
+                  alt={posting.title}
+                  className="aspect-square w-full rounded-xl border border-line object-cover"
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Documentos */}
         {files.length > 0 && (

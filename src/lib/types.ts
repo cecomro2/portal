@@ -56,6 +56,7 @@ export interface Posting {
   apply_info: string | null;
   closing_date: string | null;
   location: string | null;
+  published_at: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -67,6 +68,13 @@ export interface PostingFile {
   file_name: string;
   file_url: string;
   mime_type: string | null;
+  sort_order: number;
+}
+
+export interface PostingImage {
+  id: string;
+  posting_id: string;
+  image_url: string;
   sort_order: number;
 }
 

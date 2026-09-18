@@ -18,8 +18,10 @@ export interface PostingInput {
   apply_info: string;
   closing_date: string | null;
   location: string;
+  published_at: string | null;
   is_active: boolean;
   files: PostingFileInput[];
+  images: { image_url: string }[];
 }
 
 const revalidations: Record<"vacancy" | "procurement", string[]> = {
@@ -45,6 +47,7 @@ export async function savePosting(
       apply_info: input.apply_info || null,
       closing_date: input.closing_date || null,
       location: input.location || null,
+      published_at: input.published_at || new Date().toISOString().slice(0, 10),
       is_active: input.is_active,
       updated_at: new Date().toISOString(),
     };
@@ -84,6 +87,18 @@ export async function savePosting(
           file_name: f.file_name,
           file_url: f.file_url,
           mime_type: f.mime_type || null,
+          sort_order: i,
+        })),
+      );
+    }
+
+    // Reemplazar imágenes
+    await supabase.from("posting_images").delete().eq("posting_id", id);
+    if (input.images.length) {
+      await supabase.from("posting_images").insert(
+        input.images.map((img, i) => ({
+          posting_id: id,
+          image_url: img.image_url,
           sort_order: i,
         })),
       );

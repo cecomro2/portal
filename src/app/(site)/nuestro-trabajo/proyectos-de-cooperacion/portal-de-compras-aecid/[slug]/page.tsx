@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostingDetail } from "@/components/site/posting-detail";
-import { getPostingBySlug, getPostingFiles } from "@/lib/data";
+import { getPostingBySlug, getPostingFiles, getPostingImages } from "@/lib/data";
 
 export async function generateMetadata({
   params,
@@ -21,12 +21,16 @@ export default async function CompraDetailPage({
   const { slug } = await params;
   const posting = await getPostingBySlug("procurement", slug);
   if (!posting) notFound();
-  const files = await getPostingFiles(posting.id);
+  const [files, images] = await Promise.all([
+    getPostingFiles(posting.id),
+    getPostingImages(posting.id),
+  ]);
 
   return (
     <PostingDetail
       posting={posting}
       files={files}
+      images={images}
       backHref="/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid"
       backLabel="Volver al Portal de Compras AECID"
     />

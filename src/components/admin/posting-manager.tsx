@@ -17,6 +17,7 @@ import {
 } from "@/components/admin/ui";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { FileUpload, type UploadedFile } from "@/components/admin/file-upload";
+import { GalleryUpload } from "@/components/admin/gallery-upload";
 
 interface FormState {
   title: string;
@@ -24,8 +25,10 @@ interface FormState {
   apply_info: string;
   closing_date: string;
   location: string;
+  published_at: string;
   is_active: boolean;
   files: UploadedFile[];
+  images: string[];
 }
 
 const empty: FormState = {
@@ -34,8 +37,10 @@ const empty: FormState = {
   apply_info: "",
   closing_date: "",
   location: "",
+  published_at: "",
   is_active: true,
   files: [],
+  images: [],
 };
 
 export function PostingManager({
@@ -54,6 +59,7 @@ export function PostingManager({
       .from("postings")
       .select("*")
       .eq("type", type)
+      .order("published_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
     return (data ?? []) as Posting[];
   });
@@ -74,7 +80,7 @@ export function PostingManager({
         if (!hay.includes(q)) return false;
       }
       if (dateFilter !== "all") {
-        const d = new Date(p.created_at).getTime();
+        const d = new Date(p.published_at ?? p.created_at).getTime();
         const day = 86_400_000;
         const days =
           dateFilter === "30d" ? 30 : dateFilter === "90d" ? 90 : 365;
@@ -90,18 +96,28 @@ export function PostingManager({
 
   function openNew() {
     setEditing(null);
-    setForm(empty);
+    setForm({
+      ...empty,
+      published_at: new Date().toISOString().slice(0, 10),
+    });
     setError("");
     setOpen(true);
   }
 
   async function openEdit(p: Posting) {
     const supabase = createBrowserSupabase();
-    const { data: files } = await supabase
-      .from("posting_files")
-      .select("*")
-      .eq("posting_id", p.id)
-      .order("sort_order");
+    const [{ data: files }, { data: imgs }] = await Promise.all([
+      supabase
+        .from("posting_files")
+        .select("*")
+        .eq("posting_id", p.id)
+        .order("sort_order"),
+      supabase
+        .from("posting_images")
+        .select("image_url")
+        .eq("posting_id", p.id)
+        .order("sort_order"),
+    ]);
     setEditing(p);
     setForm({
       title: p.title,
@@ -109,12 +125,14 @@ export function PostingManager({
       apply_info: p.apply_info ?? "",
       closing_date: p.closing_date ?? "",
       location: p.location ?? "",
+      published_at: p.published_at ?? "",
       is_active: p.is_active,
       files: (files ?? []).map((f) => ({
         file_name: f.file_name,
         file_url: f.file_url,
         mime_type: f.mime_type,
       })),
+      images: (imgs ?? []).map((i) => i.image_url),
     });
     setError("");
     setOpen(true);
@@ -132,8 +150,10 @@ export function PostingManager({
       apply_info: form.apply_info,
       closing_date: form.closing_date || null,
       location: form.location,
+      published_at: form.published_at || null,
       is_active: form.is_active,
       files: form.files,
+      images: form.images.map((url) => ({ image_url: url })),
     });
     setSaving(false);
     if (!res.ok) {
@@ -208,6 +228,14 @@ export function PostingManager({
                   className={inputClass}
                 />
               </Field>
+              <Field label="Fecha de publicación" hint="Controla el orden en la lista (por defecto, hoy).">
+                <input
+                  type="date"
+                  value={form.published_at}
+                  onChange={(e) => set("published_at", e.target.value)}
+                  className={inputClass}
+                />
+              </Field>
               <Field label="Fecha de cierre" hint="Al llegar esta fecha, el estado cambiará a cerrado.">
                 <input
                   type="date"
@@ -230,6 +258,13 @@ export function PostingManager({
               <FileUpload
                 value={form.files}
                 onChange={(files) => set("files", files)}
+              />
+            </Field>
+
+            <Field label="Imágenes" hint="Se muestran en el contenido de la publicación.">
+              <GalleryUpload
+                value={form.images}
+                onChange={(urls) => set("images", urls)}
               />
             </Field>
 
