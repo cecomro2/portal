@@ -47,7 +47,6 @@ const groups: NavGroup[] = [
       { href: "/admin/vision-pais", label: "Visión País", icon: Compass },
       { href: "/admin/noticias", label: "Noticias", icon: Newspaper },
       { href: "/admin/categorias", label: "Categorías", icon: FolderOpen },
-      { href: "/admin/ubicaciones", label: "Ubicaciones", icon: MapPin },
       { href: "/admin/galeria", label: "Galería de medios", icon: ImageIcon },
       { href: "/admin/paginas", label: "Páginas", icon: FileText },
       { href: "/admin/paginas-simples", label: "Páginas Simples", icon: Layers },
@@ -59,6 +58,7 @@ const groups: NavGroup[] = [
       { href: "/admin/junta", label: "Junta Directiva", icon: Users },
       { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
       { href: "/admin/asociados", label: "Asociados y Aliados", icon: Building2 },
+      { href: "/admin/ubicaciones", label: "Ubicaciones", icon: MapPin },
     ],
   },
   {

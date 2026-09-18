@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { inputClass } from "@/components/admin/ui";
 
@@ -18,14 +18,18 @@ export function PillsInput({
   type?: "text" | "email";
 }) {
   const [draft, setDraft] = useState("");
-  const listId = useId();
 
-  function add() {
-    const item = draft.trim();
-    if (!item) return;
+  const available = suggestions.filter((s) => !value.includes(s));
+
+  function addItem(item: string) {
+    const clean = item.trim();
+    if (!clean || value.includes(clean)) return;
+    onChange([...value, clean]);
+  }
+
+  function addDraft() {
+    addItem(draft);
     setDraft("");
-    if (value.includes(item)) return;
-    onChange([...value, item]);
   }
 
   function remove(index: number) {
@@ -58,13 +62,12 @@ export function PillsInput({
       <div className="flex items-center gap-2">
         <input
           type={type}
-          list={suggestions.length ? listId : undefined}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              add();
+              addDraft();
             }
           }}
           placeholder={placeholder}
@@ -72,7 +75,7 @@ export function PillsInput({
         />
         <button
           type="button"
-          onClick={add}
+          onClick={addDraft}
           className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-700"
         >
           <Plus size={15} />
@@ -80,12 +83,21 @@ export function PillsInput({
         </button>
       </div>
 
-      {suggestions.length > 0 && (
-        <datalist id={listId}>
-          {suggestions.map((s) => (
-            <option key={s} value={s} />
+      {available.length > 0 && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <span className="text-xs text-muted">Sugerencias:</span>
+          {available.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => addItem(s)}
+              className="inline-flex items-center gap-1 rounded-full border border-line bg-white px-2.5 py-1 text-xs font-medium text-primary-700 transition hover:border-primary-300 hover:bg-primary-50"
+            >
+              <Plus size={12} />
+              {s}
+            </button>
           ))}
-        </datalist>
+        </div>
       )}
     </div>
   );
