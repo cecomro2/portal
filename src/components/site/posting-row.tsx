@@ -12,6 +12,11 @@ export function PostingRow({
   basePath: string;
 }) {
   const open = postingStatus(posting) === "abierta";
+  const locations = posting.locations?.length
+    ? posting.locations
+    : posting.location
+      ? [posting.location]
+      : [];
 
   return (
     <Link
@@ -49,11 +54,18 @@ export function PostingRow({
           </p>
         )}
 
-        {posting.location && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
-            <MapPin size={13} className="shrink-0 text-accent-500" />
-            {posting.location}
-          </p>
+        {locations.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {locations.map((loc) => (
+              <span
+                key={loc}
+                className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-[11px] font-semibold text-primary-700"
+              >
+                <MapPin size={11} className="shrink-0" />
+                {loc}
+              </span>
+            ))}
+          </div>
         )}
 
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">

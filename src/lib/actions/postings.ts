@@ -18,6 +18,8 @@ export interface PostingInput {
   apply_info: string;
   closing_date: string | null;
   location: string;
+  locations: string[];
+  apply_emails: string[];
   published_at: string | null;
   is_active: boolean;
   files: PostingFileInput[];
@@ -47,6 +49,8 @@ export async function savePosting(
       apply_info: input.apply_info || null,
       closing_date: input.closing_date || null,
       location: input.location || null,
+      locations: input.locations || [],
+      apply_emails: input.apply_emails || [],
       published_at: input.published_at || new Date().toISOString().slice(0, 10),
       is_active: input.is_active,
       updated_at: new Date().toISOString(),
@@ -102,6 +106,15 @@ export async function savePosting(
           sort_order: i,
         })),
       );
+    }
+
+    // Registrar ubicaciones nuevas en la lista reutilizable (on-the-fly)
+    for (const name of input.locations || []) {
+      const clean = name.trim();
+      if (!clean) continue;
+      await supabase
+        .from("locations")
+        .upsert({ name: clean }, { onConflict: "name", ignoreDuplicates: true });
     }
 
     revalidations[input.type].forEach((p) => revalidatePath(p));

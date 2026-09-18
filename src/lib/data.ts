@@ -9,6 +9,7 @@ import type {
   Consultant,
   HeaderItem,
   HomeStat,
+  Location,
   MediaItem,
   MenuItem,
   Person,
@@ -124,6 +125,8 @@ export const FALLBACK_VACANCIES: Posting[] = [
       "Enviar hoja de vida actualizada y carta de interés al correo convocatorias@cecomro.com, indicando en el asunto el nombre de la convocatoria, antes de la fecha de cierre.",
     closing_date: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
     location: "Región Ño Kribo, Comarca Ngäbe Buglé",
+    locations: null,
+    apply_emails: null,
     published_at: null,
     is_active: true,
     created_at: new Date(Date.now() - 4 * 3600000).toISOString(),
@@ -140,6 +143,8 @@ export const FALLBACK_VACANCIES: Posting[] = [
       "Presentar la propuesta técnica y económica en sobre cerrado en las oficinas del CECOM-RO, o por correo electrónico a compras@cecomro.com.",
     closing_date: new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10),
     location: null,
+    locations: null,
+    apply_emails: null,
     published_at: null,
     is_active: true,
     created_at: new Date(Date.now() - 26 * 3600000).toISOString(),
@@ -320,6 +325,22 @@ export async function getPostingImages(postingId: string): Promise<PostingImage[
       .order("sort_order", { ascending: true });
     if (error) return [];
     return (data ?? []) as PostingImage[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getLocations(): Promise<Location[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("locations")
+      .select("*")
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
+    if (error) return [];
+    return (data ?? []) as Location[];
   } catch {
     return [];
   }

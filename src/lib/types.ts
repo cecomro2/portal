@@ -56,10 +56,20 @@ export interface Posting {
   apply_info: string | null;
   closing_date: string | null;
   location: string | null;
+  locations: string[] | null;
+  apply_emails: string[] | null;
   published_at: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+/** Ubicación reutilizable (pills de vacantes/portal). */
+export interface Location {
+  id: string;
+  name: string;
+  sort_order: number;
+  created_at: string;
 }
 
 export interface PostingFile {

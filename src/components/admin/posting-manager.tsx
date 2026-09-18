@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
@@ -18,17 +18,19 @@ import {
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { FileUpload, type UploadedFile } from "@/components/admin/file-upload";
 import { GalleryUpload } from "@/components/admin/gallery-upload";
+import { PillsInput } from "@/components/admin/pills-input";
 
 interface FormState {
   title: string;
   description: string;
   apply_info: string;
   closing_date: string;
-  location: string;
   published_at: string;
   is_active: boolean;
   files: UploadedFile[];
   images: string[];
+  locations: string[];
+  apply_emails: string[];
 }
 
 const empty: FormState = {
@@ -36,11 +38,12 @@ const empty: FormState = {
   description: "",
   apply_info: "",
   closing_date: "",
-  location: "",
   published_at: "",
   is_active: true,
   files: [],
   images: [],
+  locations: [],
+  apply_emails: [],
 };
 
 export function PostingManager({
@@ -71,6 +74,16 @@ export function PostingManager({
   const [form, setForm] = useState<FormState>(empty);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [locationOptions, setLocationOptions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabase();
+    supabase
+      .from("locations")
+      .select("name")
+      .order("name")
+      .then(({ data }) => setLocationOptions((data ?? []).map((l) => l.name)));
+  }, []);
 
   const filtered = useMemo(() => {
     return items.filter((p) => {
@@ -124,7 +137,6 @@ export function PostingManager({
       description: p.description ?? "",
       apply_info: p.apply_info ?? "",
       closing_date: p.closing_date ?? "",
-      location: p.location ?? "",
       published_at: p.published_at ?? "",
       is_active: p.is_active,
       files: (files ?? []).map((f) => ({
@@ -133,6 +145,8 @@ export function PostingManager({
         mime_type: f.mime_type,
       })),
       images: (imgs ?? []).map((i) => i.image_url),
+      locations: p.locations ?? [],
+      apply_emails: p.apply_emails ?? [],
     });
     setError("");
     setOpen(true);
@@ -149,7 +163,9 @@ export function PostingManager({
       description: form.description,
       apply_info: form.apply_info,
       closing_date: form.closing_date || null,
-      location: form.location,
+      location: form.locations[0] ?? "",
+      locations: form.locations,
+      apply_emails: form.apply_emails,
       published_at: form.published_at || null,
       is_active: form.is_active,
       files: form.files,
@@ -221,13 +237,6 @@ export function PostingManager({
             </Field>
 
             <div className="grid gap-4 lg:grid-cols-2">
-              <Field label="Ubicación" hint="Región, comarca o localidad (opcional).">
-                <input
-                  value={form.location}
-                  onChange={(e) => set("location", e.target.value)}
-                  className={inputClass}
-                />
-              </Field>
               <Field label="Fecha de publicación" hint="Controla el orden en la lista (por defecto, hoy).">
                 <input
                   type="date"
@@ -253,6 +262,27 @@ export function PostingManager({
                 />
               </Field>
             </div>
+
+            <Field label="Ubicaciones" hint="Una o más ubicaciones; aparecen como etiquetas (pills).">
+              <PillsInput
+                value={form.locations}
+                onChange={(items) => set("locations", items)}
+                suggestions={locationOptions}
+                placeholder="Ej: David, Chiriquí (Enter o Agregar)"
+              />
+            </Field>
+
+            <Field
+              label="Correos de recepción"
+              hint="Correos que aparecen como botones en «Cómo aplicar»."
+            >
+              <PillsInput
+                value={form.apply_emails}
+                onChange={(items) => set("apply_emails", items)}
+                type="email"
+                placeholder="correo@ejemplo.com"
+              />
+            </Field>
 
             <Field label="Documentos (PDF)">
               <FileUpload

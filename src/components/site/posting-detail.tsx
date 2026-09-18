@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, CalendarDays, Info, MapPin } from "lucide-react";
+import { ArrowLeft, CalendarDays, Info, Mail, MapPin } from "lucide-react";
 import { formatDate, postingStatus } from "@/lib/utils";
 import type { Posting, PostingFile, PostingImage } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,11 @@ export function PostingDetail({
   backLabel: string;
 }) {
   const open = postingStatus(posting) === "abierta";
+  const locations = posting.locations?.length
+    ? posting.locations
+    : posting.location
+      ? [posting.location]
+      : [];
 
   return (
     <section className="bg-white py-12 lg:py-16">
@@ -49,11 +54,18 @@ export function PostingDetail({
               Fecha de cierre: {formatDate(posting.closing_date)}
             </span>
           )}
-          {posting.location && (
-            <span className="flex items-center gap-1.5 text-sm text-muted">
-              <MapPin size={15} className="text-accent-500" />
-              {posting.location}
-            </span>
+          {locations.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {locations.map((loc) => (
+                <span
+                  key={loc}
+                  className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700"
+                >
+                  <MapPin size={13} className="shrink-0" />
+                  {loc}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 
@@ -97,21 +109,37 @@ export function PostingDetail({
         )}
 
         {/* Información para aplicar */}
-        {open && posting.apply_info ? (
-          <div className="mt-10 rounded-xl border border-primary-200 bg-primary-50 p-6">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-primary-800">
-              <Info size={20} className="text-primary-600" />
-              Cómo aplicar
-            </h2>
-            <div className="rich-text mt-3">{posting.apply_info}</div>
-          </div>
-        ) : (
-          !open && (
-            <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-muted">
-              Esta convocatoria ha cerrado y la información para aplicar ya no
-              está disponible.
+        {open ? (
+          posting.apply_info || (posting.apply_emails?.length ?? 0) > 0 ? (
+            <div className="mt-10 rounded-xl border border-primary-200 bg-primary-50 p-6">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-primary-800">
+                <Info size={20} className="text-primary-600" />
+                Cómo aplicar
+              </h2>
+              {posting.apply_info && (
+                <div className="rich-text mt-3">{posting.apply_info}</div>
+              )}
+              {posting.apply_emails && posting.apply_emails.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {posting.apply_emails.map((email) => (
+                    <a
+                      key={email}
+                      href={`mailto:${email}`}
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700"
+                    >
+                      <Mail size={15} />
+                      {email}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-          )
+          ) : null
+        ) : (
+          <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-muted">
+            Esta convocatoria ha cerrado y la información para aplicar ya no
+            está disponible.
+          </div>
         )}
       </div>
     </section>
