@@ -22,6 +22,7 @@ import { PillsInput } from "@/components/admin/pills-input";
 
 interface FormState {
   title: string;
+  slug: string;
   description: string;
   apply_info: string;
   closing_date: string;
@@ -36,6 +37,7 @@ interface FormState {
 
 const empty: FormState = {
   title: "",
+  slug: "",
   description: "",
   apply_info: "",
   closing_date: "",
@@ -142,6 +144,7 @@ export function PostingManager({
     setEditing(p);
     setForm({
       title: p.title,
+      slug: p.slug ?? "",
       description: p.description ?? "",
       apply_info: p.apply_info ?? "",
       closing_date: p.closing_date ?? "",
@@ -174,6 +177,7 @@ export function PostingManager({
       id: editing?.id,
       type,
       title: form.title,
+      slug: form.slug,
       description: form.description,
       apply_info: form.apply_info,
       closing_date: form.closing_date || null,
@@ -240,6 +244,18 @@ export function PostingManager({
                 required
                 value={form.title}
                 onChange={(e) => set("title", e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+
+            <Field
+              label="Slug (URL)"
+              hint="Deja vacío para autogenerar. Solo minúsculas, números y guiones."
+            >
+              <input
+                value={form.slug}
+                onChange={(e) => set("slug", e.target.value)}
+                placeholder="slug-de-la-publicacion"
                 className={inputClass}
               />
             </Field>

@@ -14,6 +14,7 @@ export interface PostingInput {
   id?: string;
   type: "vacancy" | "procurement";
   title: string;
+  slug: string;
   description: string;
   apply_info: string;
   closing_date: string | null;
@@ -60,22 +61,16 @@ export async function savePosting(
     };
 
     let id = input.id;
-    let slug: string | undefined;
+    const slug =
+      input.slug?.trim() || `${slugify(input.title)}-${Date.now().toString(36)}`;
 
     if (id) {
       const { error } = await supabase
         .from("postings")
-        .update(base)
+        .update({ ...base, slug })
         .eq("id", id);
       if (error) return { ok: false, error: error.message };
-      const { data: existing } = await supabase
-        .from("postings")
-        .select("slug")
-        .eq("id", id)
-        .single();
-      slug = existing?.slug;
     } else {
-      slug = `${slugify(input.title)}-${Date.now().toString(36)}`;
       const { data: inserted, error } = await supabase
         .from("postings")
         .insert({ ...base, slug })

@@ -40,6 +40,9 @@ export default function HeaderAdminPage() {
   });
 
   const [logo, setLogo] = useState("/logo-cecomro.png");
+  const [logoHMobile, setLogoHMobile] = useState("44");
+  const [logoHDesktop, setLogoHDesktop] = useState("48");
+  const [itemSize, setItemSize] = useState("28");
   const [savingLogo, setSavingLogo] = useState(false);
   const [logoMsg, setLogoMsg] = useState("");
 
@@ -52,12 +55,33 @@ export default function HeaderAdminPage() {
 
   useEffect(() => {
     const supabase = createBrowserSupabase();
-    supabase
-      .from("site_settings")
-      .select("value")
-      .eq("key", "header_logo")
-      .maybeSingle()
-      .then(({ data }) => setLogo(data?.value || "/logo-cecomro.png"));
+    Promise.all([
+      supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "header_logo")
+        .maybeSingle(),
+      supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "header_logo_height_mobile")
+        .maybeSingle(),
+      supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "header_logo_height_desktop")
+        .maybeSingle(),
+      supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "header_item_size")
+        .maybeSingle(),
+    ]).then(([logoRes, hmRes, hdRes, isRes]) => {
+      setLogo(logoRes.data?.value || "/logo-cecomro.png");
+      setLogoHMobile(hmRes.data?.value || "44");
+      setLogoHDesktop(hdRes.data?.value || "48");
+      setItemSize(isRes.data?.value || "28");
+    });
   }, []);
 
   function set<K extends keyof typeof empty>(key: K, value: (typeof empty)[K]) {
@@ -122,9 +146,16 @@ export default function HeaderAdminPage() {
   async function saveLogo() {
     setSavingLogo(true);
     setLogoMsg("");
-    const res = await saveSiteSetting("header_logo", logo);
+    const results = await Promise.all([
+      saveSiteSetting("header_logo", logo),
+      saveSiteSetting("header_logo_height_mobile", logoHMobile),
+      saveSiteSetting("header_logo_height_desktop", logoHDesktop),
+      saveSiteSetting("header_item_size", itemSize),
+    ]);
     setSavingLogo(false);
-    setLogoMsg(res.ok ? "Logo guardado." : res.error ?? "Error");
+    setLogoMsg(
+      results.every((r) => r.ok) ? "Guardado." : "Error al guardar.",
+    );
     router.refresh();
   }
 
@@ -148,6 +179,32 @@ export default function HeaderAdminPage() {
         <h2 className="text-lg font-bold text-primary-800">Logo</h2>
         <div className="mt-4">
           <ImageUpload value={logo} onChange={setLogo} />
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <Field label="Altura logo · móvil (px)">
+            <input
+              type="number"
+              value={logoHMobile}
+              onChange={(e) => setLogoHMobile(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Altura logo · desktop (px)">
+            <input
+              type="number"
+              value={logoHDesktop}
+              onChange={(e) => setLogoHDesktop(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Tamaño iconos/imágenes (px)">
+            <input
+              type="number"
+              value={itemSize}
+              onChange={(e) => setItemSize(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
         </div>
         {logoMsg && <p className="mt-3 text-sm text-emerald-700">{logoMsg}</p>}
         <button

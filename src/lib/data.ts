@@ -772,11 +772,24 @@ export async function getMenuItems(): Promise<MenuItem[]> {
 
 export interface HeaderSettings {
   logo: string;
+  logoHeightMobile: number;
+  logoHeightDesktop: number;
+  itemSize: number;
 }
 
 export async function getHeaderSettings(): Promise<HeaderSettings> {
-  const logo = await getSiteSetting("header_logo");
-  return { logo: logo || "/logo-cecomro.png" };
+  const [logo, hMobile, hDesktop, itemSize] = await Promise.all([
+    getSiteSetting("header_logo"),
+    getSiteSetting("header_logo_height_mobile"),
+    getSiteSetting("header_logo_height_desktop"),
+    getSiteSetting("header_item_size"),
+  ]);
+  return {
+    logo: logo || "/logo-cecomro.png",
+    logoHeightMobile: parseInt(hMobile || "44", 10) || 44,
+    logoHeightDesktop: parseInt(hDesktop || "48", 10) || 48,
+    itemSize: parseInt(itemSize || "28", 10) || 28,
+  };
 }
 
 export async function getHeaderItems(): Promise<HeaderItem[]> {

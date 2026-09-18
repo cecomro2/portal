@@ -119,12 +119,18 @@ export function Header({
   socials,
   nav = mainNav,
   logoUrl = "/logo-cecomro.png",
+  logoHeightMobile = 44,
+  logoHeightDesktop = 48,
+  itemSize = 28,
   items = [],
 }: {
   links: TopbarLink[];
   socials: SocialLink[];
   nav?: NavItem[];
   logoUrl?: string;
+  logoHeightMobile?: number;
+  logoHeightDesktop?: number;
+  itemSize?: number;
   items?: HeaderItem[];
 }) {
   const [open, setOpen] = useState(false);
@@ -141,7 +147,11 @@ export function Header({
   return (
     <header className="relative z-50 border-b border-line bg-white py-3.5 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Logo src={logoUrl} />
+        <Logo
+          src={logoUrl}
+          heightMobile={logoHeightMobile}
+          heightDesktop={logoHeightDesktop}
+        />
 
         <div className="flex items-center gap-3">
           {/* Elementos del header (desktop) */}
@@ -162,11 +172,17 @@ export function Header({
                     <img
                       src={item.image_url}
                       alt={item.title}
-                      className="h-7 w-7 shrink-0 rounded object-contain"
+                      className="shrink-0 rounded object-contain"
+                      style={{ width: itemSize, height: itemSize }}
                     />
                   ) : (
-                    <span className="flex h-7 w-7 items-center justify-center rounded bg-primary-600 text-white">
-                      {Icon && <Icon size={14} />}
+                    <span
+                      className="flex items-center justify-center rounded bg-primary-600 text-white"
+                      style={{ width: itemSize, height: itemSize }}
+                    >
+                      {Icon && (
+                        <Icon size={Math.max(12, Math.round(itemSize * 0.5))} />
+                      )}
                     </span>
                   )}
                   <span className="flex flex-col text-left">

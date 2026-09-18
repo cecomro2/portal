@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { FilePlus, FileText, Loader2, X } from "lucide-react";
+import { FilePlus, FileText, FolderOpen, Loader2, X } from "lucide-react";
 import { uploadFile } from "@/lib/upload-client";
+import { MediaPickerModal } from "@/components/admin/media-picker-modal";
+import type { MediaItem } from "@/lib/types";
 
 export interface UploadedFile {
   file_name: string;
@@ -20,6 +22,7 @@ export function FileUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   async function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -75,15 +78,25 @@ export function FileUpload({
         </ul>
       )}
 
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={loading}
-        className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600 disabled:opacity-60"
-      >
-        {loading ? <Loader2 size={16} className="animate-spin" /> : <FilePlus size={16} />}
-        Agregar documento (PDF)
-      </button>
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={loading}
+          className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600 disabled:opacity-60"
+        >
+          {loading ? <Loader2 size={16} className="animate-spin" /> : <FilePlus size={16} />}
+          Agregar documento (PDF)
+        </button>
+        <button
+          type="button"
+          onClick={() => setPickerOpen(true)}
+          className="inline-flex items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:border-primary-300"
+        >
+          <FolderOpen size={16} />
+          Elegir de galería
+        </button>
+      </div>
 
       <input
         ref={inputRef}
@@ -95,6 +108,22 @@ export function FileUpload({
       />
 
       {error && <p className="mt-1.5 text-xs text-accent-600">{error}</p>}
+
+      <MediaPickerModal
+        open={pickerOpen}
+        kind="document"
+        multiple
+        onClose={() => setPickerOpen(false)}
+        onSelect={(items: MediaItem[]) => {
+          const docs = items.map((m) => ({
+            file_name: m.title,
+            file_url: m.file_url,
+            mime_type: m.mime_type ?? undefined,
+          }));
+          const existing = new Set(value.map((f) => f.file_url));
+          onChange([...value, ...docs.filter((d) => !existing.has(d.file_url))]);
+        }}
+      />
     </div>
   );
 }

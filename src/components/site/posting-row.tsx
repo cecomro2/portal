@@ -22,7 +22,10 @@ export function PostingRow({
   return (
     <Link
       href={`${basePath}/${posting.slug}`}
-      className="group flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6 transition hover:border-accent-400 hover:bg-white hover:shadow-sm sm:flex-row sm:items-center sm:justify-between"
+      className={cn(
+        "group flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6 transition hover:border-accent-400 hover:bg-white hover:shadow-sm sm:flex-row sm:items-center sm:justify-between",
+        status === "cerrada" && "opacity-60 hover:opacity-90",
+      )}
     >
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">

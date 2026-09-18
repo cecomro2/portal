@@ -39,6 +39,9 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
         socials={socials}
         nav={nav}
         logoUrl={header.logo}
+        logoHeightMobile={header.logoHeightMobile}
+        logoHeightDesktop={header.logoHeightDesktop}
+        itemSize={header.itemSize}
         items={headerItems}
       />
       <SiteNav nav={nav} />

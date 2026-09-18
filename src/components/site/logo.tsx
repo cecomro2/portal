@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -39,43 +39,52 @@ export function Logo({
   className,
   compact = false,
   src = "/logo-cecomro.png",
+  heightMobile = 44,
+  heightDesktop = 48,
 }: {
   className?: string;
   compact?: boolean;
   src?: string;
+  heightMobile?: number;
+  heightDesktop?: number;
 }) {
   const [error, setError] = useState(false);
+  const id = useId();
+  const logoClass = `cec-logo-${id.replace(/[^a-zA-Z0-9-]/g, "")}`;
 
   return (
-    <Link
-      href="/"
-      className={cn("group flex items-center gap-3", className)}
-      aria-label="CECOM-RO — Inicio"
-    >
-      {error ? (
-        <>
-          <LogoMark className="transition-transform group-hover:scale-105" />
-          <span className="flex flex-col leading-tight">
-            <span className="flex items-center gap-1.5 text-2xl font-bold tracking-tight">
-              <span className="text-primary-700">CECOM</span>
-              <span className="text-accent-500">RO</span>
-            </span>
-            {!compact && (
-              <span className="hidden max-w-[270px] text-[10px] font-semibold uppercase tracking-wider text-muted sm:block">
-                Centro de Competitividad de la Región Occidental
+    <>
+      <style>{`.${logoClass}{height:${heightMobile}px}@media(min-width:1024px){.${logoClass}{height:${heightDesktop}px}}`}</style>
+      <Link
+        href="/"
+        className={cn("group flex items-center gap-3", className)}
+        aria-label="CECOM-RO — Inicio"
+      >
+        {error ? (
+          <>
+            <LogoMark className="transition-transform group-hover:scale-105" />
+            <span className="flex flex-col leading-tight">
+              <span className="flex items-center gap-1.5 text-2xl font-bold tracking-tight">
+                <span className="text-primary-700">CECOM</span>
+                <span className="text-accent-500">RO</span>
               </span>
-            )}
-          </span>
-        </>
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt="CECOM-RO"
-          onError={() => setError(true)}
-          className="h-11 w-auto object-contain lg:h-12"
-        />
-      )}
-    </Link>
+              {!compact && (
+                <span className="hidden max-w-[270px] text-[10px] font-semibold uppercase tracking-wider text-muted sm:block">
+                  Centro de Competitividad de la Región Occidental
+                </span>
+              )}
+            </span>
+          </>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt="CECOM-RO"
+            onError={() => setError(true)}
+            className={`${logoClass} w-auto object-contain`}
+          />
+        )}
+      </Link>
+    </>
   );
 }
