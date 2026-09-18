@@ -11,7 +11,8 @@ export function PostingRow({
   posting: Posting;
   basePath: string;
 }) {
-  const open = postingStatus(posting) === "abierta";
+  const status = postingStatus(posting);
+  const open = status === "abierta";
   const locations = posting.locations?.length
     ? posting.locations
     : posting.location
@@ -28,16 +29,18 @@ export function PostingRow({
           <h3 className="text-base font-bold text-slate-900 transition group-hover:text-accent-500">
             {posting.title}
           </h3>
-          <span
-            className={cn(
-              "rounded-full px-2.5 py-0.5 text-[10px] font-bold",
-              open
-                ? "bg-emerald-100 text-emerald-800"
-                : "bg-gray-200 text-gray-600",
-            )}
-          >
-            {open ? "Convocatoria abierta" : "Cerrada"}
-          </span>
+          {status !== "none" && (
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-[10px] font-bold",
+                open
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-gray-200 text-gray-600",
+              )}
+            >
+              {open ? "Convocatoria abierta" : "Cerrada"}
+            </span>
+          )}
         </div>
 
         {posting.closing_date && (

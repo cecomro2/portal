@@ -21,7 +21,7 @@ export interface PostingInput {
   locations: string[];
   apply_emails: string[];
   published_at: string | null;
-  is_active: boolean;
+  status: "open" | "closed" | "none";
   files: PostingFileInput[];
   images: { image_url: string }[];
 }
@@ -52,7 +52,8 @@ export async function savePosting(
       locations: input.locations || [],
       apply_emails: input.apply_emails || [],
       published_at: input.published_at || new Date().toISOString().slice(0, 10),
-      is_active: input.is_active,
+      status: input.status || "open",
+      is_active: input.status !== "closed",
       updated_at: new Date().toISOString(),
     };
 

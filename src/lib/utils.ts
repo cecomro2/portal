@@ -2,15 +2,23 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { Posting } from "@/lib/types";
 
-/** Estado efectivo de una vacante/compra (considera la fecha de cierre). */
-export function postingStatus(p: Posting): "abierta" | "cerrada" {
-  if (!p.is_active) return "cerrada";
-  if (!p.closing_date) return "abierta";
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const close = new Date(p.closing_date);
-  close.setHours(0, 0, 0, 0);
-  return close >= today ? "abierta" : "cerrada";
+/** Estado efectivo de una vacante/compra (considera fecha de cierre y status). */
+export function postingStatus(
+  p: Posting,
+): "abierta" | "cerrada" | "none" {
+  const status = p.status;
+  if (status === "none") return "none";
+  if (status === "closed") return "cerrada";
+  // "open" → auto-cierre por fecha; legacy (null) → usar is_active
+  if (!status && p.is_active === false) return "cerrada";
+  if (p.closing_date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const close = new Date(p.closing_date);
+    close.setHours(0, 0, 0, 0);
+    if (close < today) return "cerrada";
+  }
+  return "abierta";
 }
 
 export function cn(...inputs: ClassValue[]) {
@@ -91,6 +99,14 @@ export function timeAgo(iso: string | null | undefined): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
+  if (days >= 365) {
+    const years = Math.floor(days / 365);
+    return years === 1 ? "hace 1 año" : `hace ${years} años`;
+  }
+  if (days >= 60) {
+    const months = Math.floor(days / 30);
+    return months === 1 ? "hace 1 mes" : `hace ${months} meses`;
+  }
   if (days > 0) return days === 1 ? "hace 1 día" : `hace ${days} días`;
   if (hours > 0) return hours === 1 ? "hace 1 hora" : `hace ${hours} horas`;
   if (minutes > 0) return minutes === 1 ? "hace 1 minuto" : `hace ${minutes} minutos`;

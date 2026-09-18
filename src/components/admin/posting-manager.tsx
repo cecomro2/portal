@@ -26,7 +26,7 @@ interface FormState {
   apply_info: string;
   closing_date: string;
   published_at: string;
-  is_active: boolean;
+  status: "open" | "closed" | "none";
   files: UploadedFile[];
   images: string[];
   locations: string[];
@@ -39,7 +39,7 @@ const empty: FormState = {
   apply_info: "",
   closing_date: "",
   published_at: "",
-  is_active: true,
+  status: "open",
   files: [],
   images: [],
   locations: [],
@@ -138,7 +138,12 @@ export function PostingManager({
       apply_info: p.apply_info ?? "",
       closing_date: p.closing_date ?? "",
       published_at: p.published_at ?? "",
-      is_active: p.is_active,
+      status:
+        p.status === "open" || p.status === "closed" || p.status === "none"
+          ? p.status
+          : p.is_active
+            ? "open"
+            : "closed",
       files: (files ?? []).map((f) => ({
         file_name: f.file_name,
         file_url: f.file_url,
@@ -167,7 +172,7 @@ export function PostingManager({
       locations: form.locations,
       apply_emails: form.apply_emails,
       published_at: form.published_at || null,
-      is_active: form.is_active,
+      status: form.status,
       files: form.files,
       images: form.images.map((url) => ({ image_url: url })),
     });
@@ -298,15 +303,19 @@ export function PostingManager({
               />
             </Field>
 
-            <label className="flex items-center gap-2 text-sm font-medium text-ink">
-              <input
-                type="checkbox"
-                checked={form.is_active}
-                onChange={(e) => set("is_active", e.target.checked)}
-                className="h-4 w-4 rounded border-line text-primary-600"
-              />
-              Activa (abierta)
-            </label>
+            <Field label="Estado">
+              <select
+                value={form.status}
+                onChange={(e) =>
+                  set("status", e.target.value as "open" | "closed" | "none")
+                }
+                className={inputClass}
+              >
+                <option value="open">Abierta</option>
+                <option value="closed">Cerrada</option>
+                <option value="none">Sin estado</option>
+              </select>
+            </Field>
 
             {error && (
               <p className="rounded-lg border border-accent-200 bg-accent-50 px-4 py-2.5 text-sm text-accent-700">
@@ -387,10 +396,16 @@ export function PostingManager({
                     className={
                       status === "abierta"
                         ? "rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700"
-                        : "rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-500"
+                        : status === "cerrada"
+                          ? "rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-500"
+                          : "rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-500"
                     }
                   >
-                    {status === "abierta" ? "Abierta" : "Cerrada"}
+                    {status === "abierta"
+                      ? "Abierta"
+                      : status === "cerrada"
+                        ? "Cerrada"
+                        : "Sin estado"}
                   </span>
                   <div className="flex gap-1">
                     <button

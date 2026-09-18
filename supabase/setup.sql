@@ -117,6 +117,7 @@ create table if not exists public.postings (
   apply_emails text[] not null default '{}',
   published_at date not null default current_date,
   is_active boolean not null default true,
+  status text not null default 'open',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

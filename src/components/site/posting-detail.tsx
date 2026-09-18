@@ -19,7 +19,8 @@ export function PostingDetail({
   backHref: string;
   backLabel: string;
 }) {
-  const open = postingStatus(posting) === "abierta";
+  const status = postingStatus(posting);
+  const open = status === "abierta";
   const locations = posting.locations?.length
     ? posting.locations
     : posting.location
@@ -38,16 +39,18 @@ export function PostingDetail({
         </Link>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <span
-            className={cn(
-              "rounded-full px-3 py-1 text-xs font-semibold",
-              open
-                ? "bg-emerald-50 text-emerald-700"
-                : "bg-gray-100 text-gray-500",
-            )}
-          >
-            {open ? "Convocatoria abierta" : "Convocatoria cerrada"}
-          </span>
+          {status !== "none" && (
+            <span
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-semibold",
+                open
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "bg-gray-100 text-gray-500",
+              )}
+            >
+              {open ? "Convocatoria abierta" : "Convocatoria cerrada"}
+            </span>
+          )}
           {posting.closing_date && (
             <span className="flex items-center gap-1.5 text-sm text-muted">
               <CalendarDays size={15} />
@@ -135,12 +138,12 @@ export function PostingDetail({
               )}
             </div>
           ) : null
-        ) : (
+        ) : status === "cerrada" ? (
           <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-muted">
             Esta convocatoria ha cerrado y la información para aplicar ya no
             está disponible.
           </div>
-        )}
+        ) : null}
       </div>
     </section>
   );

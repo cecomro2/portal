@@ -60,6 +60,7 @@ export interface Posting {
   apply_emails: string[] | null;
   published_at: string | null;
   is_active: boolean;
+  status: string | null;
   created_at: string;
   updated_at: string;
 }
