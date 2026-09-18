@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deletePosting, savePosting } from "@/lib/actions/postings";
-import type { Posting, PostingType } from "@/lib/types";
+import type { Posting, PostingCategory, PostingType } from "@/lib/types";
 import { formatDate, postingStatus } from "@/lib/utils";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
@@ -27,6 +27,7 @@ interface FormState {
   closing_date: string;
   published_at: string;
   status: "open" | "closed" | "none";
+  category_id: string;
   files: UploadedFile[];
   images: string[];
   locations: string[];
@@ -40,6 +41,7 @@ const empty: FormState = {
   closing_date: "",
   published_at: "",
   status: "open",
+  category_id: "",
   files: [],
   images: [],
   locations: [],
@@ -75,6 +77,7 @@ export function PostingManager({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [locationOptions, setLocationOptions] = useState<string[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<PostingCategory[]>([]);
 
   useEffect(() => {
     const supabase = createBrowserSupabase();
@@ -83,6 +86,11 @@ export function PostingManager({
       .select("name")
       .order("name")
       .then(({ data }) => setLocationOptions((data ?? []).map((l) => l.name)));
+    supabase
+      .from("posting_categories")
+      .select("*")
+      .order("name")
+      .then(({ data }) => setCategoryOptions((data ?? []) as PostingCategory[]));
   }, []);
 
   const filtered = useMemo(() => {
@@ -137,6 +145,7 @@ export function PostingManager({
       description: p.description ?? "",
       apply_info: p.apply_info ?? "",
       closing_date: p.closing_date ?? "",
+      category_id: p.category_id ?? "",
       published_at: p.published_at ?? "",
       status:
         p.status === "open" || p.status === "closed" || p.status === "none"
@@ -169,6 +178,7 @@ export function PostingManager({
       apply_info: form.apply_info,
       closing_date: form.closing_date || null,
       location: form.locations[0] ?? "",
+      category_id: form.category_id || null,
       locations: form.locations,
       apply_emails: form.apply_emails,
       published_at: form.published_at || null,
@@ -242,6 +252,20 @@ export function PostingManager({
             </Field>
 
             <div className="grid gap-4 lg:grid-cols-2">
+              <Field label="Categoría">
+                <select
+                  value={form.category_id}
+                  onChange={(e) => set("category_id", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">— Sin categoría —</option>
+                  {categoryOptions.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <Field label="Fecha de publicación" hint="Controla el orden en la lista (por defecto, hoy).">
                 <input
                   type="date"

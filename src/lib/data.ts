@@ -18,6 +18,7 @@ import type {
   PostFile,
   PostImage,
   Posting,
+  PostingCategory,
   PostingFile,
   PostingImage,
   PostVideo,
@@ -125,6 +126,7 @@ export const FALLBACK_VACANCIES: Posting[] = [
       "Enviar hoja de vida actualizada y carta de interés al correo convocatorias@cecomro.com, indicando en el asunto el nombre de la convocatoria, antes de la fecha de cierre.",
     closing_date: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
     location: "Región Ño Kribo, Comarca Ngäbe Buglé",
+    category_id: null,
     locations: null,
     apply_emails: null,
     published_at: null,
@@ -144,6 +146,7 @@ export const FALLBACK_VACANCIES: Posting[] = [
       "Presentar la propuesta técnica y económica en sobre cerrado en las oficinas del CECOM-RO, o por correo electrónico a compras@cecomro.com.",
     closing_date: new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10),
     location: null,
+    category_id: null,
     locations: null,
     apply_emails: null,
     published_at: null,
@@ -257,6 +260,25 @@ async function listPersons(table: "board_members" | "executive_team") {
   }
 }
 
+async function attachPostingCategories(
+  supabase: ReturnType<typeof createPublicSupabase>,
+  postings: Posting[],
+): Promise<Posting[]> {
+  const ids = [
+    ...new Set(postings.map((p) => p.category_id).filter(Boolean)),
+  ] as string[];
+  if (!ids.length) return postings;
+  const { data } = await supabase
+    .from("posting_categories")
+    .select("id, name")
+    .in("id", ids);
+  const map = new Map((data ?? []).map((c) => [c.id, c.name]));
+  return postings.map((p) => ({
+    ...p,
+    category_name: p.category_id ? (map.get(p.category_id) ?? null) : null,
+  }));
+}
+
 export async function getPostings(
   type: Posting["type"],
 ): Promise<Posting[]> {
@@ -270,7 +292,7 @@ export async function getPostings(
       .order("published_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
     if (error) return [];
-    return (data ?? []) as Posting[];
+    return attachPostingCategories(supabase, (data ?? []) as Posting[]);
   } catch {
     return [];
   }
@@ -294,7 +316,10 @@ export async function getPostingBySlug(
       .eq("slug", slug)
       .maybeSingle();
     if (error || !data) return null;
-    return data as Posting;
+    const [withCategory] = await attachPostingCategories(supabase, [
+      data as Posting,
+    ]);
+    return withCategory;
   } catch {
     return null;
   }
@@ -343,6 +368,22 @@ export async function getLocations(): Promise<Location[]> {
       .order("name", { ascending: true });
     if (error) return [];
     return (data ?? []) as Location[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getPostingCategories(): Promise<PostingCategory[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const supabase = createPublicSupabase();
+    const { data, error } = await supabase
+      .from("posting_categories")
+      .select("*")
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
+    if (error) return [];
+    return (data ?? []) as PostingCategory[];
   } catch {
     return [];
   }

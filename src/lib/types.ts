@@ -56,6 +56,8 @@ export interface Posting {
   apply_info: string | null;
   closing_date: string | null;
   location: string | null;
+  category_id: string | null;
+  category_name?: string | null;
   locations: string[] | null;
   apply_emails: string[] | null;
   published_at: string | null;
@@ -63,6 +65,14 @@ export interface Posting {
   status: string | null;
   created_at: string;
   updated_at: string;
+}
+
+/** Categoría de vacantes/portal de compras. */
+export interface PostingCategory {
+  id: string;
+  name: string;
+  sort_order: number;
+  created_at: string;
 }
 
 /** Ubicación reutilizable (pills de vacantes/portal). */

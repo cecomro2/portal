@@ -102,6 +102,7 @@ create table if not exists public.postings (
   apply_info text,
   closing_date date,
   location text,
+  category_id uuid,
   locations text[] not null default '{}',
   apply_emails text[] not null default '{}',
   published_at date not null default current_date,
@@ -143,6 +144,15 @@ create table if not exists public.locations (
 );
 alter table public.locations enable row level security;
 create policy "locations_select" on public.locations for select using (true);
+
+create table if not exists public.posting_categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+alter table public.posting_categories enable row level security;
+create policy "posting_categories_select" on public.posting_categories for select using (true);
 
 -- ------------------------------------------------------------
 -- Junta Directiva y Equipo Ejecutivo

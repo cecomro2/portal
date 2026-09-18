@@ -58,7 +58,6 @@ const groups: NavGroup[] = [
       { href: "/admin/junta", label: "Junta Directiva", icon: Users },
       { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
       { href: "/admin/asociados", label: "Asociados y Aliados", icon: Building2 },
-      { href: "/admin/ubicaciones", label: "Ubicaciones", icon: MapPin },
     ],
   },
   {
@@ -66,6 +65,8 @@ const groups: NavGroup[] = [
     items: [
       { href: "/admin/vacantes", label: "Vacantes", icon: Briefcase },
       { href: "/admin/compras", label: "Portal de Compras", icon: ShoppingCart },
+      { href: "/admin/categorias-aecid", label: "Categorías AECID", icon: FolderOpen },
+      { href: "/admin/ubicaciones", label: "Ubicaciones", icon: MapPin },
     ],
   },
   {

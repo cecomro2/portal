@@ -51,6 +51,11 @@ export function PostingDetail({
               {open ? "Convocatoria abierta" : "Convocatoria cerrada"}
             </span>
           )}
+          {posting.category_name && (
+            <span className="rounded-full bg-accent-500/10 px-3 py-1 text-xs font-semibold text-accent-600">
+              {posting.category_name}
+            </span>
+          )}
           {posting.closing_date && (
             <span className="flex items-center gap-1.5 text-sm text-muted">
               <CalendarDays size={15} />

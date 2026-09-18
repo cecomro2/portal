@@ -41,6 +41,11 @@ export function PostingRow({
               {open ? "Convocatoria abierta" : "Cerrada"}
             </span>
           )}
+          {posting.category_name && (
+            <span className="rounded-full bg-accent-500/10 px-2.5 py-0.5 text-[10px] font-bold text-accent-600">
+              {posting.category_name}
+            </span>
+          )}
         </div>
 
         {posting.closing_date && (

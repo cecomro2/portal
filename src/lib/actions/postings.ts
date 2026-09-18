@@ -18,6 +18,7 @@ export interface PostingInput {
   apply_info: string;
   closing_date: string | null;
   location: string;
+  category_id: string | null;
   locations: string[];
   apply_emails: string[];
   published_at: string | null;
@@ -49,6 +50,7 @@ export async function savePosting(
       apply_info: input.apply_info || null,
       closing_date: input.closing_date || null,
       location: input.location || null,
+      category_id: input.category_id || null,
       locations: input.locations || [],
       apply_emails: input.apply_emails || [],
       published_at: input.published_at || new Date().toISOString().slice(0, 10),
