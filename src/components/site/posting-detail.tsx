@@ -4,6 +4,7 @@ import { formatDate, postingStatus } from "@/lib/utils";
 import type { Posting, PostingFile, PostingImage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { DocumentList } from "@/components/site/document-list";
+import { ImageGallery } from "@/components/site/image-gallery";
 
 export function PostingDetail({
   posting,
@@ -69,17 +70,13 @@ export function PostingDetail({
         {/* Imágenes */}
         {images && images.length > 0 && (
           <div className="mt-8">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {images.map((img) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={img.id}
-                  src={img.image_url}
-                  alt={posting.title}
-                  className="aspect-square w-full rounded-xl border border-line object-cover"
-                />
-              ))}
-            </div>
+            <ImageGallery
+              images={images.map((img) => ({
+                id: img.id,
+                url: img.image_url,
+                alt: posting.title,
+              }))}
+            />
           </div>
         )}
 
