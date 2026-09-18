@@ -61,7 +61,7 @@ export function PostingRow({
         </p>
 
         <p className="mt-2 text-xs text-muted">
-          Publicado {timeAgo(posting.created_at)}
+          Publicado {timeAgo(posting.published_at ?? posting.created_at)}
         </p>
       </div>
 

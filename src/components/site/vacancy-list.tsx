@@ -28,8 +28,8 @@ export function VacancyList({
       return true;
     });
     return [...list].sort((a, b) => {
-      const ta = new Date(a.created_at).getTime();
-      const tb = new Date(b.created_at).getTime();
+      const ta = new Date(a.published_at ?? a.created_at).getTime();
+      const tb = new Date(b.published_at ?? b.created_at).getTime();
       return sort === "desc" ? tb - ta : ta - tb;
     });
   }, [postings, query, sort]);
