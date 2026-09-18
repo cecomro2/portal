@@ -48,6 +48,7 @@ next-env.d.ts
 /pila pagina/
 /cadenas de valor/
 /agro/
+/blog prensa/
 *.pdf
 
 # datos intermedios de scraping
