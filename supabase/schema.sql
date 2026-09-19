@@ -346,6 +346,7 @@ create table if not exists public.vision_documents (
   vision_id uuid not null references public.visions(id) on delete cascade,
   label text not null,
   file_url text not null,
+  type text not null default 'file',
   sort_order int not null default 0
 );
 alter table public.vision_documents enable row level security;

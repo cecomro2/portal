@@ -215,12 +215,14 @@ export interface Vision {
   sort_order: number;
 }
 
-/** Documento PDF de una visión. */
+/** Documento PDF o enlace de una visión. */
 export interface VisionDocument {
   id: string;
   vision_id: string;
   label: string;
   file_url: string;
+  /** "file" = PDF adjunto, "link" = enlace externo. */
+  type: "file" | "link";
   sort_order: number;
 }
 

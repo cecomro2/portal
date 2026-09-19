@@ -45,6 +45,7 @@ export default async function VisionDetailPage({
               id: d.id,
               label: d.label,
               file_url: d.file_url,
+              type: d.type,
             }))}
           />
         </div>

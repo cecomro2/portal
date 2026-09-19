@@ -16,6 +16,7 @@ export interface VisionDocumentInput {
   vision_id: string;
   label: string;
   file_url: string;
+  type?: "file" | "link";
   sort_order: number;
 }
 
@@ -78,6 +79,7 @@ export async function saveVisionDocument(
       vision_id: input.vision_id,
       label: input.label,
       file_url: input.file_url,
+      type: input.type || "file",
       sort_order: input.sort_order,
     };
     const { error } = input.id

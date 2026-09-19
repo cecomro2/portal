@@ -683,9 +683,9 @@ export async function getVisionBySlug(slug: string): Promise<Vision | null> {
 
 function fallbackVisionDocs(visionId: string): VisionDocument[] {
   return [
-    { id: `${visionId}-1`, vision_id: visionId, label: "Síntesis Diagnóstica Preliminar", file_url: "/uploads/demo/sintesis-diagnostica.pdf", sort_order: 1 },
-    { id: `${visionId}-2`, vision_id: visionId, label: "Visión", file_url: "/uploads/demo/sintesis-diagnostica.pdf", sort_order: 2 },
-    { id: `${visionId}-3`, vision_id: visionId, label: "Ver Versión Actualizada", file_url: "/uploads/demo/sintesis-diagnostica.pdf", sort_order: 3 },
+    { id: `${visionId}-1`, vision_id: visionId, label: "Síntesis Diagnóstica Preliminar", file_url: "/uploads/demo/sintesis-diagnostica.pdf", type: "file", sort_order: 1 },
+    { id: `${visionId}-2`, vision_id: visionId, label: "Visión", file_url: "/uploads/demo/sintesis-diagnostica.pdf", type: "file", sort_order: 2 },
+    { id: `${visionId}-3`, vision_id: visionId, label: "Ver Versión Actualizada", file_url: "/uploads/demo/sintesis-diagnostica.pdf", type: "file", sort_order: 3 },
   ];
 }
 

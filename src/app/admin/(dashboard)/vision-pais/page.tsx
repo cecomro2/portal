@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  ExternalLink,
   FileText,
   FolderOpen,
   Loader2,
@@ -21,6 +22,7 @@ import {
   saveVisionDocument,
 } from "@/lib/actions/visions";
 import type { MediaItem, Vision, VisionDocument } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { MediaPickerModal } from "@/components/admin/media-picker-modal";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
@@ -58,6 +60,7 @@ export default function VisionPaisAdminPage() {
   const [editingDoc, setEditingDoc] = useState<VisionDocument | null>(null);
   const [dLabel, setDLabel] = useState("");
   const [dUrl, setDUrl] = useState("");
+  const [dType, setDType] = useState<"file" | "link">("file");
   const [dOrder, setDOrder] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -139,6 +142,7 @@ export default function VisionPaisAdminPage() {
     setEditingDoc(null);
     setDLabel("");
     setDUrl("");
+    setDType("file");
     setDOrder(documents.length + 1);
     setError("");
     setDFormOpen(true);
@@ -148,6 +152,7 @@ export default function VisionPaisAdminPage() {
     setEditingDoc(d);
     setDLabel(d.label);
     setDUrl(d.file_url);
+    setDType(d.type ?? "file");
     setDOrder(d.sort_order);
     setError("");
     setDFormOpen(true);
@@ -181,6 +186,7 @@ export default function VisionPaisAdminPage() {
       vision_id: selected.id,
       label: dLabel,
       file_url: dUrl,
+      type: dType,
       sort_order: dOrder,
     });
     setSaving(false);
@@ -310,43 +316,88 @@ export default function VisionPaisAdminPage() {
                 className={inputClass}
               />
             </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="PDF *">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600"
-                  >
-                    {uploading ? (
-                      <Loader2 size={16} className="animate-spin" />
-                    ) : (
-                      <Upload size={16} />
-                    )}
-                    {dUrl ? "Cambiar PDF" : "Subir PDF"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPickerOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:border-primary-300"
-                  >
-                    <FolderOpen size={16} />
-                    Elegir de galería
-                  </button>
-                  {dUrl && (
-                    <span className="truncate text-xs text-muted">
-                      PDF cargado
-                    </span>
+
+            <Field label="Tipo">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDType("file")}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition",
+                    dType === "file"
+                      ? "border-primary-400 bg-primary-50 text-primary-700"
+                      : "border-line bg-white text-muted hover:border-primary-300",
                   )}
-                </div>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="application/pdf,.pdf"
-                  className="hidden"
-                  onChange={handleFile}
-                />
-              </Field>
+                >
+                  <FileText size={15} />
+                  PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDType("link")}
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition",
+                    dType === "link"
+                      ? "border-primary-400 bg-primary-50 text-primary-700"
+                      : "border-line bg-white text-muted hover:border-primary-300",
+                  )}
+                >
+                  <ExternalLink size={15} />
+                  Enlace
+                </button>
+              </div>
+            </Field>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {dType === "file" ? (
+                <Field label="PDF *">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileRef.current?.click()}
+                      className="inline-flex items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-4 py-2.5 text-sm font-medium text-muted transition hover:border-primary-300 hover:text-primary-600"
+                    >
+                      {uploading ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Upload size={16} />
+                      )}
+                      {dUrl ? "Cambiar PDF" : "Subir PDF"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPickerOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:border-primary-300"
+                    >
+                      <FolderOpen size={16} />
+                      Elegir de galería
+                    </button>
+                    {dUrl && (
+                      <span className="truncate text-xs text-muted">
+                        PDF cargado
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    className="hidden"
+                    onChange={handleFile}
+                  />
+                </Field>
+              ) : (
+                <Field label="URL del enlace *" hint="Ej. https://ejemplo.com">
+                  <input
+                    required
+                    type="url"
+                    value={dUrl}
+                    onChange={(e) => setDUrl(e.target.value)}
+                    placeholder="https://"
+                    className={inputClass}
+                  />
+                </Field>
+              )}
               <Field label="Orden">
                 <input
                   type="number"
@@ -475,7 +526,14 @@ export default function VisionPaisAdminPage() {
                   className="flex items-center justify-between gap-2 rounded-lg border border-line bg-white p-3"
                 >
                   <span className="flex min-w-0 items-center gap-2">
-                    <FileText size={16} className="shrink-0 text-accent-500" />
+                    {d.type === "link" ? (
+                      <ExternalLink
+                        size={16}
+                        className="shrink-0 text-primary-500"
+                      />
+                    ) : (
+                      <FileText size={16} className="shrink-0 text-accent-500" />
+                    )}
                     <span className="truncate text-sm text-ink">{d.label}</span>
                   </span>
                   <div className="flex shrink-0 gap-1">
