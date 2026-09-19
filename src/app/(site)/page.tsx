@@ -307,7 +307,7 @@ export default async function HomePage() {
                 <Reveal key={post.id} delay={i * 0.08}>
                   <Link
                     href={`/noticias/${post.slug}`}
-                    className="group block overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
+                    className="group block min-w-0 overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">
                       {post.cover_image_url ? (
@@ -327,7 +327,7 @@ export default async function HomePage() {
                       <p className="text-xs font-medium text-muted">
                         {formatDate(post.published_at)}
                       </p>
-                      <h3 className="mt-2 line-clamp-2 text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
+                      <h3 className="mt-2 line-clamp-2 break-words text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
                         {post.title}
                       </h3>
                     </div>

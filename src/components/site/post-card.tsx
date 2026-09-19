@@ -6,7 +6,7 @@ export function PostCard({ post }: { post: Post }) {
   return (
     <Link
       href={`/noticias/${post.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">
         {post.cover_image_url ? (
@@ -26,11 +26,13 @@ export function PostCard({ post }: { post: Post }) {
         <p className="text-xs font-medium text-muted">
           {formatDate(post.published_at)}
         </p>
-        <h3 className="mt-2 line-clamp-2 text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
+        <h3 className="mt-2 line-clamp-2 break-words text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
           {post.title}
         </h3>
         {post.excerpt && (
-          <p className="mt-2 line-clamp-3 text-sm text-muted">{post.excerpt}</p>
+          <p className="mt-2 line-clamp-3 break-words text-sm text-muted">
+            {post.excerpt}
+          </p>
         )}
       </div>
     </Link>
