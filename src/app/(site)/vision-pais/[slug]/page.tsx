@@ -35,6 +35,11 @@ export default async function VisionDetailPage({
 
       <section className="bg-white py-12 lg:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          {vision.description && (
+            <div className="prose-sm mb-10 whitespace-pre-line text-base leading-relaxed text-ink/80">
+              {vision.description}
+            </div>
+          )}
           <DocumentList
             documents={documents.map((d) => ({
               id: d.id,

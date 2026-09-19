@@ -7,6 +7,7 @@ import { slugify } from "@/lib/utils";
 export interface VisionInput {
   id?: string;
   title: string;
+  description?: string;
   sort_order: number;
 }
 
@@ -26,14 +27,23 @@ export async function saveVision(
     if (input.id) {
       const { error } = await supabase
         .from("visions")
-        .update({ title: input.title, sort_order: input.sort_order })
+        .update({
+          title: input.title,
+          description: input.description || null,
+          sort_order: input.sort_order,
+        })
         .eq("id", input.id);
       if (error) return { ok: false, error: error.message };
     } else {
       const slug = `${slugify(input.title)}-${Date.now().toString(36)}`;
       const { error } = await supabase
         .from("visions")
-        .insert({ title: input.title, slug, sort_order: input.sort_order });
+        .insert({
+          title: input.title,
+          slug,
+          description: input.description || null,
+          sort_order: input.sort_order,
+        });
       if (error) return { ok: false, error: error.message };
     }
     revalidatePath("/vision-pais");

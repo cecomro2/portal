@@ -335,6 +335,7 @@ create table if not exists public.visions (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   slug text not null unique,
+  description text,
   sort_order int not null default 0
 );
 alter table public.visions enable row level security;

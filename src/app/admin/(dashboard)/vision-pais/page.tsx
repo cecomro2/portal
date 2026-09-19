@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   FileText,
+  FolderOpen,
   Loader2,
   Pencil,
   Plus,
@@ -19,7 +20,8 @@ import {
   saveVision,
   saveVisionDocument,
 } from "@/lib/actions/visions";
-import type { Vision, VisionDocument } from "@/lib/types";
+import type { MediaItem, Vision, VisionDocument } from "@/lib/types";
+import { MediaPickerModal } from "@/components/admin/media-picker-modal";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
   AdminPageHeader,
@@ -49,6 +51,7 @@ export default function VisionPaisAdminPage() {
   const [vFormOpen, setVFormOpen] = useState(false);
   const [editingVision, setEditingVision] = useState<Vision | null>(null);
   const [vTitle, setVTitle] = useState("");
+  const [vDesc, setVDesc] = useState("");
   const [vOrder, setVOrder] = useState(0);
 
   const [dFormOpen, setDFormOpen] = useState(false);
@@ -58,6 +61,7 @@ export default function VisionPaisAdminPage() {
   const [dOrder, setDOrder] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [error, setError] = useState("");
 
   async function loadDocs(v: Vision) {
@@ -88,6 +92,7 @@ export default function VisionPaisAdminPage() {
   function openNewVision() {
     setEditingVision(null);
     setVTitle("");
+    setVDesc("");
     setVOrder(visions.length + 1);
     setError("");
     setVFormOpen(true);
@@ -96,6 +101,7 @@ export default function VisionPaisAdminPage() {
   function openEditVision(v: Vision) {
     setEditingVision(v);
     setVTitle(v.title);
+    setVDesc(v.description ?? "");
     setVOrder(v.sort_order);
     setError("");
     setVFormOpen(true);
@@ -108,6 +114,7 @@ export default function VisionPaisAdminPage() {
     const res = await saveVision({
       id: editingVision?.id,
       title: vTitle,
+      description: vDesc,
       sort_order: vOrder,
     });
     setSaving(false);
@@ -223,39 +230,52 @@ export default function VisionPaisAdminPage() {
               <X size={18} />
             </button>
           </div>
-          <form onSubmit={onSubmitVision} className="grid gap-4 sm:grid-cols-3">
-            <Field label="Título *">
-              <input
-                required
-                value={vTitle}
-                onChange={(e) => setVTitle(e.target.value)}
-                className={inputClass}
-              />
-            </Field>
-            <Field label="Orden">
-              <input
-                type="number"
-                value={vOrder}
-                onChange={(e) => setVOrder(Number(e.target.value))}
-                className={inputClass}
-              />
-            </Field>
-            <div className="flex items-end gap-2">
-              <button
-                type="submit"
-                disabled={saving}
-                className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-60"
-              >
-                Guardar
-              </button>
-              <button
-                type="button"
-                onClick={() => setVFormOpen(false)}
-                className="rounded-lg border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:bg-surface"
-              >
-                Cancelar
-              </button>
+          <form onSubmit={onSubmitVision} className="grid gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Título *">
+                <input
+                  required
+                  value={vTitle}
+                  onChange={(e) => setVTitle(e.target.value)}
+                  className={inputClass}
+                />
+              </Field>
+              <Field label="Orden">
+                <input
+                  type="number"
+                  value={vOrder}
+                  onChange={(e) => setVOrder(Number(e.target.value))}
+                  className={inputClass}
+                />
+              </Field>
+              <div className="flex items-end gap-2">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-700 disabled:opacity-60"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVFormOpen(false)}
+                  className="rounded-lg border border-line px-5 py-2.5 text-sm font-medium text-muted transition hover:bg-surface"
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
+            <Field
+              label="Descripción"
+              hint="Texto que aparece arriba de los documentos PDF en la página pública."
+            >
+              <textarea
+                value={vDesc}
+                onChange={(e) => setVDesc(e.target.value)}
+                rows={5}
+                className={inputClass}
+              />
+            </Field>
           </form>
         </Card>
       )}
@@ -292,7 +312,7 @@ export default function VisionPaisAdminPage() {
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="PDF *">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => fileRef.current?.click()}
@@ -304,6 +324,14 @@ export default function VisionPaisAdminPage() {
                       <Upload size={16} />
                     )}
                     {dUrl ? "Cambiar PDF" : "Subir PDF"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPickerOpen(true)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:border-primary-300"
+                  >
+                    <FolderOpen size={16} />
+                    Elegir de galería
                   </button>
                   {dUrl && (
                     <span className="truncate text-xs text-muted">
@@ -352,6 +380,20 @@ export default function VisionPaisAdminPage() {
           </form>
         </Card>
       )}
+
+      <MediaPickerModal
+        open={pickerOpen}
+        kind="document"
+        multiple={false}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(items: MediaItem[]) => {
+          const doc = items[0];
+          if (doc) {
+            setDUrl(doc.file_url);
+            if (!dLabel) setDLabel(doc.title);
+          }
+        }}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Visiones */}
