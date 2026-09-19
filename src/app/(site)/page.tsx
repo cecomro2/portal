@@ -302,11 +302,11 @@ export default async function HomePage() {
               </div>
             </Reveal>
 
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {homePosts.slice(0, 3).map((post, i) => (
                 <Reveal key={post.id} delay={i * 0.08}>
                   <Link
-                    href={`/noticias/${post.slug}`}
+                    href={`/${post.slug}`}
                     className="group block min-w-0 overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">

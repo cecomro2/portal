@@ -116,7 +116,7 @@ export default async function ProyectosCooperacionPage() {
               </div>
             </Reveal>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {prensa.slice(0, 6).map((post, i) => (
                 <Reveal key={post.id} delay={(i % 3) * 0.07}>
                   <PostCard post={post} />

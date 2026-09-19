@@ -5,7 +5,7 @@ import { formatDate } from "@/lib/utils";
 export function PostCard({ post }: { post: Post }) {
   return (
     <Link
-      href={`/noticias/${post.slug}`}
+      href={`/${post.slug}`}
       className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">

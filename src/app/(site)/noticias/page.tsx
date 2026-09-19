@@ -46,7 +46,7 @@ export default async function NoticiasPage() {
           )}
 
           {posts.length ? (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post, i) => (
                 <Reveal key={post.id} delay={(i % 3) * 0.07}>
                   <PostCard post={post} />
