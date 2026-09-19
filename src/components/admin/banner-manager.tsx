@@ -23,6 +23,7 @@ const empty = {
   cta_label: "",
   cta_href: "",
   image_url: "",
+  overlay_opacity: 60,
   sort_order: 0,
   is_active: true,
 };
@@ -64,6 +65,7 @@ export function BannerManager() {
       cta_label: b.cta_label ?? "",
       cta_href: b.cta_href ?? "",
       image_url: b.image_url,
+      overlay_opacity: b.overlay_opacity ?? 60,
       sort_order: b.sort_order,
       is_active: b.is_active,
     });
@@ -178,6 +180,24 @@ export function BannerManager() {
                   value={form.image_url}
                   onChange={(url) => set("image_url", url)}
                 />
+              </Field>
+              <Field
+                label="Opacidad del overlay"
+                hint="Oscurece la imagen de fondo para que el texto se lea en blanco. 0 = imagen clara, 100 = fondo casi negro."
+              >
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={form.overlay_opacity}
+                    onChange={(e) => set("overlay_opacity", Number(e.target.value))}
+                    className="w-full accent-primary-600"
+                  />
+                  <span className="w-12 shrink-0 text-sm font-semibold text-primary-700">
+                    {form.overlay_opacity}%
+                  </span>
+                </div>
               </Field>
             </div>
 

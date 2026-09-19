@@ -39,6 +39,8 @@ export interface Banner {
   cta_label: string | null;
   cta_href: string | null;
   image_url: string;
+  /** Opacidad del overlay oscuro del slide (0-100). */
+  overlay_opacity: number | null;
   sort_order: number;
   is_active: boolean;
   created_at: string;

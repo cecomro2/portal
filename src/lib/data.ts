@@ -45,6 +45,7 @@ export const FALLBACK_BANNERS: Banner[] = [
     cta_href: "/nosotros/quienes-somos",
     image_url:
       "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80",
+    overlay_opacity: 60,
     sort_order: 1,
     is_active: true,
     created_at: new Date().toISOString(),
@@ -59,6 +60,7 @@ export const FALLBACK_BANNERS: Banner[] = [
     cta_href: "/nuestro-trabajo/turismo",
     image_url:
       "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1920&q=80",
+    overlay_opacity: 60,
     sort_order: 2,
     is_active: true,
     created_at: new Date().toISOString(),
@@ -73,6 +75,7 @@ export const FALLBACK_BANNERS: Banner[] = [
     cta_href: "/nuestro-trabajo/vision-2050",
     image_url:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80",
+    overlay_opacity: 60,
     sort_order: 3,
     is_active: true,
     created_at: new Date().toISOString(),

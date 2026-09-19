@@ -96,7 +96,7 @@ export function Hero({ banners }: { banners: Banner[] }) {
               <img
                 src={b.image_url}
                 alt={b.title}
-                className="h-full w-full object-cover object-center brightness-50"
+                className="h-full w-full object-cover object-center"
               />
             ) : (
               <div
@@ -111,7 +111,10 @@ export function Hero({ banners }: { banners: Banner[] }) {
                 )}
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#23286E]/95 via-[#2F358A]/75 to-transparent" />
+            <div
+              className="absolute inset-0 bg-primary-950"
+              style={{ opacity: (b.overlay_opacity ?? 60) / 100 }}
+            />
 
             <div className="absolute inset-0 z-20 flex items-center">
               <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -134,7 +137,7 @@ export function Hero({ banners }: { banners: Banner[] }) {
                   {b.subtitle && (
                     <p
                       data-hero-anim
-                      className="mt-4 max-w-2xl text-sm text-white/85 sm:text-base"
+                      className="mt-4 max-w-2xl text-sm text-white sm:text-base"
                     >
                       {b.subtitle}
                     </p>
