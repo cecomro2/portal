@@ -54,6 +54,20 @@ body {
     "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  text-align: justify;
+}
+
+/* Elementos de interfaz que no deben justificarse */
+button,
+input,
+textarea,
+select,
+th,
+td,
+code,
+pre,
+.kbd {
+  text-align: initial;
 }
 
 /* Restaurar cursor de puntero en botones (Tailwind v4 usa cursor: default) */

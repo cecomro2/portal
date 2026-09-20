@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     description:
       "Impulsamos la posición competitiva de la Región Occidental de Panamá.",
   },
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
