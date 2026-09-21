@@ -51,7 +51,20 @@ export async function savePost(
         .single();
       slug = data?.slug;
     } else {
-      slug = `${slugify(input.title)}-${Date.now().toString(36)}`;
+      const slugBase = slugify(input.title) || "post";
+      slug = slugBase;
+      let suffix = 2;
+      // Slug limpio, sin sufijos aleatorios; si colisiona, se numera (-2, -3, …)
+      while (true) {
+        const { data: existing } = await supabase
+          .from("posts")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+        if (!existing) break;
+        slug = `${slugBase}-${suffix}`;
+        suffix += 1;
+      }
       const { data: inserted, error } = await supabase
         .from("posts")
         .insert({ ...base, slug })
