@@ -24,6 +24,7 @@ const empty = {
   cta_href: "",
   image_url: "",
   overlay_opacity: 60,
+  image_position: 50,
   sort_order: 0,
   is_active: true,
 };
@@ -66,6 +67,7 @@ export function BannerManager() {
       cta_href: b.cta_href ?? "",
       image_url: b.image_url,
       overlay_opacity: b.overlay_opacity ?? 60,
+      image_position: b.image_position ?? 50,
       sort_order: b.sort_order,
       is_active: b.is_active,
     });
@@ -195,6 +197,24 @@ export function BannerManager() {
                   />
                   <span className="w-12 shrink-0 text-sm font-semibold text-primary-700">
                     {form.overlay_opacity}%
+                  </span>
+                </div>
+              </Field>
+              <Field
+                label="Posición vertical de la imagen"
+                hint="Ajusta qué parte de la foto se muestra. 0 = arriba, 50 = centro, 100 = abajo."
+              >
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={form.image_position}
+                    onChange={(e) => set("image_position", Number(e.target.value))}
+                    className="w-full accent-primary-600"
+                  />
+                  <span className="w-12 shrink-0 text-sm font-semibold text-primary-700">
+                    {form.image_position}%
                   </span>
                 </div>
               </Field>

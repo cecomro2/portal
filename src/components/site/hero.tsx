@@ -96,7 +96,8 @@ export function Hero({ banners }: { banners: Banner[] }) {
               <img
                 src={b.image_url}
                 alt={b.title}
-                className="h-full w-full object-cover object-center"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: `50% ${b.image_position ?? 50}%` }}
               />
             ) : (
               <div

@@ -83,6 +83,7 @@ create table if not exists public.banners (
   cta_href text,
   image_url text not null default '',
   overlay_opacity int not null default 60,
+  image_position int not null default 50,
   sort_order int not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now()

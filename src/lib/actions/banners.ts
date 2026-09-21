@@ -12,6 +12,7 @@ export interface BannerInput {
   cta_href?: string;
   image_url: string;
   overlay_opacity?: number;
+  image_position?: number;
   sort_order: number;
   is_active: boolean;
 }
@@ -29,6 +30,7 @@ export async function saveBanner(
       cta_href: input.cta_href || null,
       image_url: input.image_url,
       overlay_opacity: input.overlay_opacity ?? 60,
+      image_position: input.image_position ?? 50,
       sort_order: input.sort_order,
       is_active: input.is_active,
     };
