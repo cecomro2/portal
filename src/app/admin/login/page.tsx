@@ -13,6 +13,35 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotMsg, setForgotMsg] = useState("");
+  const [forgotError, setForgotError] = useState("");
+  const [forgotSending, setForgotSending] = useState(false);
+
+  async function onForgot() {
+    setForgotError("");
+    setForgotMsg("");
+    if (!forgotEmail) {
+      setForgotError("Escribe tu correo.");
+      return;
+    }
+    setForgotSending(true);
+    const supabase = createBrowserSupabase();
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+      forgotEmail,
+      { redirectTo: `${window.location.origin}/reset-password` },
+    );
+    setForgotSending(false);
+    if (resetError) {
+      setForgotError(resetError.message);
+      return;
+    }
+    setForgotMsg(
+      "Te enviamos un enlace de recuperación. Revisa tu bandeja de entrada (y el spam).",
+    );
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -120,6 +149,59 @@ export default function LoginPage() {
             Entrar
           </button>
         </form>
+
+        <div className="mt-4 rounded-2xl bg-white/10 p-4 backdrop-blur">
+          {!forgotOpen ? (
+            <button
+              type="button"
+              onClick={() => setForgotOpen(true)}
+              className="w-full text-center text-sm font-medium text-white transition hover:text-accent-300"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-primary-100">
+                Escribe tu correo y te enviaremos un enlace para restablecerla.
+              </p>
+              <input
+                type="email"
+                required
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="correo@cecomro.com"
+                className="w-full rounded-lg border border-white/20 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+              />
+              {forgotError && (
+                <p className="text-xs text-accent-200">{forgotError}</p>
+              )}
+              {forgotMsg && (
+                <p className="text-xs text-emerald-200">{forgotMsg}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={onForgot}
+                  disabled={forgotSending}
+                  className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-primary-700 transition hover:bg-primary-50 disabled:opacity-60"
+                >
+                  {forgotSending ? "Enviando…" : "Enviar enlace"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgotOpen(false);
+                    setForgotError("");
+                    setForgotMsg("");
+                  }}
+                  className="rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
