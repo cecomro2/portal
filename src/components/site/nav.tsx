@@ -85,7 +85,7 @@ function DropdownChild({ child }: { child: NavItem }) {
       {hasChildren ? (
         <button
           type="button"
-          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-justify text-sm text-ink transition hover:bg-surface hover:text-primary-700"
+          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-ink transition hover:bg-surface hover:text-primary-700"
         >
           {content}
         </button>
@@ -174,7 +174,7 @@ export function SiteNav({ nav = mainNav }: { nav?: NavItem[] }) {
         aria-label="Navegación principal"
         className="mx-auto flex h-12 max-w-7xl items-center justify-center px-2 xl:px-4"
       >
-        <ul className="flex h-full items-stretch">
+        <ul className="flex h-full items-stretch text-left">
           {nav.map((item) => (
             <DesktopItem key={item.href} item={item} />
           ))}

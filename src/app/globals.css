@@ -58,6 +58,7 @@ body {
 }
 
 /* Elementos de interfaz que no deben justificarse */
+button,
 input,
 textarea,
 select,

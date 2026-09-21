@@ -49,7 +49,7 @@ function DrawerNavItem({
             type="button"
             onClick={() => onToggle(pathKey, depth)}
             className={cn(
-              "flex flex-1 items-center gap-2 py-3 text-justify text-sm font-medium transition hover:text-primary-700",
+              "flex flex-1 items-center gap-2 py-3 text-left text-sm font-medium transition hover:text-primary-700",
               depth === 0 ? "text-ink" : "text-muted",
             )}
           >
@@ -185,7 +185,7 @@ export function Header({
                       )}
                     </span>
                   )}
-                  <span className="flex flex-col text-justify">
+                  <span className="flex flex-col text-left">
                     <span className="text-[11px] font-bold uppercase leading-none tracking-tight text-primary-700 transition group-hover:text-accent-500">
                       {item.title}
                     </span>
@@ -245,7 +245,7 @@ export function Header({
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-3">
+          <div className="flex-1 overflow-y-auto px-4 py-3 text-left">
             {nav.map((item) => (
               <DrawerNavItem
                 key={item.href}
