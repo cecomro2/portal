@@ -17,35 +17,37 @@ export default function ResetPasswordPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    async function init() {
-      const supabase = createBrowserSupabase();
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
+    let cancelled = false;
+    let attempts = 0;
+    const supabase = createBrowserSupabase();
 
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) {
-          setStatus("error");
-          setMessage(
-            "El enlace es inválido o ya expiró. Solicita un nuevo enlace de recuperación.",
-          );
-          return;
-        }
-      }
-
+    // El cliente de navegador de Supabase detecta automáticamente el `code`/token
+    // de la URL (detectSessionInUrl) e intercambia la sesión. Aquí solo esperamos
+    // a que la sesión quede establecida.
+    async function check() {
+      if (cancelled) return;
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (!session) {
+      if (session) {
+        setStatus("ready");
+        return;
+      }
+      attempts += 1;
+      if (attempts >= 20) {
         setStatus("error");
         setMessage(
-          "No se pudo verificar la sesión. Vuelve a solicitar el enlace de recuperación.",
+          "No se pudo verificar la sesión. El enlace pudo expirar; solicita un nuevo enlace de recuperación.",
         );
         return;
       }
-      setStatus("ready");
+      setTimeout(check, 300);
     }
-    init();
+
+    check();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function onSubmit(e: React.FormEvent) {
