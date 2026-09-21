@@ -31,15 +31,31 @@ export default function ChangePasswordPage() {
     }
     setSaving(true);
     const supabase = createBrowserSupabase();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      setSaving(false);
+      setError(
+        "Tu sesión expiró. Cierra sesión e inicia de nuevo para poder cambiar la contraseña.",
+      );
+      return;
+    }
     const { error: err } = await supabase.auth.updateUser({ password });
     setSaving(false);
     if (err) {
-      setError(err.message);
+      setError(
+        err.message === "Auth session missing!"
+          ? "La sesión expiró. Cierra sesión e inicia de nuevo."
+          : err.message,
+      );
       return;
     }
     setPassword("");
     setConfirm("");
-    setMsg("Contraseña actualizada correctamente.");
+    setMsg(
+      "Contraseña actualizada correctamente. Úsala en tu próximo inicio de sesión.",
+    );
   }
 
   return (
