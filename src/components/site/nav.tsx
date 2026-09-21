@@ -85,7 +85,7 @@ function DropdownChild({ child }: { child: NavItem }) {
       {hasChildren ? (
         <button
           type="button"
-          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left text-sm text-ink transition hover:bg-surface hover:text-primary-700"
+          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-justify text-sm text-ink transition hover:bg-surface hover:text-primary-700"
         >
           {content}
         </button>

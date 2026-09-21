@@ -351,13 +351,13 @@ export const defaultTopbarLinks = [
 
 export const CONTACT = {
   location: [
-    "Plaza Felipe Rodríguez",
-    "Calle Felipe Rodríguez",
+    "Edificio Felipe Rodríguez",
+    "Calle Felipe Rodríguez, Av. Obaldía",
     "Piso #2",
     "David, Chiriquí",
   ],
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=Plaza%20Felipe%20Rodr%C3%ADguez%20David%20Chiriqu%C3%AD%20Panam%C3%A1",
+    "https://www.google.com/maps/search/?api=1&query=Edificio%20Felipe%20Rodr%C3%ADguez%20David%20Chiriqu%C3%AD%20Panam%C3%A1",
   hours: ["Lunes a Viernes: 8:00 am a 5:00 pm", "Sábado: 9:00 am a 12:00 md"],
   phones: ["+507 6728-9192"],
 } as const;

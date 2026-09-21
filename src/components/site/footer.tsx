@@ -13,11 +13,13 @@ export function Footer({ socials }: { socials: SocialLink[] }) {
         <div className="mb-10 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Marca */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded bg-primary-700 text-sm font-bold text-white">
-                <span className="text-accent-400">C</span>R
-              </span>
-              <span className="text-lg font-bold text-white">CECOM RO</span>
+            <div className="inline-block rounded-lg bg-white p-2.5 shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-cecomro.png"
+                alt="CECOM-RO"
+                className="h-12 w-auto object-contain"
+              />
             </div>
             <p className="text-xs leading-relaxed text-slate-400">
               Fundación Centro de Competitividad de la Región Occidental de
