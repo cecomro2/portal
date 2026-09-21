@@ -13,7 +13,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cecomro.com"),
+  metadataBase: new URL("https://www.cecomro.com"),
   title: {
     default: "CECOM-RO · Centro de Competitividad de la Región Occidental",
     template: "%s · CECOM-RO",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_PA",
-    url: "https://cecomro.com",
+    url: "https://www.cecomro.com",
     siteName: "CECOM-RO",
     title: "CECOM-RO · Centro de Competitividad de la Región Occidental",
     description:
