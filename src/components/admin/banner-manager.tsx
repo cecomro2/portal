@@ -128,9 +128,8 @@ export function BannerManager() {
 
           <form onSubmit={onSubmit} className="grid gap-4">
             <div className="grid gap-4 lg:grid-cols-2">
-              <Field label="Título *">
+              <Field label="Título" hint="Opcional: déjalo vacío para un slide solo de imagen.">
                 <input
-                  required
                   value={form.title}
                   onChange={(e) => set("title", e.target.value)}
                   className={inputClass}

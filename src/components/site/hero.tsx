@@ -128,12 +128,14 @@ export function Hero({ banners }: { banners: Banner[] }) {
                       {b.badge}
                     </p>
                   )}
-                  <h1
-                    data-hero-anim
-                    className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
-                  >
-                    {b.title}
-                  </h1>
+                  {b.title && (
+                    <h1
+                      data-hero-anim
+                      className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
+                    >
+                      {b.title}
+                    </h1>
+                  )}
                   {b.subtitle && (
                     <p
                       data-hero-anim
@@ -142,11 +144,11 @@ export function Hero({ banners }: { banners: Banner[] }) {
                       {b.subtitle}
                     </p>
                   )}
-                  <div
-                    data-hero-anim
-                    className="mt-7 flex flex-wrap items-center gap-3"
-                  >
-                    {b.cta_label && (
+                  {b.cta_label && (
+                    <div
+                      data-hero-anim
+                      className="mt-7 flex flex-wrap items-center gap-3"
+                    >
                       <Link
                         href={b.cta_href ?? "/nosotros/quienes-somos"}
                         className="inline-flex items-center gap-2 rounded-lg bg-accent-500 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-accent-900/30 transition hover:bg-accent-600"
@@ -154,15 +156,15 @@ export function Hero({ banners }: { banners: Banner[] }) {
                         {b.cta_label}
                         <ChevronRight size={16} />
                       </Link>
-                    )}
-                    <Link
-                      href="/nuestro-trabajo/proyectos-de-cooperacion"
-                      className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-xs font-semibold text-white transition hover:bg-white hover:text-primary-800"
-                    >
-                      <Briefcase size={16} />
-                      Proyectos y Convocatorias
-                    </Link>
-                  </div>
+                      <Link
+                        href="/nuestro-trabajo/proyectos-de-cooperacion"
+                        className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-xs font-semibold text-white transition hover:bg-white hover:text-primary-800"
+                      >
+                        <Briefcase size={16} />
+                        Proyectos y Convocatorias
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
