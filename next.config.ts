@@ -41,7 +41,14 @@ const postRedirects: { source: string; destination: string; permanent: true }[] 
 
 const nextConfig: NextConfig = {
   async redirects() {
-    return postRedirects;
+    return [
+      ...postRedirects,
+      {
+        source: "/nuestro-trabajo/proyectos-de-cooperacion",
+        destination: "/proyectos-aecid",
+        permanent: true,
+      },
+    ];
   },
 };
 

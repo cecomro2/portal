@@ -158,7 +158,7 @@ export function Hero({ banners }: { banners: Banner[] }) {
                         <ChevronRight size={16} />
                       </Link>
                       <Link
-                        href="/nuestro-trabajo/proyectos-de-cooperacion"
+                        href="/proyectos-aecid"
                         className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-3 text-xs font-semibold text-white transition hover:bg-white hover:text-primary-800"
                       >
                         <Briefcase size={16} />

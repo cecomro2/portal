@@ -20,7 +20,7 @@ export default function NuestroTrabajoPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <Link
-              href="/nuestro-trabajo/proyectos-de-cooperacion"
+              href="/proyectos-aecid"
               className="group flex flex-col gap-4 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-8 text-white transition hover:shadow-xl sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-start gap-4">

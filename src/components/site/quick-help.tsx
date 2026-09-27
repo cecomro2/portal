@@ -21,7 +21,7 @@ interface QuickOption {
 }
 
 const options: QuickOption[] = [
-  { label: "Proyecto AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion", icon: Briefcase },
+  { label: "Proyecto AECID", href: "/proyectos-aecid", icon: Briefcase },
   { label: "Vacantes AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid", icon: Briefcase },
   { label: "Portal de Compras AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid", icon: ShoppingCart },
   { label: "Circuito del Café", href: "/nuestro-trabajo/turismo/circuito-del-cafe", icon: Coffee },

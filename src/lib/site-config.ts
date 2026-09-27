@@ -160,7 +160,7 @@ const aecidSubmenu: NavItem = {
   children: [
     {
       label: "Proyectos de Cooperación AECID",
-      href: "/nuestro-trabajo/proyectos-de-cooperacion",
+      href: "/proyectos-aecid",
       icon: "file-text",
     },
     {
