@@ -21,23 +21,43 @@ function escapeHtml(s: string): string {
 }
 
 /**
- * Convierte texto pegado desde un PDF (con columnas separadas por tabuladores)
- * en una tabla HTML. Devuelve "" si no detecta estructura tabular.
+ * Convierte texto pegado desde un PDF (con columnas separadas por tabuladores,
+ * o por espacios múltiples) en una tabla HTML. Devuelve "" si no detecta
+ * estructura tabular.
  */
 function textToTableHtml(text: string): string {
-  const rows = text
+  const lines = text
     .split(/\r?\n/)
     .map((r) => r.trimEnd())
-    .filter((r) => r.includes("\t"));
-  if (!rows.length) return "";
+    .filter((r) => r.trim().length > 0);
+  if (lines.length < 2) return "";
 
-  const grid = rows.map((row) => row.split("\t").map((c) => c.trim()));
+  const hasTabs = lines.some((l) => l.includes("\t"));
+
+  let grid: string[][];
+  if (hasTabs) {
+    grid = lines
+      .filter((l) => l.includes("\t"))
+      .map((l) => l.split("\t").map((c) => c.trim()));
+  } else {
+    // Separador por espacios múltiples (2 o más)
+    const spaceLines = lines.filter((l) => /\s{2,}/.test(l));
+    if (spaceLines.length < 2) return "";
+    grid = spaceLines.map((l) =>
+      l
+        .split(/\s{2,}/)
+        .map((c) => c.trim())
+        .filter((c) => c.length > 0),
+    );
+  }
+
+  if (grid.length < 2) return "";
   const colCount = Math.max(...grid.map((r) => r.length));
-  const hasHeader = grid.length >= 2;
+  if (colCount < 2) return "";
 
   const body = grid
     .map((row, ri) => {
-      const tag = hasHeader && ri === 0 ? "th" : "td";
+      const tag = ri === 0 ? "th" : "td";
       const cells = Array.from({ length: colCount }, (_, i) => {
         const cell = row[i] ?? "";
         return `<${tag}>${escapeHtml(cell)}</${tag}>`;
@@ -98,13 +118,14 @@ export function RichTextEditor({
   }
 
   function onPaste(e: React.ClipboardEvent) {
-    // Si el portapapeles trae HTML (Word/Excel/otro), se deja el pegado por defecto.
     const html = e.clipboardData.getData("text/html");
-    if (html) return;
-
     const text = e.clipboardData.getData("text/plain");
-    if (!text || !text.includes("\t")) return;
 
+    // Si el HTML ya trae una tabla real, se respeta el pegado por defecto.
+    if (html && /<table[\s>]/i.test(html)) return;
+
+    // Caso PDF: el HTML suele ser texto suelto sin <table>, pero el texto plano
+    // trae las columnas separadas por tabuladores o espacios → se convierte a tabla.
     const tableHtml = textToTableHtml(text);
     if (!tableHtml) return;
 
