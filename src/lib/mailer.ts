@@ -1,25 +1,18 @@
-import nodemailer, { type Transporter } from "nodemailer";
+import { Resend } from "resend";
 
-const smtpHost = process.env.SMTP_HOST ?? "mail.cecomro.com";
-const smtpPort = Number(process.env.SMTP_PORT ?? 465);
-const smtpUser = process.env.SMTP_USER ?? "info@cecomro.com";
-const smtpPass = process.env.SMTP_PASS ?? "";
-const smtpFrom = process.env.SMTP_FROM ?? "CECOM-RO <info@cecomro.com>";
+const apiKey = process.env.RESEND_API_KEY ?? "";
+const from =
+  process.env.RESEND_FROM ??
+  process.env.SMTP_FROM ??
+  "CECOM-RO <info@cecomro.com>";
 
-export const isMailerConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+export const isMailerConfigured = Boolean(apiKey);
 
-let transporter: Transporter | null = null;
+let resend: Resend | null = null;
 
-function getTransporter(): Transporter {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpPort === 465,
-      auth: { user: smtpUser, pass: smtpPass },
-    });
-  }
-  return transporter;
+function getResend(): Resend {
+  if (!resend) resend = new Resend(apiKey);
+  return resend;
 }
 
 export interface SendEmailInput {
@@ -41,12 +34,12 @@ export async function sendEmail(
   input: SendEmailInput,
 ): Promise<SendEmailResult> {
   if (!isMailerConfigured) {
-    console.warn("SMTP no configurado: email no enviado.");
+    console.warn("Resend no configurado (RESEND_API_KEY): email no enviado.");
     return { ok: false, error: "not_configured" };
   }
   try {
-    const info = await getTransporter().sendMail({
-      from: smtpFrom,
+    const { data, error } = await getResend().emails.send({
+      from,
       to: input.to,
       cc: input.cc,
       bcc: input.bcc,
@@ -54,7 +47,10 @@ export async function sendEmail(
       html: input.html,
       replyTo: input.replyTo,
     });
-    return { ok: true, data: info };
+    if (error) {
+      return { ok: false, error: error.message };
+    }
+    return { ok: true, data };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
