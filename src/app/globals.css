@@ -97,6 +97,7 @@ button:not(:disabled),
   color: #3a4151;
   line-height: 1.75;
   font-size: 0.975rem;
+  text-align: left;
 }
 .rich-text h1,
 .rich-text h2,

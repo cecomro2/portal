@@ -116,7 +116,13 @@ export function timeAgo(iso: string | null | undefined): string {
 /** Formatea una fecha ISO a formato legible en español. */
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "";
-  const d = new Date(iso);
+  // Las fechas "solo fecha" (YYYY-MM-DD) se parsean como medianoche UTC, lo que
+  // en zonas horarias negativas (p. ej. Panamá) las corre un día atrás. Se
+  // construye la fecha con componentes locales para evitarlo.
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const d = m
+    ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+    : new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   return d.toLocaleDateString("es-PA", {
     year: "numeric",

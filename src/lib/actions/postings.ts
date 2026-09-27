@@ -61,8 +61,24 @@ export async function savePosting(
     };
 
     let id = input.id;
-    const slug =
-      input.slug?.trim() || `${slugify(input.title)}-${Date.now().toString(36)}`;
+    let slug = input.slug?.trim() || "";
+
+    if (!slug) {
+      // Slug limpio, sin sufijo aleatorio; si colisiona, se numera (-2, -3, …)
+      const slugBase = slugify(input.title) || "publicacion";
+      slug = slugBase;
+      let n = 2;
+      while (true) {
+        const { data: existing } = await supabase
+          .from("postings")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+        if (!existing || existing.id === id) break;
+        slug = `${slugBase}-${n}`;
+        n += 1;
+      }
+    }
 
     if (id) {
       const { error } = await supabase

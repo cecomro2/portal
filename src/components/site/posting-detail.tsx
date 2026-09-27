@@ -125,7 +125,10 @@ export function PostingDetail({
                 Cómo aplicar
               </h2>
               {posting.apply_info && (
-                <div className="rich-text mt-3">{posting.apply_info}</div>
+                <div
+                  className="rich-text mt-3"
+                  dangerouslySetInnerHTML={{ __html: posting.apply_info }}
+                />
               )}
               {posting.apply_emails && posting.apply_emails.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">

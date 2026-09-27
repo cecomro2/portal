@@ -31,7 +31,7 @@ export function DocumentList({ documents }: { documents: DocItem[] }) {
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-500/10 text-accent-500">
                   {isLink ? <ExternalLink size={20} /> : <FileText size={20} />}
                 </span>
-                <span className="pt-1 text-sm font-semibold text-slate-900 sm:text-base">
+                <span className="pt-1 text-left text-sm font-semibold text-slate-900 sm:text-base">
                   {doc.label}
                 </span>
               </span>

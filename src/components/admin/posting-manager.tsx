@@ -299,11 +299,9 @@ export function PostingManager({
                 />
               </Field>
               <Field label="Información para aplicar" hint="Solo se mostrará mientras esté abierta.">
-                <textarea
-                  rows={3}
+                <RichTextEditor
                   value={form.apply_info}
-                  onChange={(e) => set("apply_info", e.target.value)}
-                  className={inputClass}
+                  onChange={(html) => set("apply_info", html)}
                 />
               </Field>
             </div>
