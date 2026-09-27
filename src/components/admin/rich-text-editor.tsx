@@ -20,35 +20,48 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
+function cellHtml(s: string): string {
+  return escapeHtml(s).replace(/\n/g, "<br/>");
+}
+
 /**
- * Convierte texto pegado desde un PDF (con columnas separadas por tabuladores,
- * o por espacios múltiples) en una tabla HTML. Devuelve "" si no detecta
+ * Convierte texto pegado desde un PDF (columnas separadas por tabuladores o por
+ * espacios múltiples) en una tabla HTML. Maneja celdas de varias líneas (las
+ * líneas sin tabulador se unen a la celda anterior). Devuelve "" si no detecta
  * estructura tabular.
  */
 function textToTableHtml(text: string): string {
-  const lines = text
-    .split(/\r?\n/)
-    .map((r) => r.trimEnd())
-    .filter((r) => r.trim().length > 0);
-  if (lines.length < 2) return "";
+  const rawLines = text.split(/\r?\n/).map((r) => r.trimEnd());
+  const hasTabs = rawLines.some((l) => l.includes("\t"));
 
-  const hasTabs = lines.some((l) => l.includes("\t"));
+  let grid: string[][] = [];
 
-  let grid: string[][];
   if (hasTabs) {
-    grid = lines
-      .filter((l) => l.includes("\t"))
-      .map((l) => l.split("\t").map((c) => c.trim()));
+    // Filas con tabulador; las líneas sin tabulador son continuación de la
+    // última celda (celdas de varias líneas).
+    let current: string[] | null = null;
+    for (const line of rawLines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      if (line.includes("\t")) {
+        if (current) grid.push(current);
+        current = line.split("\t").map((c) => c.trim());
+      } else if (current) {
+        current[current.length - 1] = `${current[current.length - 1]}\n${trimmed}`;
+      }
+    }
+    if (current) grid.push(current);
   } else {
     // Separador por espacios múltiples (2 o más)
-    const spaceLines = lines.filter((l) => /\s{2,}/.test(l));
-    if (spaceLines.length < 2) return "";
-    grid = spaceLines.map((l) =>
-      l
-        .split(/\s{2,}/)
-        .map((c) => c.trim())
-        .filter((c) => c.length > 0),
-    );
+    const spaceLines = rawLines.filter((l) => /\s{2,}/.test(l));
+    if (spaceLines.length >= 2) {
+      grid = spaceLines.map((l) =>
+        l
+          .split(/\s{2,}/)
+          .map((c) => c.trim())
+          .filter((c) => c.length > 0),
+      );
+    }
   }
 
   if (grid.length < 2) return "";
@@ -60,7 +73,7 @@ function textToTableHtml(text: string): string {
       const tag = ri === 0 ? "th" : "td";
       const cells = Array.from({ length: colCount }, (_, i) => {
         const cell = row[i] ?? "";
-        return `<${tag}>${escapeHtml(cell)}</${tag}>`;
+        return `<${tag}>${cellHtml(cell)}</${tag}>`;
       }).join("");
       return `<tr>${cells}</tr>`;
     })
