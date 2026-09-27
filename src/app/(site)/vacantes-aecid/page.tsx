@@ -5,7 +5,7 @@ import { getPostings } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Vacantes AECID" };
 
-const BASE = "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid";
+const BASE = "/vacantes-aecid";
 
 export default async function VacantesPage() {
   const postings = await getPostings("vacancy");

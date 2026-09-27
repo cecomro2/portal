@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 
 const quickLinks = [
-  { label: "Vacantes AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid" },
-  { label: "Portal de Compras", href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid" },
+  { label: "Vacantes AECID", href: "/vacantes-aecid" },
+  { label: "Portal de Compras", href: "/portal-de-compras-aecid" },
   { label: "Circuito del Café", href: "/nuestro-trabajo/turismo" },
   { label: "Asociados y Aliados", href: "/nosotros/asociados-y-aliados" },
   { label: "Visión 2050", href: "/nuestro-trabajo/vision-2050" },

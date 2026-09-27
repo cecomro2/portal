@@ -48,6 +48,16 @@ const nextConfig: NextConfig = {
         destination: "/proyectos-aecid",
         permanent: true,
       },
+      {
+        source: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid/:path*",
+        destination: "/vacantes-aecid/:path*",
+        permanent: true,
+      },
+      {
+        source: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid/:path*",
+        destination: "/portal-de-compras-aecid/:path*",
+        permanent: true,
+      },
     ];
   },
 };

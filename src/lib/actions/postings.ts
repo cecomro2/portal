@@ -30,11 +30,11 @@ export interface PostingInput {
 
 const revalidations: Record<"vacancy" | "procurement", string[]> = {
   vacancy: [
-    "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
+    "/vacantes-aecid",
     "/proyectos-aecid",
   ],
   procurement: [
-    "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid",
+    "/portal-de-compras-aecid",
     "/proyectos-aecid",
   ],
 };

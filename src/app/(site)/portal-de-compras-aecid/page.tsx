@@ -6,7 +6,7 @@ import { getPostings } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Portal de Compras AECID" };
 
-const BASE = "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid";
+const BASE = "/portal-de-compras-aecid";
 
 export default async function ComprasPage() {
   const postings = await getPostings("procurement");

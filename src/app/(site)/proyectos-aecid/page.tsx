@@ -27,12 +27,12 @@ const quickLinks = [
   {
     icon: Briefcase,
     label: "Vacantes AECID",
-    href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid",
+    href: "/vacantes-aecid",
   },
   {
     icon: ShoppingCart,
     label: "Portal de Compras AECID",
-    href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid",
+    href: "/portal-de-compras-aecid",
   },
 ];
 

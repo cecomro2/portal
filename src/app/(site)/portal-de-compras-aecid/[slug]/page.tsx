@@ -9,17 +9,17 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const posting = await getPostingBySlug("vacancy", slug);
-  return { title: posting?.title ?? "Vacante" };
+  const posting = await getPostingBySlug("procurement", slug);
+  return { title: posting?.title ?? "Proceso de compra" };
 }
 
-export default async function VacanteDetailPage({
+export default async function CompraDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const posting = await getPostingBySlug("vacancy", slug);
+  const posting = await getPostingBySlug("procurement", slug);
   if (!posting) notFound();
   const [files, images] = await Promise.all([
     getPostingFiles(posting.id),
@@ -31,8 +31,8 @@ export default async function VacanteDetailPage({
       posting={posting}
       files={files}
       images={images}
-      backHref="/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid"
-      backLabel="Volver a Vacantes AECID"
+      backHref="/portal-de-compras-aecid"
+      backLabel="Volver al Portal de Compras AECID"
     />
   );
 }

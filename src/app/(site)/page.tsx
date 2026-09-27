@@ -32,8 +32,8 @@ const axes: {
     href: "/proyectos-aecid",
     linkLabel: "Ver Proyectos",
     subs: [
-      { label: "Vacantes AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion/vacantes-aecid" },
-      { label: "Portal de Compras AECID", href: "/nuestro-trabajo/proyectos-de-cooperacion/portal-de-compras-aecid" },
+      { label: "Vacantes AECID", href: "/vacantes-aecid" },
+      { label: "Portal de Compras AECID", href: "/portal-de-compras-aecid" },
     ],
   },
   {
