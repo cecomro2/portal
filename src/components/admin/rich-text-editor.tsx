@@ -13,6 +13,42 @@ import {
   Underline,
 } from "lucide-react";
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/**
+ * Convierte texto pegado desde un PDF (con columnas separadas por tabuladores)
+ * en una tabla HTML. Devuelve "" si no detecta estructura tabular.
+ */
+function textToTableHtml(text: string): string {
+  const rows = text
+    .split(/\r?\n/)
+    .map((r) => r.trimEnd())
+    .filter((r) => r.includes("\t"));
+  if (!rows.length) return "";
+
+  const grid = rows.map((row) => row.split("\t").map((c) => c.trim()));
+  const colCount = Math.max(...grid.map((r) => r.length));
+  const hasHeader = grid.length >= 2;
+
+  const body = grid
+    .map((row, ri) => {
+      const tag = hasHeader && ri === 0 ? "th" : "td";
+      const cells = Array.from({ length: colCount }, (_, i) => {
+        const cell = row[i] ?? "";
+        return `<${tag}>${escapeHtml(cell)}</${tag}>`;
+      }).join("");
+      return `<tr>${cells}</tr>`;
+    })
+    .join("");
+
+  return `<table><tbody>${body}</tbody></table>`;
+}
+
 function ToolbarButton({
   onClick,
   title,
@@ -59,6 +95,22 @@ export function RichTextEditor({
 
   function emit() {
     if (ref.current) onChange(ref.current.innerHTML);
+  }
+
+  function onPaste(e: React.ClipboardEvent) {
+    // Si el portapapeles trae HTML (Word/Excel/otro), se deja el pegado por defecto.
+    const html = e.clipboardData.getData("text/html");
+    if (html) return;
+
+    const text = e.clipboardData.getData("text/plain");
+    if (!text || !text.includes("\t")) return;
+
+    const tableHtml = textToTableHtml(text);
+    if (!tableHtml) return;
+
+    e.preventDefault();
+    document.execCommand("insertHTML", false, tableHtml);
+    emit();
   }
 
   return (
@@ -117,6 +169,7 @@ export function RichTextEditor({
         suppressContentEditableWarning
         onInput={emit}
         onBlur={emit}
+        onPaste={onPaste}
         className="rich-text min-h-[220px] px-4 py-3 outline-none"
         data-placeholder="Escribe el contenido…"
       />

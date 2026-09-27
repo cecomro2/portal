@@ -149,6 +149,24 @@ button:not(:disabled),
   border-radius: 0.5rem;
   height: auto;
 }
+.rich-text table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.9rem;
+  text-align: left;
+}
+.rich-text th,
+.rich-text td {
+  border: 1px solid #e7e9f0;
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+}
+.rich-text th {
+  background: #f6f7fb;
+  font-weight: 600;
+  color: #191d49;
+}
 
 /* ------------------------------------------------------------------ */
 /* Bloques de contenido de páginas simples (plantillas copiables)      */
