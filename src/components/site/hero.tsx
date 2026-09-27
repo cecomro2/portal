@@ -119,7 +119,7 @@ export function Hero({ banners }: { banners: Banner[] }) {
 
             <div className="absolute inset-0 z-20 flex items-center">
               <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="max-w-3xl">
+                <div className="max-w-3xl text-left">
                   {b.badge && (
                     <p
                       data-hero-anim
@@ -130,12 +130,12 @@ export function Hero({ banners }: { banners: Banner[] }) {
                     </p>
                   )}
                   {b.title && (
-                    <h1
+                    <h2
                       data-hero-anim
                       className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
                     >
                       {b.title}
-                    </h1>
+                    </h2>
                   )}
                   {b.subtitle && (
                     <p

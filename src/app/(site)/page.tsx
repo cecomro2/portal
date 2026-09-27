@@ -146,9 +146,9 @@ export default async function HomePage() {
               <p className="text-xs font-bold uppercase tracking-widest text-accent-500">
                 Sobre Nosotros
               </p>
-              <h2 className="mt-2 text-3xl font-bold text-primary-700">
+              <h1 className="mt-2 text-3xl font-bold text-primary-700">
                 CECOM RO
-              </h2>
+              </h1>
               <h3 className="mt-1 text-lg font-semibold text-slate-700 sm:text-xl">
                 Centro de Competitividad de la Región Occidental de Panamá
               </h3>
