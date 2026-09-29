@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { Eye, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deletePosting, savePosting } from "@/lib/actions/postings";
 import type { Posting, PostingCategory, PostingType } from "@/lib/types";
@@ -60,6 +60,7 @@ export function PostingManager({
   subtitle: string;
 }) {
   const router = useRouter();
+  const publicBase = type === "vacancy" ? "/vacantes-aecid" : "/portal-de-compras-aecid";
   const { items, loading, load } = useAdminList<Posting>(async () => {
     const supabase = createBrowserSupabase();
     const { data } = await supabase
@@ -446,6 +447,16 @@ export function PostingManager({
                         : "Sin estado"}
                   </span>
                   <div className="flex gap-1">
+                    <a
+                      href={`${publicBase}/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
+                      aria-label="Ver publicación"
+                      title="Ver publicación"
+                    >
+                      <Eye size={15} />
+                    </a>
                     <button
                       onClick={() => openEdit(p)}
                       className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"

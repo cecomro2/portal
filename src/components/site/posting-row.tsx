@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, ExternalLink, MapPin } from "lucide-react";
+import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { postingStatus, stripHtml, timeAgo, formatDate } from "@/lib/utils";
 import type { Posting } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,6 @@ export function PostingRow({
 }) {
   const status = postingStatus(posting);
   const open = status === "abierta";
-  const href = `${basePath}/${posting.slug}`;
   const locations = posting.locations?.length
     ? posting.locations
     : posting.location
@@ -21,7 +20,8 @@ export function PostingRow({
       : [];
 
   return (
-    <div
+    <Link
+      href={`${basePath}/${posting.slug}`}
       className={cn(
         "group flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6 transition hover:border-accent-400 hover:bg-white hover:shadow-sm sm:flex-row sm:items-center sm:justify-between",
         status === "cerrada" && "opacity-60 hover:opacity-90",
@@ -29,11 +29,9 @@ export function PostingRow({
     >
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          <Link href={href}>
-            <h3 className="text-base font-bold text-slate-900 transition group-hover:text-accent-500">
-              {posting.title}
-            </h3>
-          </Link>
+          <h3 className="text-base font-bold text-slate-900 transition group-hover:text-accent-500">
+            {posting.title}
+          </h3>
           {status !== "none" && (
             <span
               className={cn(
@@ -90,17 +88,13 @@ export function PostingRow({
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center">
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-primary-700"
-        >
-          Ver publicación
-          <ExternalLink size={14} />
-        </a>
-      </div>
-    </div>
+      <span className="flex shrink-0 items-center gap-1.5 text-sm font-bold text-primary-700 transition group-hover:text-accent-500">
+        Ver convocatoria
+        <ChevronRight
+          size={16}
+          className="transition group-hover:translate-x-0.5"
+        />
+      </span>
+    </Link>
   );
 }

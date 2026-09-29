@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { Eye, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deletePost, savePost } from "@/lib/actions/posts";
 import type { Post, PostCategory } from "@/lib/types";
@@ -400,6 +400,16 @@ export default function NoticiasAdminPage() {
                     </span>
                   )}
                   <div className="flex gap-1">
+                    <a
+                      href={`/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
+                      aria-label="Ver publicación"
+                      title="Ver publicación"
+                    >
+                      <Eye size={15} />
+                    </a>
                     <button
                       onClick={() => openEdit(p)}
                       className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"

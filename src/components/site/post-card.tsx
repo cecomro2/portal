@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import type { Post } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
 export function PostCard({ post }: { post: Post }) {
   return (
-    <div className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg">
+    <Link
+      href={`/${post.slug}`}
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg"
+    >
       <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">
         {post.cover_image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -24,28 +26,15 @@ export function PostCard({ post }: { post: Post }) {
         <p className="text-xs font-medium text-muted">
           {formatDate(post.published_at)}
         </p>
-        <Link href={`/${post.slug}`}>
-          <h3 className="mt-2 line-clamp-2 break-words text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
-            {post.title}
-          </h3>
-        </Link>
+        <h3 className="mt-2 line-clamp-2 break-words text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
+          {post.title}
+        </h3>
         {post.excerpt && (
           <p className="mt-2 line-clamp-3 break-words text-sm text-muted">
             {post.excerpt}
           </p>
         )}
-        <div className="mt-auto pt-4">
-          <a
-            href={`/${post.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-primary-700"
-          >
-            Ver publicación
-            <ExternalLink size={14} />
-          </a>
-        </div>
       </div>
-    </div>
+    </Link>
   );
 }
