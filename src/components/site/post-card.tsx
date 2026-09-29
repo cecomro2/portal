@@ -22,11 +22,11 @@ export function PostCard({ post }: { post: Post }) {
           </div>
         )}
       </div>
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-5 text-left">
         <p className="text-xs font-medium text-muted">
           {formatDate(post.published_at)}
         </p>
-        <h3 className="mt-2 line-clamp-2 break-words text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
+        <h3 className="mt-2 line-clamp-2 break-words text-left text-base font-semibold leading-snug text-primary-800 group-hover:text-accent-500">
           {post.title}
         </h3>
         {post.excerpt && (
