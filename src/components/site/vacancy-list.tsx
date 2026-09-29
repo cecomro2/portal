@@ -3,8 +3,11 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { PostingRow } from "@/components/site/posting-row";
+import { Pagination } from "@/components/site/pagination";
 import type { Posting } from "@/lib/types";
 import { normalize, searchTerms, stripHtml } from "@/lib/utils";
+
+const PAGE_SIZE = 9;
 
 export function VacancyList({
   postings,
@@ -15,6 +18,7 @@ export function VacancyList({
 }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"desc" | "asc">("desc");
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     const terms = searchTerms(query);
@@ -34,6 +38,10 @@ export function VacancyList({
     });
   }, [postings, query, sort]);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row">
@@ -45,14 +53,20 @@ export function VacancyList({
           <input
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
             placeholder="Buscar vacante por cargo, ubicación…"
             className="w-full rounded-lg border border-line bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition focus:border-primary-400"
           />
         </div>
         <select
           value={sort}
-          onChange={(e) => setSort(e.target.value as "desc" | "asc")}
+          onChange={(e) => {
+            setSort(e.target.value as "desc" | "asc");
+            setPage(1);
+          }}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-primary-400"
         >
           <option value="desc">Más recientes</option>
@@ -60,9 +74,9 @@ export function VacancyList({
         </select>
       </div>
 
-      {filtered.length ? (
+      {paged.length ? (
         <div className="space-y-4">
-          {filtered.map((p) => (
+          {paged.map((p) => (
             <PostingRow key={p.id} posting={p} basePath={basePath} />
           ))}
         </div>
@@ -73,6 +87,12 @@ export function VacancyList({
             : "No hay vacantes publicadas en este momento."}
         </p>
       )}
+
+      <Pagination
+        current={safePage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }
