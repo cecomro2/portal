@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Script from "next/script";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { submitContact } from "@/lib/actions/contact";
+
+const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+  "0x4AAAAAAFMERkajYj7BGyE8";
 
 export function ContactForm() {
   const [status, setStatus] = useState<
@@ -16,6 +21,14 @@ export function ContactForm() {
     setStatus("loading");
     setError("");
     const form = e.currentTarget;
+    const tokenInput = form.querySelector<HTMLInputElement>(
+      'input[name="cf-turnstile-response"]',
+    );
+    if (!tokenInput?.value) {
+      setStatus("error");
+      setError("Por favor completa la verificación de seguridad.");
+      return;
+    }
     const res = await submitContact(new FormData(form));
     if (res.ok) {
       setStatus("success");
@@ -27,7 +40,12 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        strategy="afterInteractive"
+      />
+      <form onSubmit={onSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-ink">
@@ -91,6 +109,13 @@ export function ContactForm() {
       </div>
       <input type="hidden" name="ts" value={mountedAt} />
 
+      {/* Verificación Cloudflare Turnstile */}
+      <div
+        className="cf-turnstile"
+        data-sitekey={TURNSTILE_SITE_KEY}
+        data-theme="light"
+      />
+
       {status === "success" && (
         <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           <CheckCircle2 size={18} />
@@ -115,6 +140,7 @@ export function ContactForm() {
         )}
         Enviar mensaje
       </button>
-    </form>
+      </form>
+    </>
   );
 }

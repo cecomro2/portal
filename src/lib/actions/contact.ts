@@ -2,9 +2,30 @@
 
 import { sendEmail } from "@/lib/mailer";
 
+const TURNSTILE_SECRET =
+  process.env.TURNSTILE_SECRET_KEY ||
+  "0x4AAAAAAFMERoMchRv9kaUZHwVCDeP4HFE";
+
 export interface ContactResult {
   ok: boolean;
   error?: string;
+}
+
+async function verifyTurnstile(token: string): Promise<boolean> {
+  if (!token) return false;
+  try {
+    const body = new URLSearchParams();
+    body.append("secret", TURNSTILE_SECRET);
+    body.append("response", token);
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      { method: "POST", body },
+    );
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
 }
 
 export async function submitContact(formData: FormData): Promise<ContactResult> {
@@ -15,6 +36,17 @@ export async function submitContact(formData: FormData): Promise<ContactResult> 
   if (honeypot || (elapsed !== null && elapsed < 3000)) {
     // Silencio: simulamos éxito para no dar señales al bot.
     return { ok: true };
+  }
+
+  const turnstileToken = String(
+    formData.get("cf-turnstile-response") ?? "",
+  ).trim();
+  if (!turnstileToken) {
+    return { ok: false, error: "Por favor completa la verificación de seguridad." };
+  }
+  const verified = await verifyTurnstile(turnstileToken);
+  if (!verified) {
+    return { ok: false, error: "La verificación de seguridad falló. Inténtalo de nuevo." };
   }
 
   const name = String(formData.get("name") ?? "").trim();
