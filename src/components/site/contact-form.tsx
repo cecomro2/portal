@@ -9,6 +9,7 @@ export function ContactForm() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [error, setError] = useState("");
+  const [mountedAt] = useState(() => Date.now());
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -76,6 +77,19 @@ export function ContactForm() {
           placeholder="Escribe tu mensaje…"
         />
       </div>
+
+      {/* Anti-spam: campo trampa invisible para bots */}
+      <div className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">No llenar este campo</label>
+        <input
+          id="website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+      <input type="hidden" name="ts" value={mountedAt} />
 
       {status === "success" && (
         <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">

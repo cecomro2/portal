@@ -8,6 +8,15 @@ export interface ContactResult {
 }
 
 export async function submitContact(formData: FormData): Promise<ContactResult> {
+  // Anti-spam: honeypot (los bots rellenan el campo oculto) + tiempo mínimo de envío.
+  const honeypot = String(formData.get("website") ?? "").trim();
+  const ts = Number(formData.get("ts") ?? "0");
+  const elapsed = Number.isFinite(ts) && ts > 0 ? Date.now() - ts : null;
+  if (honeypot || (elapsed !== null && elapsed < 3000)) {
+    // Silencio: simulamos éxito para no dar señales al bot.
+    return { ok: true };
+  }
+
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const subject = String(formData.get("subject") ?? "").trim();
