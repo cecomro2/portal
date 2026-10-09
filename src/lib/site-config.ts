@@ -197,7 +197,6 @@ export const mainNav: NavItem[] = [
     label: "Nuestro Trabajo",
     href: "/nuestro-trabajo",
     children: [
-      { label: "Vacantes", href: "/vacantes", icon: "briefcase" },
       {
         label: "Proyectos en Ejecución",
         href: "#en-ejecucion",
@@ -218,6 +217,7 @@ export const mainNav: NavItem[] = [
         href: "/vision-pais",
         children: [],
       },
+      { label: "Vacantes", href: "/vacantes", icon: "briefcase" },
     ],
   },
   {
