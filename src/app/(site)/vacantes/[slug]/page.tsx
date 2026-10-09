@@ -1,0 +1,28 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PostingDetail } from "@/components/site/posting-detail";
+import { getPostingBySlug, getPostingFiles, getPostingImages } from "@/lib/data";
+
+export async function generateMetadata({ params }: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const posting = await getPostingBySlug("general_vacancy", slug);
+  return { title: posting?.title ?? "Vacante" };
+}
+
+export default async function VacanteDetailPage({ params }: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const posting = await getPostingBySlug("general_vacancy", slug);
+  if (!posting) notFound();
+  const [files, images] = await Promise.all([
+    getPostingFiles(posting.id),
+    getPostingImages(posting.id),
+  ]);
+  return (
+    <PostingDetail posting={posting} files={files} images={images}
+      backHref="/vacantes" backLabel="Volver a Vacantes" />
+  );
+}

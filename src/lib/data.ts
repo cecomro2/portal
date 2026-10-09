@@ -1,4 +1,5 @@
 import { createPublicSupabase, isSupabaseConfigured } from "@/lib/supabase/server";
+import { postingSection, postingStorageType, type PostingSection } from "@/lib/posting-sections";
 import {
   defaultSocials,
   defaultTopbarLinks,
@@ -286,7 +287,7 @@ async function attachPostingCategories(
 }
 
 export async function getPostings(
-  type: Posting["type"],
+  type: PostingSection,
 ): Promise<Posting[]> {
   if (!isSupabaseConfigured) return type === "vacancy" ? FALLBACK_VACANCIES : [];
   try {
@@ -294,18 +295,18 @@ export async function getPostings(
     const { data, error } = await supabase
       .from("postings")
       .select("*")
-      .eq("type", type)
+      .eq("type", postingStorageType(type))
       .order("published_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
     if (error) return [];
-    return attachPostingCategories(supabase, (data ?? []) as Posting[]);
+    return attachPostingCategories(supabase, ((data ?? []) as Posting[]).filter((posting) => postingSection(posting) === type));
   } catch {
     return [];
   }
 }
 
 export async function getPostingBySlug(
-  type: Posting["type"],
+  type: PostingSection,
   slug: string,
 ): Promise<Posting | null> {
   if (!isSupabaseConfigured) {
@@ -318,10 +319,10 @@ export async function getPostingBySlug(
     const { data, error } = await supabase
       .from("postings")
       .select("*")
-      .eq("type", type)
+      .eq("type", postingStorageType(type))
       .eq("slug", slug)
       .maybeSingle();
-    if (error || !data) return null;
+    if (error || !data || postingSection(data as Posting) !== type) return null;
     const [withCategory] = await attachPostingCategories(supabase, [
       data as Posting,
     ]);

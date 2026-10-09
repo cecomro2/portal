@@ -9,10 +9,13 @@ import {
 } from "lucide-react";
 import { createServiceSupabase } from "@/lib/supabase/server";
 import { AdminPageHeader, Card } from "@/components/admin/ui";
+import { postingSection } from "@/lib/posting-sections";
+import type { Posting } from "@/lib/types";
 
 const quickLinks = [
   { href: "/admin/banner", label: "Banner de inicio", icon: ImageIcon },
   { href: "/admin/vacantes", label: "Vacantes AECID", icon: Briefcase },
+  { href: "/admin/vacantes-generales", label: "Vacantes", icon: Briefcase },
   { href: "/admin/compras", label: "Portal de Compras", icon: ShoppingCart },
   { href: "/admin/junta", label: "Junta Directiva", icon: Users },
   { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
@@ -31,16 +34,19 @@ export default async function DashboardPage() {
       supabase.from("board_members").select("id", { count: "exact", head: true }),
       supabase.from("executive_team").select("id", { count: "exact", head: true }),
       supabase.from("associates").select("id", { count: "exact", head: true }),
-      supabase.from("postings").select("type"),
+      supabase.from("postings").select("type, slug"),
     ]);
 
-  const vacantes = postings.data?.filter((p) => p.type === "vacancy").length ?? 0;
+  const postingRows = (postings.data ?? []) as Pick<Posting, "type" | "slug">[];
+  const vacantes = postingRows.filter((p) => postingSection(p) === "vacancy").length;
+  const generales = postingRows.filter((p) => postingSection(p) === "general_vacancy").length;
   const compras =
     postings.data?.filter((p) => p.type === "procurement").length ?? 0;
 
   const stats = [
     { label: "Banners", value: banners.count ?? 0, href: "/admin/banner" },
-    { label: "Vacantes", value: vacantes, href: "/admin/vacantes" },
+    { label: "Vacantes AECID", value: vacantes, href: "/admin/vacantes" },
+    { label: "Vacantes", value: generales, href: "/admin/vacantes-generales" },
     { label: "Compras", value: compras, href: "/admin/compras" },
     { label: "Noticias", value: posts.count ?? 0, href: "/admin/noticias" },
     { label: "Medios", value: media.count ?? 0, href: "/admin/galeria" },

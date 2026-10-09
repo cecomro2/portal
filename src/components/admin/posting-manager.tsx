@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Eye, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { deletePosting, savePosting } from "@/lib/actions/postings";
-import type { Posting, PostingCategory, PostingType } from "@/lib/types";
+import type { Posting, PostingCategory } from "@/lib/types";
+import { POSTING_BASE_PATHS, postingSection, postingStorageType, type PostingSection } from "@/lib/posting-sections";
 import { formatDate, postingStatus } from "@/lib/utils";
 import { useAdminList } from "@/components/admin/use-admin-list";
 import {
@@ -55,25 +56,26 @@ export function PostingManager({
   title,
   subtitle,
 }: {
-  type: PostingType;
+  type: PostingSection;
   title: string;
   subtitle: string;
 }) {
   const router = useRouter();
-  const publicBase = type === "vacancy" ? "/vacantes-aecid" : "/portal-de-compras-aecid";
+  const publicBase = POSTING_BASE_PATHS[type];
   const { items, loading, load } = useAdminList<Posting>(async () => {
     const supabase = createBrowserSupabase();
     const { data } = await supabase
       .from("postings")
       .select("*")
-      .eq("type", type)
+      .eq("type", postingStorageType(type))
       .order("published_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
-    return (data ?? []) as Posting[];
+    return ((data ?? []) as Posting[]).filter((posting) => postingSection(posting) === type);
   });
 
   const [query, setQuery] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
+  const [filterTime, setFilterTime] = useState(0);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Posting | null>(null);
   const [form, setForm] = useState<FormState>(empty);
@@ -108,11 +110,11 @@ export function PostingManager({
         const day = 86_400_000;
         const days =
           dateFilter === "30d" ? 30 : dateFilter === "90d" ? 90 : 365;
-        if (Date.now() - d > days * day) return false;
+        if (filterTime - d > days * day) return false;
       }
       return true;
     });
-  }, [items, query, dateFilter]);
+  }, [items, query, dateFilter, filterTime]);
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -203,7 +205,11 @@ export function PostingManager({
 
   async function onDelete(id: string) {
     if (!window.confirm("¿Eliminar este registro?")) return;
-    await deletePosting(id);
+    const result = await deletePosting(id);
+    if (!result.ok) {
+      window.alert(result.error ?? "No se pudo eliminar la publicación.");
+      return;
+    }
     await load();
     router.refresh();
   }
@@ -399,7 +405,10 @@ export function PostingManager({
         </div>
         <select
           value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
+          onChange={(e) => {
+            setFilterTime(Date.now());
+            setDateFilter(e.target.value);
+          }}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-primary-400"
         >
           <option value="all">Fecha: Todas</option>

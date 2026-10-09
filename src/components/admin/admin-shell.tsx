@@ -20,7 +20,6 @@ import {
   Settings,
   ShoppingCart,
   Users,
-  X,
 } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -46,6 +45,7 @@ const groups: NavGroup[] = [
       { href: "/admin/inicio", label: "Edición Inicio", icon: LayoutDashboard },
       { href: "/admin/vision-pais", label: "Visión País", icon: Compass },
       { href: "/admin/noticias", label: "Noticias", icon: Newspaper },
+      { href: "/admin/vacantes-generales", label: "Vacantes", icon: Briefcase },
       { href: "/admin/categorias", label: "Categorías", icon: FolderOpen },
       { href: "/admin/galeria", label: "Galería de medios", icon: ImageIcon },
       { href: "/admin/paginas", label: "Páginas", icon: FileText },
@@ -63,7 +63,7 @@ const groups: NavGroup[] = [
   {
     label: "Cooperación AECID",
     items: [
-      { href: "/admin/vacantes", label: "Vacantes", icon: Briefcase },
+      { href: "/admin/vacantes", label: "Vacantes AECID", icon: Briefcase },
       { href: "/admin/compras", label: "Portal de Compras", icon: ShoppingCart },
       { href: "/admin/categorias-aecid", label: "Categorías AECID", icon: FolderOpen },
       { href: "/admin/ubicaciones", label: "Ubicaciones", icon: MapPin },
