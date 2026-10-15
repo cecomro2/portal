@@ -24,6 +24,14 @@ assert.ok(!joinPageDocuments("", [{ file_name: "PDF", file_url: "javascript:aler
 const malformed = "<!-- page-documents:invalid -->contenido<!-- /page-documents -->";
 assert.equal(splitPageDocuments(malformed).content, malformed);
 const { withSimplePages, mainNav } = await load("src/lib/site-config.ts");
+const trabajo = mainNav.find((item) => item.key === "trabajo");
+for (const section of ["en-ejecucion", "ejecutados", "impulsamos"]) {
+  const group = trabajo.children.find((item) => item.href === `#${section}`);
+  assert.equal(group.children.filter((item) => item.href === `#${section}-innovacion-social` && item.label === "Innovación Social").length, 1);
+  const injected = withSimplePages([{ title: "Proyecto de prueba", path: `/prueba-${section}`, parent_href: `#${section}-innovacion-social`, sort_order: 1 }], mainNav);
+  const category = injected.find((item) => item.key === "trabajo").children.find((item) => item.href === `#${section}`).children.find((item) => item.href === `#${section}-innovacion-social`);
+  assert.equal(category.children[0].href, `/prueba-${section}`);
+}
 const paths = ["/nuestro-trabajo/gestion-territorial-aecid", "/nuestro-trabajo/planes-estrategicos-cnb"];
 const pages = paths.map((path, i) => ({ title: `CNB ${i}`, path, parent_href: "#ejecutados-gestion-territorial", sort_order: i }));
 pages.push({ title: "Circuito del Café", path: "/nuestro-trabajo/turismo/circuito-del-cafe", parent_href: "#ejecutados-turismo", sort_order: 0 });

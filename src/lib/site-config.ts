@@ -100,6 +100,7 @@ export const AREA_TITLES: Record<string, string> = {
   "gestion-territorial": "Gestión Territorial",
   gobernabilidad: "Gobernabilidad",
   logistica: "Logística",
+  "innovacion-social": "Innovación Social",
 };
 
 function areaItem(
@@ -120,6 +121,7 @@ const enEjecucionAreas: NavItem[] = [
   areaItem("en-ejecucion", "turismo"),
   areaItem("en-ejecucion", "gestion-territorial"),
   areaItem("en-ejecucion", "gobernabilidad"),
+  areaItem("en-ejecucion", "innovacion-social"),
 ];
 
 const ejecutadosAreas: NavItem[] = [
@@ -135,6 +137,7 @@ const ejecutadosAreas: NavItem[] = [
   areaItem("ejecutados", "logistica", [
     { label: "Cadenas de Valor Panamá-Costa Rica", href: "/nuestro-trabajo/ejecutados/logistica/cadenas-de-valor" },
   ]),
+  areaItem("ejecutados", "innovacion-social"),
 ];
 
 const impulsamosAreas: NavItem[] = [
@@ -149,6 +152,7 @@ const impulsamosAreas: NavItem[] = [
   areaItem("impulsamos", "logistica", [
     { label: "PILA", href: "/nuestro-trabajo/impulsamos/logistica/pila" },
   ]),
+  areaItem("impulsamos", "innovacion-social"),
 ];
 
 /** Bloque AECID (va primero dentro de "Proyectos en Ejecución"). */
