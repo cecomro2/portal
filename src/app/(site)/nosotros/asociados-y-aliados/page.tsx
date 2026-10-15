@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/site/page-header";
 import { Reveal } from "@/components/site/reveal";
-import { getAssociates } from "@/lib/data";
+import { getAssociates, getSiteSetting } from "@/lib/data";
+import { GALLERY_KEY, parseAssociatesGallery } from "@/lib/ecosystem";
+import { ImageGallery } from "@/components/site/image-gallery";
 import type { Associate } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Asociados y Aliados" };
@@ -63,6 +64,7 @@ function Group({
 
 export default async function AsociadosPage() {
   const associates = await getAssociates();
+  const gallery = parseAssociatesGallery(await getSiteSetting(GALLERY_KEY));
   const asociados = associates.filter((a) => a.type === "asociado");
   const aliados = associates.filter((a) => a.type === "aliado");
 
@@ -76,8 +78,11 @@ export default async function AsociadosPage() {
 
       <section className="bg-white py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {associates.length ? (
-            <div className="space-y-12">
+          {gallery.images.length > 0 ? <div className="[&_img]:grayscale">
+            <ImageGallery wide images={gallery.images.map((url, index) => ({ id: String(index), url, alt: `Asociados y Aliados — imagen ${index + 1}` }))} />
+          </div> : <p className="rounded-xl border border-dashed border-line bg-surface p-10 text-center text-muted">La galería de asociados y aliados estará disponible próximamente.</p>}
+          {gallery.showIndividual && (associates.length ? (
+            <div className="mt-12 space-y-12">
               <Group title="Asociados" items={asociados} />
               <Group title="Aliados" items={aliados} />
             </div>
@@ -85,7 +90,7 @@ export default async function AsociadosPage() {
             <p className="rounded-xl border border-dashed border-line bg-surface p-10 text-center text-muted">
               El listado de asociados y aliados estará disponible próximamente.
             </p>
-          )}
+          ))}
         </div>
       </section>
     </>

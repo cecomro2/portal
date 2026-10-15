@@ -9,7 +9,7 @@ export interface GalleryImage {
   alt?: string;
 }
 
-export function ImageGallery({ images }: { images: GalleryImage[] }) {
+export function ImageGallery({ images, wide = false }: { images: GalleryImage[]; wide?: boolean }) {
   const [index, setIndex] = useState<number | null>(null);
 
   const close = useCallback(() => setIndex(null), []);
@@ -38,19 +38,20 @@ export function ImageGallery({ images }: { images: GalleryImage[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className={wide ? "grid grid-cols-1 gap-6 md:grid-cols-2" : "grid grid-cols-2 gap-3 sm:grid-cols-3"}>
         {images.map((img, i) => (
           <button
             key={img.id}
             type="button"
             onClick={() => setIndex(i)}
-            className="group aspect-[4/3] overflow-hidden rounded-xl border border-line bg-surface"
+            className={`group ${wide ? "aspect-video" : "aspect-[4/3]"} overflow-hidden rounded-xl border border-line bg-surface`}
             aria-label="Ampliar imagen"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img.url}
               alt={img.alt ?? ""}
+              loading="lazy"
               className="h-full w-full object-contain transition group-hover:opacity-90"
             />
           </button>

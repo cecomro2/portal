@@ -9,6 +9,7 @@ import {
   Compass,
   FileText,
   FolderOpen,
+  Globe,
   Image as ImageIcon,
   Key,
   LayoutDashboard,
@@ -43,6 +44,7 @@ const groups: NavGroup[] = [
     label: "Contenido",
     items: [
       { href: "/admin/inicio", label: "Edición Inicio", icon: LayoutDashboard },
+      { href: "/admin/ecosistema", label: "Ecosistema", icon: Globe },
       { href: "/admin/vision-pais", label: "Visión País", icon: Compass },
       { href: "/admin/noticias", label: "Noticias", icon: Newspaper },
       { href: "/admin/vacantes-generales", label: "Vacantes", icon: Briefcase },
@@ -58,6 +60,7 @@ const groups: NavGroup[] = [
       { href: "/admin/junta", label: "Junta Directiva", icon: Users },
       { href: "/admin/equipo", label: "Equipo Ejecutivo", icon: Users },
       { href: "/admin/asociados", label: "Asociados y Aliados", icon: Building2 },
+      { href: "/admin/galeria-aliados", label: "Galería de Aliados", icon: ImageIcon },
     ],
   },
   {

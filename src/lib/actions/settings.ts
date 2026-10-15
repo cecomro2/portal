@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { createServiceSupabase } from "@/lib/supabase/server";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export async function saveSiteSetting(
   key: string,
   value: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
+    if (!(await getCurrentAdmin())) return { ok: false, error: "No autorizado." };
     const supabase = createServiceSupabase();
     const { error } = await supabase.from("site_settings").upsert({ key, value });
     if (error) return { ok: false, error: error.message };

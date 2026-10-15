@@ -14,6 +14,7 @@ import { getBanners, getHomeStats, getPosts, getSiteSetting } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 import { Hero } from "@/components/site/hero";
 import { Reveal } from "@/components/site/reveal";
+import { ECOSYSTEM_KEY, parseEcosystem, visibleEcosystem } from "@/lib/ecosystem";
 
 const axes: {
   icon: LucideIcon;
@@ -88,13 +89,15 @@ const axes: {
 ];
 
 export default async function HomePage() {
-  const [banners, posts, stats, sobreImage, newsCatsRaw] = await Promise.all([
+  const [banners, posts, stats, sobreImage, newsCatsRaw, ecosystemRaw] = await Promise.all([
     getBanners(),
     getPosts(),
     getHomeStats(),
     getSiteSetting("sobre_home_image"),
     getSiteSetting("home_news_categories"),
+    getSiteSetting(ECOSYSTEM_KEY),
   ]);
+  const ecosystem = visibleEcosystem(parseEcosystem(ecosystemRaw));
 
   let selectedCats: string[] = [];
   try {
@@ -277,6 +280,20 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {ecosystem.length > 0 && <section id="ecosistema" className="bg-primary-700 py-16 text-white lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">Ecosistema</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80">Organizaciones que conectan investigación, innovación, formación y emprendimiento.</p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {ecosystem.map((org) => { const Tag = org.url ? "a" : "div"; return <Tag key={org.id} href={org.url || undefined} target={org.url ? "_blank" : undefined} rel={org.url ? "noopener noreferrer" : undefined} className={`group flex h-full flex-col rounded-2xl border border-white/25 bg-white/5 p-6 ${org.url ? "transition hover:-translate-y-1 hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" : ""}`}>
+              <h3 className="flex items-center justify-between gap-3 text-lg font-bold text-white">{org.name}{org.url && <ArrowRight size={18} className="shrink-0 transition group-hover:translate-x-1" />}</h3>
+              {org.description && <p className="mt-3 text-sm leading-relaxed text-white/80">{org.description}</p>}
+              {org.url && <span className="mt-auto pt-5 text-xs font-semibold text-white">Visitar sitio web ↗</span>}
+            </Tag>; })}
+          </div>
+        </div>
+      </section>}
 
       {/* Noticias recientes */}
       {homePosts.length > 0 && (
