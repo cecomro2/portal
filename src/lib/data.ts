@@ -723,7 +723,8 @@ export async function getSimplePages(): Promise<SimplePage[]> {
       .from("simple_pages")
       .select("*")
       .eq("is_active", true)
-      .order("sort_order", { ascending: true });
+      .order("sort_order", { ascending: true })
+      .order("path", { ascending: true });
     if (error) return [];
     return (data ?? []) as SimplePage[];
   } catch {

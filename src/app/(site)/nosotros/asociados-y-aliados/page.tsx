@@ -78,7 +78,7 @@ export default async function AsociadosPage() {
 
       <section className="bg-white py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {gallery.images.length > 0 ? <div className="[&_img]:grayscale">
+          {gallery.images.length > 0 ? <div className="rounded-2xl bg-slate-100 p-4 sm:p-6">
             <ImageGallery wide images={gallery.images.map((url, index) => ({ id: String(index), url, alt: `Asociados y Aliados — imagen ${index + 1}` }))} />
           </div> : <p className="rounded-xl border border-dashed border-line bg-surface p-10 text-center text-muted">La galería de asociados y aliados estará disponible próximamente.</p>}
           {gallery.showIndividual && (associates.length ? (

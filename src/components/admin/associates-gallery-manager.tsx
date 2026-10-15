@@ -24,7 +24,7 @@ export function AssociatesGalleryManager({ initial }: { initial: AssociatesGalle
     catch { setMessage("No se pudo guardar. Intenta nuevamente."); }
     finally { setSaving(false); }
   }
-  return <div><AdminPageHeader title="Galería de Asociados y Aliados" subtitle="Imágenes en escala de grises. Las nuevas cargas se guardan en Cloudflare R2." />
+  return <div><AdminPageHeader title="Galería de Asociados y Aliados" subtitle="Imágenes a color sobre fondo gris. Las nuevas cargas se guardan en Cloudflare R2." />
     <fieldset disabled={saving}><Card><GalleryUpload value={gallery.images} onChange={(images) => setGallery({ ...gallery, images })} />
       {gallery.images.length > 0 && <div className="mt-5 space-y-2"><p className="text-sm font-semibold">Orden de las imágenes</p>{gallery.images.map((url, index) => <div key={`${url}-${index}`} className="flex items-center gap-3 rounded border border-line p-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
