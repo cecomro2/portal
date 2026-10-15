@@ -9,6 +9,9 @@ import type { SimplePage } from "@/lib/types";
 import { flattenNav } from "@/lib/site-config";
 import { SIMPLE_PAGE_TEMPLATES } from "@/lib/simple-page-templates";
 import { useAdminList } from "@/components/admin/use-admin-list";
+import { FileUpload } from "@/components/admin/file-upload";
+import { ImageUpload } from "@/components/admin/image-upload";
+import { joinPageDocuments, splitPageDocuments, type PageDocument } from "@/lib/simple-page-documents";
 import {
   AdminPageHeader,
   Card,
@@ -59,6 +62,7 @@ export default function SimplePagesAdminPage() {
   const [pPath, setPPath] = useState("");
   const [pParent, setPParent] = useState("");
   const [pContent, setPContent] = useState("");
+  const [pDocuments, setPDocuments] = useState<PageDocument[]>([]);
   const [pOrder, setPOrder] = useState(0);
   const [pActive, setPActive] = useState(true);
 
@@ -89,6 +93,7 @@ export default function SimplePagesAdminPage() {
     setPPath("");
     setPParent("#ejecutados-agro");
     setPContent("");
+    setPDocuments([]);
     setPOrder(pages.length + 1);
     setPActive(true);
     setError("");
@@ -100,7 +105,9 @@ export default function SimplePagesAdminPage() {
     setPTitle(p.title);
     setPPath(p.path);
     setPParent(p.parent_href);
-    setPContent(p.content);
+    const parsed = splitPageDocuments(p.content);
+    setPContent(parsed.content);
+    setPDocuments(parsed.documents);
     setPOrder(p.sort_order);
     setPActive(p.is_active);
     setError("");
@@ -115,7 +122,7 @@ export default function SimplePagesAdminPage() {
       id: editingPage?.id,
       title: pTitle,
       path: pPath,
-      content: pContent,
+      content: joinPageDocuments(pContent, pDocuments),
       parent_href: pParent,
       sort_order: pOrder,
       is_active: pActive,
@@ -132,7 +139,11 @@ export default function SimplePagesAdminPage() {
 
   async function onDeletePage(id: string) {
     if (!window.confirm("¿Eliminar esta página?")) return;
-    await deleteSimplePage(id);
+    const result = await deleteSimplePage(id);
+    if (!result.ok) {
+      setError(result.error ?? "No se pudo eliminar la página.");
+      return;
+    }
     await load();
     router.refresh();
   }
@@ -225,6 +236,19 @@ export default function SimplePagesAdminPage() {
                 className={`${inputClass} font-mono text-xs`}
               />
             </Field>
+            <Field label="Documentos PDF" hint="Agrega o quita documentos. Los archivos se guardan en Cloudflare R2.">
+              <FileUpload value={pDocuments} onChange={(files) => setPDocuments(files.map((f) => ({ ...f, preview_url: pDocuments.find((d) => d.file_url === f.file_url)?.preview_url })))} />
+            </Field>
+            {pDocuments.map((doc, index) => (
+              <div key={`${doc.file_url}-${index}`} className="grid gap-3 rounded-lg border border-line p-3 sm:grid-cols-2">
+                <Field label="Título del documento">
+                  <input className={inputClass} value={doc.file_name} onChange={(e) => setPDocuments(pDocuments.map((d, i) => i === index ? { ...d, file_name: e.target.value } : d))} />
+                </Field>
+                <Field label="Vista previa (portada)" hint="Opcional: sube una imagen de la primera página del PDF.">
+                  <ImageUpload value={doc.preview_url ?? ""} onChange={(url) => setPDocuments(pDocuments.map((d, i) => i === index ? { ...d, preview_url: url } : d))} />
+                </Field>
+              </div>
+            ))}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Orden">
                 <input

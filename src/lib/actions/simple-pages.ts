@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServiceSupabase } from "@/lib/supabase/server";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export interface SimplePageInput {
   id?: string;
@@ -17,6 +18,7 @@ export async function saveSimplePage(
   input: SimplePageInput,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
+    if (!(await getCurrentAdmin())) return { ok: false, error: "No autorizado." };
     const supabase = createServiceSupabase();
     const payload = {
       title: input.title,
@@ -41,6 +43,7 @@ export async function deleteSimplePage(
   id: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
+    if (!(await getCurrentAdmin())) return { ok: false, error: "No autorizado." };
     const supabase = createServiceSupabase();
     const { error } = await supabase.from("simple_pages").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };

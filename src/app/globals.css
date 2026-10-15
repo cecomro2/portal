@@ -172,6 +172,30 @@ button:not(:disabled),
 /* ------------------------------------------------------------------ */
 /* Bloques de contenido de páginas simples (plantillas copiables)      */
 /* ------------------------------------------------------------------ */
+.sp-pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.sp-pdf-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #fff;
+}
+.sp-content .sp-pdf-cover {
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+  background: #f5f6fa;
+  border-radius: 0;
+}
+.sp-pdf-body { padding: 1.25rem; }
+.sp-coffee-documents { display: grid; gap: 1rem; margin-top: 1.5rem; }
+@media (min-width: 1024px) { .sp-coffee-documents { grid-template-columns: repeat(3, 1fr); } }
+.sp-coffee-documents a { justify-content: center; text-align: center; }
+.sp-content .sp-pdf-body h3 { margin-top: 0; }
 .sp-content {
   color: #3a4151;
   line-height: 1.75;

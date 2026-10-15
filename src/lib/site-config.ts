@@ -130,9 +130,7 @@ const ejecutadosAreas: NavItem[] = [
     { label: "Circuito Golfo de Chiriquí", href: "https://circuitogolfodechiriqui.com" },
     { label: "Boca Chica", href: "/nuestro-trabajo/turismo/boca-chica" },
   ]),
-  areaItem("ejecutados", "gestion-territorial", [
-    { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
-  ]),
+  areaItem("ejecutados", "gestion-territorial"),
   areaItem("ejecutados", "gobernabilidad"),
   areaItem("ejecutados", "logistica", [
     { label: "Cadenas de Valor Panamá-Costa Rica", href: "/nuestro-trabajo/ejecutados/logistica/cadenas-de-valor" },
@@ -279,7 +277,9 @@ export function withSimplePages(
   }
 
   const mapItem = (item: NavItem): NavItem => {
-    const children = item.children ? item.children.map(mapItem) : undefined;
+    const children = item.children
+      ? item.children.filter((child) => !pages.some((p) => p.path === child.href)).map(mapItem)
+      : undefined;
     const extra = byParent.get(item.href);
     if (extra?.length) {
       const merged = [

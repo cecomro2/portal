@@ -82,7 +82,7 @@ const axes: {
     href: "/nuestro-trabajo/gestion-territorial",
     linkLabel: "Territorio e Infraestructura",
     subs: [
-      { label: "Gestión Territorial AECID", href: "/nuestro-trabajo/gestion-territorial-aecid" },
+      { label: "Desarrollo Integral CNB", href: "/nuestro-trabajo/gestion-territorial-aecid" },
     ],
   },
 ];
