@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Bold,
   Heading2,
@@ -11,7 +11,17 @@ import {
   ListOrdered,
   RemoveFormatting,
   Underline,
+  Quote,
+  Pilcrow,
+  Strikethrough,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Undo2,
+  Redo2,
+  Unlink,
 } from "lucide-react";
+import { normalizeEditorUrl, setEditorLinkAttributes } from "@/lib/editor-links";
 
 function escapeHtml(s: string): string {
   return s
@@ -95,6 +105,7 @@ function ToolbarButton({
     <button
       type="button"
       title={title}
+      aria-label={title}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className="flex h-8 w-8 items-center justify-center rounded-md text-muted transition hover:bg-primary-50 hover:text-primary-700"
@@ -112,6 +123,12 @@ export function RichTextEditor({
   onChange: (html: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const savedRange = useRef<Range | null>(null);
+  const editingLink = useRef<HTMLAnchorElement | null>(null);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [newTab, setNewTab] = useState(true);
+  const [linkError, setLinkError] = useState("");
 
   useEffect(() => {
     if (ref.current && ref.current.innerHTML !== value) {
@@ -121,9 +138,79 @@ export function RichTextEditor({
   }, []);
 
   function exec(cmd: string, arg?: string) {
+    ref.current?.focus();
     document.execCommand(cmd, false, arg);
     ref.current?.focus();
     emit();
+  }
+
+  function openLink() {
+    const root = ref.current;
+    if (!root) return;
+    const selection = window.getSelection();
+    const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
+    savedRange.current = range && root.contains(range.commonAncestorContainer) ? range.cloneRange() : null;
+    const node = savedRange.current?.startContainer;
+    const element = node?.nodeType === Node.ELEMENT_NODE ? node as Element : node?.parentElement;
+    const anchor = element?.closest("a");
+    editingLink.current = anchor && root.contains(anchor) ? anchor : null;
+    setLinkUrl(editingLink.current?.getAttribute("href") ?? "https://");
+    setNewTab(editingLink.current ? editingLink.current.target === "_blank" : true);
+    setLinkError(""); setLinkOpen(true);
+  }
+
+  function restoreRange() {
+    const root = ref.current;
+    if (!root) return;
+    root.focus();
+    const selection = window.getSelection();
+    if (!selection) return;
+    const range = savedRange.current && root.contains(savedRange.current.commonAncestorContainer)
+      ? savedRange.current : document.createRange();
+    if (range !== savedRange.current) { range.selectNodeContents(root); range.collapse(false); }
+    selection.removeAllRanges(); selection.addRange(range);
+  }
+
+  function applyLink() {
+    const url = normalizeEditorUrl(linkUrl);
+    if (!url) { setLinkError("Usa https://, http://, mailto:, tel:, una ruta / o un ancla # válidos."); return; }
+    const root = ref.current;
+    if (!root) return;
+    restoreRange();
+    if (editingLink.current && root.contains(editingLink.current)) {
+      setEditorLinkAttributes(editingLink.current, url, newTab);
+    } else {
+      const selection = window.getSelection();
+      if (!selection?.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      if (range.collapsed) {
+        const anchor = document.createElement("a");
+        anchor.textContent = url;
+        setEditorLinkAttributes(anchor, url, newTab);
+        range.insertNode(anchor); range.setStartAfter(anchor); range.collapse(true);
+        selection.removeAllRanges(); selection.addRange(range);
+      } else {
+        // Usa la URL real también en el historial nativo de deshacer/rehacer.
+        const previousLinks = new Set(root.querySelectorAll("a"));
+        const selectedRange = range.cloneRange();
+        document.execCommand("createLink", false, url);
+        root.querySelectorAll<HTMLAnchorElement>("a").forEach((anchor) => {
+          if (!previousLinks.has(anchor) || selectedRange.intersectsNode(anchor)) {
+            setEditorLinkAttributes(anchor, url, newTab);
+          }
+        });
+      }
+    }
+    setLinkOpen(false); emit();
+  }
+
+  function removeLink() {
+    const root = ref.current;
+    restoreRange();
+    const anchor = editingLink.current;
+    if (anchor && root?.contains(anchor)) anchor.replaceWith(...Array.from(anchor.childNodes));
+    else document.execCommand("unlink", false);
+    setLinkOpen(false); emit();
   }
 
   function emit() {
@@ -159,6 +246,8 @@ export function RichTextEditor({
         <ToolbarButton title="Subrayado" onClick={() => exec("underline")}>
           <Underline size={15} />
         </ToolbarButton>
+        <ToolbarButton title="Tachado" onClick={() => exec("strikeThrough")}><Strikethrough size={15} /></ToolbarButton>
+        <ToolbarButton title="Párrafo normal / salir de cita" onClick={() => exec("formatBlock", "p")}><Pilcrow size={15} /></ToolbarButton>
         <span className="mx-1 h-4 w-px bg-line" />
         <ToolbarButton title="Título" onClick={() => exec("formatBlock", "h2")}>
           <Heading2 size={15} />
@@ -169,6 +258,10 @@ export function RichTextEditor({
         >
           <Heading3 size={15} />
         </ToolbarButton>
+        <ToolbarButton title="Cita destacada" onClick={() => exec("formatBlock", "blockquote")}><Quote size={15} /></ToolbarButton>
+        <ToolbarButton title="Alinear a la izquierda" onClick={() => exec("justifyLeft")}><AlignLeft size={15} /></ToolbarButton>
+        <ToolbarButton title="Centrar" onClick={() => exec("justifyCenter")}><AlignCenter size={15} /></ToolbarButton>
+        <ToolbarButton title="Alinear a la derecha" onClick={() => exec("justifyRight")}><AlignRight size={15} /></ToolbarButton>
         <span className="mx-1 h-4 w-px bg-line" />
         <ToolbarButton title="Lista" onClick={() => exec("insertUnorderedList")}>
           <List size={15} />
@@ -181,13 +274,11 @@ export function RichTextEditor({
         </ToolbarButton>
         <ToolbarButton
           title="Enlace"
-          onClick={() => {
-            const url = window.prompt("URL del enlace:", "https://");
-            if (url) exec("createLink", url);
-          }}
+          onClick={openLink}
         >
           <Link2 size={15} />
         </ToolbarButton>
+        <ToolbarButton title="Quitar enlace del texto seleccionado" onClick={() => exec("unlink")}><Unlink size={15} /></ToolbarButton>
         <span className="mx-1 h-4 w-px bg-line" />
         <ToolbarButton
           title="Limpiar formato"
@@ -195,11 +286,35 @@ export function RichTextEditor({
         >
           <RemoveFormatting size={15} />
         </ToolbarButton>
+        <ToolbarButton title="Deshacer" onClick={() => exec("undo")}><Undo2 size={15} /></ToolbarButton>
+        <ToolbarButton title="Rehacer" onClick={() => exec("redo")}><Redo2 size={15} /></ToolbarButton>
       </div>
+
+      {linkOpen && <div role="dialog" aria-label="Editar enlace" className="border-b border-line bg-surface p-4" onKeyDown={(e) => {
+        if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); setLinkOpen(false); restoreRange(); }
+        if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+          e.preventDefault(); e.stopPropagation();
+          if (e.target.type !== "checkbox") applyLink();
+        }
+      }}>
+        <label className="block text-sm font-medium text-ink">URL del enlace
+          <input aria-label="URL del enlace" autoFocus value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} className="mt-2 w-full rounded-lg border border-line bg-white px-3 py-2 text-sm" />
+        </label>
+        <label className="my-3 flex items-center gap-2 text-sm"><input type="checkbox" checked={newTab} onChange={(e) => setNewTab(e.target.checked)} />Abrir en una pestaña nueva</label>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={applyLink} className="rounded-lg bg-primary-600 px-3 py-2 text-sm text-white">Aplicar enlace</button>
+          <button type="button" onClick={removeLink} className="rounded-lg border border-line px-3 py-2 text-sm">Quitar enlace</button>
+          <button type="button" onClick={() => { setLinkOpen(false); restoreRange(); }} className="rounded-lg border border-line px-3 py-2 text-sm">Cancelar</button>
+        </div>
+        {linkError && <p role="alert" className="mt-2 text-sm text-red-600">{linkError}</p>}
+      </div>}
 
       <div
         ref={ref}
         contentEditable
+        role="textbox"
+        aria-label="Contenido enriquecido"
+        aria-multiline="true"
         suppressContentEditableWarning
         onInput={emit}
         onBlur={emit}
