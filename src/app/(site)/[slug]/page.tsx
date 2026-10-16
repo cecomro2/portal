@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays } from "lucide-react";
 import { getCategories, getPostBySlug, getPostFiles, getPostImages, getPostVideos } from "@/lib/data";
-import { formatDate, youtubeId } from "@/lib/utils";
+import { formatDate, youtubeId, stripHtml } from "@/lib/utils";
 import { DocumentList } from "@/components/site/document-list";
 import { ImageGallery } from "@/components/site/image-gallery";
+import { SharePost } from "@/components/site/share-post";
+import { SITE } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -14,7 +16,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  return { title: post?.title ?? "Noticia" };
+  if (!post || !post.is_published) return { title: "Noticia" };
+  const url = new URL(`/${post.slug}`, SITE.url).href;
+  const description = stripHtml(post.excerpt || post.content).slice(0, 160);
+  const images = post.cover_image_url ? [new URL(post.cover_image_url, SITE.url).href] : undefined;
+  return {
+    title: post.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "article", title: post.title, description, url, images, publishedTime: post.published_at ?? undefined },
+    twitter: { card: images ? "summary_large_image" : "summary", title: post.title, description, images },
+  };
 }
 
 export default async function NoticiaPage({
@@ -50,6 +62,7 @@ export default async function NoticiaPage({
             <CalendarDays size={15} />
             {formatDate(post.published_at)}
           </span>
+          <SharePost url={new URL(`/${post.slug}`, SITE.url).href} title={post.title} />
         </div>
 
         <h1 className="mt-4 text-3xl font-bold leading-tight text-primary-800 sm:text-4xl">

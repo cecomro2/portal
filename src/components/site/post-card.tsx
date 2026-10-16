@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 export function PostCard({ post }: { post: Post }) {
   return (
     <div className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative aspect-[16/10] overflow-hidden bg-primary-100">
+      <Link href={`/${post.slug}`} aria-label={`Ver publicación: ${post.title}`} className="relative block aspect-[16/10] cursor-pointer overflow-hidden bg-primary-100 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary-600">
         {post.cover_image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -19,7 +19,7 @@ export function PostCard({ post }: { post: Post }) {
             <span className="text-2xl font-bold">CECOM-RO</span>
           </div>
         )}
-      </div>
+      </Link>
       <div className="flex flex-1 flex-col p-5 text-left">
         <p className="text-xs font-medium text-muted">
           {formatDate(post.published_at)}
