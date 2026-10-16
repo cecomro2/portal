@@ -419,7 +419,8 @@ export async function getPosts(): Promise<Post[]> {
       .from("posts")
       .select("*")
       .eq("is_published", true)
-      .order("published_at", { ascending: false });
+      .order("published_at", { ascending: false })
+      .order("id", { ascending: false });
     if (error) return [];
     return (data ?? []) as Post[];
   } catch {
@@ -442,7 +443,8 @@ export async function getPostsByCategory(slug: string): Promise<Post[]> {
       .select("*")
       .eq("category_id", cat.id)
       .eq("is_published", true)
-      .order("published_at", { ascending: false });
+      .order("published_at", { ascending: false })
+      .order("id", { ascending: false });
     if (error) return [];
     return (data ?? []) as Post[];
   } catch {

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServiceSupabase } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
+import { revalidateVisionDocuments } from "@/lib/content-revalidation";
 
 export interface VisionInput {
   id?: string;
@@ -47,8 +48,8 @@ export async function saveVision(
         });
       if (error) return { ok: false, error: error.message };
     }
-    revalidatePath("/vision-pais");
-    revalidatePath("/");
+    revalidateVisionDocuments();
+    revalidatePath("/", "layout");
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -62,8 +63,8 @@ export async function deleteVision(
     const supabase = createServiceSupabase();
     const { error } = await supabase.from("visions").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };
-    revalidatePath("/vision-pais");
-    revalidatePath("/");
+    revalidateVisionDocuments();
+    revalidatePath("/", "layout");
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -89,7 +90,7 @@ export async function saveVisionDocument(
           .eq("id", input.id)
       : await supabase.from("vision_documents").insert(payload);
     if (error) return { ok: false, error: error.message };
-    revalidatePath("/vision-pais");
+    revalidateVisionDocuments();
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -106,7 +107,7 @@ export async function deleteVisionDocument(
       .delete()
       .eq("id", id);
     if (error) return { ok: false, error: error.message };
-    revalidatePath("/vision-pais");
+    revalidateVisionDocuments();
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };

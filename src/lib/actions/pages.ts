@@ -26,7 +26,7 @@ export async function savePage(
       updated_at: new Date().toISOString(),
     });
     if (error) return { ok: false, error: error.message };
-    if (pagePaths[input.slug]) revalidatePath(pagePaths[input.slug]);
+    revalidatePath(pagePaths[input.slug] ?? `/nuestro-trabajo/${input.slug}`);
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };

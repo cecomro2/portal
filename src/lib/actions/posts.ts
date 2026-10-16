@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateNews } from "@/lib/content-revalidation";
 import { createServiceSupabase } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
 
@@ -112,8 +112,7 @@ export async function savePost(
       );
     }
 
-    revalidatePath("/noticias");
-    revalidatePath("/");
+    revalidateNews(slug);
     return { ok: true, slug };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -125,10 +124,11 @@ export async function deletePost(
 ): Promise<{ ok: boolean; error?: string }> {
   try {
     const supabase = createServiceSupabase();
+    const { data: previous, error: lookupError } = await supabase.from("posts").select("slug").eq("id", id).maybeSingle();
+    if (lookupError) return { ok: false, error: lookupError.message };
     const { error } = await supabase.from("posts").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };
-    revalidatePath("/noticias");
-    revalidatePath("/");
+    revalidateNews(previous?.slug);
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -152,7 +152,7 @@ export async function saveCategory(
         .insert({ name: input.name, slug: slugify(input.name) });
       if (error) return { ok: false, error: error.message };
     }
-    revalidatePath("/noticias");
+    revalidateNews(undefined, true);
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
@@ -166,7 +166,7 @@ export async function deleteCategory(
     const supabase = createServiceSupabase();
     const { error } = await supabase.from("categories").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };
-    revalidatePath("/noticias");
+    revalidateNews(undefined, true);
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Error" };
